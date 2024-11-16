@@ -1,0 +1,31 @@
+.mainclass{
+    background-color: aliceblue;
+    /* border: 2px solid black; */
+    display: flex;
+    justify-content: center;
+    flex-direction:column;
+    text-align: center;
+}
+
+.logouav{
+    max-width: 10vw;
+    border-radius: 80%;
+    margin-top: 5%;
+}
+.googlelogo{
+    max-width: 1vw;
+    max-height: 1vw;
+}
+.inputing{
+    padding: 1%;
+    align-items: center;
+}
+input{
+  border: 2px solid gray;  
+  outline: none;
+  border-radius: 6px;
+}
+.placeholder{
+    background-color: white;
+    color: gray;
+}
