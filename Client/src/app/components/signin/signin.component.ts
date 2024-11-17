@@ -7,4 +7,7 @@ import { Component } from '@angular/core';
 })
 export class SigninComponent {
 
+  public TrySignIn(){
+    console.log("karni");
+  }
 }
