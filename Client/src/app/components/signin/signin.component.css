@@ -6,11 +6,12 @@
     flex-direction:column;
     text-align: center;
 }
-
 .logouav{
-    max-width: 10vw;
+    resize: both;
+    width: 10vh;
     border-radius: 80%;
     margin-top: 5%;
+    content: 50px;
 }
 .googlelogo{
     max-width: 1vw;
