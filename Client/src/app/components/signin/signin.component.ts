@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { UserService } from 'src/app/services/user.service';
 
 @Component({
   selector: 'app-signin',
@@ -6,8 +7,23 @@ import { Component } from '@angular/core';
   styleUrls: ['./signin.component.css']
 })
 export class SigninComponent {
+  protected  email: string = '';
+  protected  password: string = '';
+
+  constructor(private userservice: UserService) {}
 
   public TrySignIn(){
-    console.log("karni");
+    
+    this.userservice.login(this.email,this.password).subscribe(
+      (res) =>{
+        console.log("sign in worked");
+        console.log(res);
+      },
+      (error) => {
+        console.log("failed");
+      }
+    )
+    this.password = '';
+
   }
 }
