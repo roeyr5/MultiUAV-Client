@@ -14,6 +14,9 @@ export class UserService {
     console.log("karni : " ,password , email);
     return this.http.post(`${this.ROOT_URL}/users/login`,{email : email , password : password});
   } 
+  public list() : Observable<string[]> {
+    return this.http.get<string[]>(`${this.ROOT_URL}/parameters/all`)
+  }
   
   
 }
