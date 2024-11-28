@@ -1,18 +1,19 @@
-<div class = "mainclass">
-    <div class="borderclass">
+<div class="container">
+    <div class="inside">
         <div><img class="logouav" src="assets/images/Screenshot_8.jpg" alt="logo uav"></div>
-        </div> <p>Stay updated on your UAV'S</p> <div>
-        <div class="inputing">
+     </div> <p>Stay updated on your UAV'S</p> <div>
+     <div class="inputing">
             <div><input type="email" class="info" placeholder="Email" [(ngModel)]="email"></div>
             <div><input type="password" class="info" placeholder="Password" [(ngModel)]="password" (keydown.enter)="TrySignIn()"></div>
-        </div>
-        <div>  <button (click)="TrySignIn()">Login</button>
-        </div>
-        <div>
-            <img class="googlelogo" src="assets/images/google.png" alt="google logo">
-            <button>Google</button>
-        </div>
+    </div>
+      <div>  <button (click)="TrySignIn()">Login</button>
+      </div>
+     <div>
+      <img class="googlelogo" src="assets/images/google.png" alt="google logo">
+      <button >Google</button>
+     </div>
         <div><p>New to site? <a>Join Now</a></p></div>
     </div>
+        
 </div>
 
