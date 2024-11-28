@@ -1,11 +1,18 @@
-.mainclass{
+.container{
     background-color: aliceblue;
     /* border: 2px solid black; */
-    display: flex;
+    display:flex;
+    justify-content: center;
+    align-items: center;
     justify-content: center;
     flex-direction:column;
     text-align: center;
+    width: 500px;
+    height: 700px;
+    border-radius: 30px;
+    
 }
+
 .logouav{
     resize: both;
     width: 10vh;
