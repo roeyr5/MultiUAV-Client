@@ -8,6 +8,7 @@ const routes: Routes = [
   { path: 'signin', component: SigninComponent },
   {path : 'main' , component : MainComponent},
   {path : 'error' , component : PageNotFoundComponent},
+  {path: '**',component:SigninComponent},
 
 ];
 
