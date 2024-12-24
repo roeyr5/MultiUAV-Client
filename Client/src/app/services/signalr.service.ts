@@ -1,20 +1,19 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { Observable } from 'rxjs';
+import { Observable, partition } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class SignalRService {
   private hubConnection: signalR.HubConnection;
-
   constructor() {
     this.hubConnection = new signalR.HubConnectionBuilder()
       .withUrl('http://localhost:2000/ltshub') 
       .build();
   }
 
-  startConnection(): Observable<void> {
+  public startConnection(): Observable<void> {
     return new Observable<void>((observer) => {
       this.hubConnection
         .start()
@@ -30,15 +29,26 @@ export class SignalRService {
     });
   }
 
-  receiveMessage(): Observable<string> {
-    return new Observable<string>((observer) => {
-      this.hubConnection.on('ReceiveMessage', (message: string) => {
-        observer.next(message);
+  public receiveMessage(): Observable<{ message : Map<string,string> , partition : number}> {
+    return new Observable((observer) => {
+      this.hubConnection.on('ReceiveMessage', (message: Map<string,string> , partition : number) => {
+        console.log(partition);
+        console.log(message);
+        observer.next({message,partition});
       });
     });
   }
 
-  sendMessage(message: string): void {
+  public sendMessage(message: string): void {
     this.hubConnection.invoke('SendMessage', message);
+  }
+
+  public addParameter(parameter: string): void {
+    this.hubConnection.invoke('AddParameter', parameter);
+  }
+
+  // Method to remove parameter
+  public removeParameter(parameter: string): void {
+    this.hubConnection.invoke('RemoveParameter', parameter);
   }
 }

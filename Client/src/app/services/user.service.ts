@@ -17,6 +17,10 @@ export class UserService {
   public list() : Observable<string[]> {
     return this.http.get<string[]>(`${this.ROOT_URL}/parameters/all`)
   }
+  public signup(email: string , password: string): Observable<any> {
+    console.log("karni : " ,password , email);
+    return this.http.post(`${this.ROOT_URL}/users/create`,{email : email , password : password});
+  }
   
   
 }

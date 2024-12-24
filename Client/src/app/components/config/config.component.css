@@ -1,0 +1,11 @@
+.Simulator{
+  display:flex;
+  flex-direction: column;
+  padding: 1%;
+}
+.Telemetry{
+  display:flex;
+  flex-direction: column;
+  padding: 1%;
+}
+

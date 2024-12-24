@@ -1,0 +1,21 @@
+.grid-item-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid #ccc;
+  padding: 10px;
+  background: #f9f9f9;
+  height: 100%;
+}
+.drag-handle {
+  cursor: grab;
+}
+.main{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+/* .{
+overflow: hidden;
+} */

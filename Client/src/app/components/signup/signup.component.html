@@ -1,0 +1,32 @@
+<div class="container">
+  <div class="inside">
+      <div><img class="logouav" src="assets/images/Screenshot_8.jpg" alt="logo uav"></div>
+   </div> <p>Stay updated on your UAV'S</p> <div>
+   <div class="inputing">
+      <mat-form-field class="example-full-width">
+          <mat-label>Email</mat-label>
+          <input matInput placeholder="Email" [(ngModel)]="email">
+      </mat-form-field>
+      <mat-form-field class="example-full-width">
+          <mat-label>Password</mat-label>
+          <input matInput placeholder="Password" [(ngModel)]="password">
+      </mat-form-field>
+      <mat-form-field class="example-full-width">
+        <mat-label>Password again</mat-label>
+        <input matInput placeholder="Password again" [(ngModel)]="repassword" (keydown.enter)="TrySignUp()">
+    </mat-form-field>
+  </div>
+    <div>  
+      <button mat-stroked-button  (click)="TrySignUp()">Sign Up</button>
+    </div>
+   <div>
+      <button mat-stroked-button >
+          <img src="assets/images/google.png" alt="Google Logo" style="height: 20px; width: 20px; margin-right: 8px;">
+          Sign up with Google
+        </button>     
+  </div>
+      <div><p>Alredy registered site? <a href="/signin">Sign in now</a></p></div>
+  </div>
+      
+</div>
+

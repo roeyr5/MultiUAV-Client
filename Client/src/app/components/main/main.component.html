@@ -1,1 +1,25 @@
-<p>main works!</p>
+<div class="main">
+  <h4>Select Parameter</h4>
+  <mat-form-field>
+    <mat-label>Parameters</mat-label>
+    <mat-select >
+      <mat-option *ngFor="let parameter of parametersarray"  [value]="parameter" (onSelectionChange)="onSelect(parameter)">
+        {{ parameter }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <div>
+    <button mat-raised-button (click)="MoveParameters()">Enable drag and move</button>
+  </div>
+</div>
+
+<div>
+  
+</div>
+<gridster [options]="options">
+  <gridster-item *ngFor="let item of dashboard" [item]="item">
+    <div class="widget-content">
+      Item: {{ item.x }}, {{ item.y }}
+    </div>
+  </gridster-item>
+</gridster>

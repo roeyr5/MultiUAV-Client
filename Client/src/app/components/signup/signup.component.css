@@ -1,0 +1,45 @@
+
+.container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: aliceblue;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  width: 600px;
+  height: 800px;
+  border-radius: 30px;
+}
+
+
+.logouav{
+  resize: both;
+  width: 10vh;
+  border-radius: 80%;
+  margin-top: 5%;
+  content: 50px;
+}
+.googlelogo{
+  max-width: 1vw;
+  max-height: 1vw;
+}
+.inputing{
+  display: flex;
+  flex-direction: column;
+  padding: 1%;
+  align-items:center;
+}
+input{
+border: 2px solid gray;  
+outline: none;
+border-radius: 6px;
+}
+.placeholder{
+  background-color: white;
+  color: gray;
+}
+

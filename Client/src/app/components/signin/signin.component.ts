@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import {Router} from '@angular/router';
 import { UserService } from 'src/app/services/user.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-signin',
@@ -17,7 +18,10 @@ export class SigninComponent {
     
     this.userservice.login(this.email,this.password).subscribe(
       (res) =>{
-        console.log("sign in worked");
+        Swal.fire({
+                  title: 'logging in',
+                  icon:'success'
+                });
         this.route.navigate(['/main']);
       },
       (error) => {

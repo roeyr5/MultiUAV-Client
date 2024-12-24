@@ -9,6 +9,12 @@ import { MainComponent } from './components/main/main.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatButtonModule } from '@angular/material/button';
 import {MatInputModule} from '@angular/material/input';
+import {MatSelectModule} from '@angular/material/select';
+import {GridsterModule} from 'angular-gridster2';
+import { MonitorComponent } from './components/monitor/monitor.component';
+import { SignupComponent } from './components/signup/signup.component';
+import { ConfigComponent } from './components/config/config.component';
+import { TestComponent } from './components/test/test.component';
 
 
 
@@ -17,8 +23,14 @@ import {MatInputModule} from '@angular/material/input';
     AppComponent,
     SigninComponent,
     MainComponent,
+    MonitorComponent,
+    SignupComponent,
+    ConfigComponent,
+    TestComponent,
   ],
   imports: [
+    GridsterModule,
+    MatSelectModule,
     MatInputModule,
     MatButtonModule,
     BrowserModule,
