@@ -108,12 +108,15 @@ export class MainComponent implements OnInit {
 
       this.signalRService.receiveMessage().subscribe((message)=>{
         this.items.set(message.partition,message.message);
+        console.log(message);
       });
     });
   }
 
   protected sendMessage(message: string): void {
     this.signalRService.sendMessage(message);
+    console.log(message);
+
   }
 
   protected GetParameters(){    
@@ -128,6 +131,7 @@ export class MainComponent implements OnInit {
   protected onSelect(event: any): void {
     const selectedValue = event.value;
 
+    
     this.dashboard.push({
       cols: 1, 
       rows: 1, 
