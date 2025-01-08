@@ -15,6 +15,7 @@ import { MonitorComponent } from './components/monitor/monitor.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { ConfigComponent } from './components/config/config.component';
 import { TestComponent } from './components/test/test.component';
+import { AddNewDialogComponent } from './components/dialogs/adduavcomp/add-new-dialog/add-new-dialog.component';
 
 
 
@@ -27,6 +28,7 @@ import { TestComponent } from './components/test/test.component';
     SignupComponent,
     ConfigComponent,
     TestComponent,
+    AddNewDialogComponent,
   ],
   imports: [
     GridsterModule,

@@ -1,20 +1,33 @@
-<div>
+<div class="div"> 
+  <div class="device-manager">
+  <h1>Device Manager</h1>
+  <ul class="device-list">
+    <li *ngFor="let device of devices">{{ device }} <button>Pause</button> <button>Continue</button> <button>Delete</button></li>
+  </ul>
+  <button class="connect-button" (click)="StartOne()">Connect a new device</button>
+  </div>
+</div>
+
+
+<!-- <div>
   <div >
     <div class="Simulator">
-      <h3>Simulator</h3>
-      <button mat-raised-button (click)="StartSimulator()" >Start Simulator</button>
+      <h3>Simulator & Telemetry</h3>
+      <button mat-raised-button (click)="StartIcds()" >Start ICDS</button>
       <button mat-raised-button (click)="StartPcap()" >Start Pcap</button>
       <button mat-raised-button (click)="Stop()">Stop</button>
+      <button mat-raised-button (click)="Pause()">Pause</button>
+      <button mat-raised-button (click)="Continue()">Continue</button>
     </div>
-  </div>
+  </div> -->
 
-  <div>
+  <!-- <div>
     <div class="Telemetry">
       <h3>Telemetry Device</h3>
       <button mat-raised-button (click)="StartAll()" >Start All Channels</button>
       <button mat-raised-button (click)="StartOne()" >Start Specific Channel</button>
       <button mat-raised-button (click)="StopChannel()">Stop</button>
     </div>
-  </div>
+  </div> -->
   
-</div>
+<!-- </div> -->

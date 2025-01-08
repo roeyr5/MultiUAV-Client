@@ -1,5 +1,7 @@
 import { HttpClient, HttpStatusCode } from '@angular/common/http';
 import { Component } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
+import { AddNewDialogComponent } from '../dialogs/adduavcomp/add-new-dialog/add-new-dialog.component';
 import { Observable } from 'rxjs';
 import { ApiResponse } from 'src/app/models/apirepsonse';
 import Swal from 'sweetalert2';
@@ -12,9 +14,28 @@ import Swal from 'sweetalert2';
 export class ConfigComponent {
   protected channel:string = '';
   protected port : number = 0;
+  devices: string[] = ["test","testd","test"];
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient , private dialog:MatDialog) {}
 
+  openAddUavDialog():void{
+    const dialogRef = this.dialog.open(AddNewDialogComponent,{width:'400px'})
+
+    dialogRef.afterClosed().subscribe((result)=>{
+      if(result){
+        console.log('user enterd : ' , result);
+      }
+    })
+  }
+  protected StartIcds(){
+    
+  }
+  protected Pause(){
+
+  }
+  protected Continue(){
+
+  }
   protected StartSimulator() {
     return this.http.get(`http://localhost:7000/StartFetching`);
   }
@@ -24,10 +45,10 @@ export class ConfigComponent {
   protected Stop(){
     return this.http.get(`http://localhost:7000/Stop`);
   }
-  protected StartAll<T>() : Observable<ApiResponse<T>>{
-    console.log('h');
-    return this.http.get<ApiResponse<T>>(`http://localhost:5000/StartAll`);
-  }
+  // protected StartAll<T>() : Observable<ApiResponse<T>>{
+  //   console.log('h');
+  //   return this.http.get<ApiResponse<T>>(`http://localhost:5000/StartAll`);
+  // }
   protected StartOne(){
     // Swal.fire({
     //   title:'Start channel listening',

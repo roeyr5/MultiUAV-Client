@@ -1,11 +1,41 @@
-.Simulator{
-  display:flex;
-  flex-direction: column;
-  padding: 1%;
-}
-.Telemetry{
-  display:flex;
-  flex-direction: column;
-  padding: 1%;
+.device-manager {
+  border: 2px solid black;
+  border-radius: 15px;
+  width: 500px;
+  padding: 20px;
+  text-align: center;
+  background-color: white;
 }
 
+.device-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.div{
+  display: flex;
+  justify-content: center;
+  
+}
+.device-list li {
+  background-color: purple;
+  color: white;
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+}
+
+.connect-button {
+  margin-top: 20px;
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  text-decoration: none;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.connect-button:hover {
+  background-color: #0056b3;
+}
