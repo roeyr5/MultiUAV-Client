@@ -1,32 +1,44 @@
 import { HttpClient, HttpStatusCode } from '@angular/common/http';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { AddNewDialogComponent } from '../dialogs/adduavcomp/add-new-dialog/add-new-dialog.component';
+import { UserService } from 'src/app/services/user.service';
 import { Observable } from 'rxjs';
 import { ApiResponse } from 'src/app/models/apirepsonse';
 import Swal from 'sweetalert2';
+import { AddNewDialogComponent } from '../dialogs/add-new-dialog.component';
 
 @Component({
   selector: 'app-config',
   templateUrl: './config.component.html',
   styleUrls: ['./config.component.css']
 })
-export class ConfigComponent {
+export class ConfigComponent implements OnInit {
   protected channel:string = '';
   protected port : number = 0;
-  devices: string[] = ["test","testd","test"];
 
-  constructor(private http: HttpClient , private dialog:MatDialog) {}
+  devices: string[] = ["test","test"];
+  pcaps: string[] = ["test"];
+  fileName :string = '';
 
-  openAddUavDialog():void{
-    const dialogRef = this.dialog.open(AddNewDialogComponent,{width:'400px'})
 
-    dialogRef.afterClosed().subscribe((result)=>{
-      if(result){
-        console.log('user enterd : ' , result);
-      }
-    })
+  constructor(private http: HttpClient , private userservice:UserService) {} // private dialog:MatDialog 
+
+  ngOnInit(): void {
+      
   }
+  
+  protected onFileSelected(event:any){
+
+  }
+  // protected openAddUavDialog():void{
+  //   const dialogRef = this.dialog.open(AddNewDialogComponent,{width:'400px'})
+
+  //   dialogRef.afterClosed().subscribe((result)=>{
+  //     if(result){
+  //       console.log('user enterd : ' , result);
+  //     }
+  //   })
+  // }
   protected StartIcds(){
     
   }

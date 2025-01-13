@@ -15,9 +15,8 @@ import { MonitorComponent } from './components/monitor/monitor.component';
 import { SignupComponent } from './components/signup/signup.component';
 import { ConfigComponent } from './components/config/config.component';
 import { TestComponent } from './components/test/test.component';
-import { AddNewDialogComponent } from './components/dialogs/adduavcomp/add-new-dialog/add-new-dialog.component';
-
-
+import { AddNewDialogComponent } from './components/dialogs/add-new-dialog.component';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
@@ -29,6 +28,7 @@ import { AddNewDialogComponent } from './components/dialogs/adduavcomp/add-new-d
     ConfigComponent,
     TestComponent,
     AddNewDialogComponent,
+    
   ],
   imports: [
     GridsterModule,
@@ -40,6 +40,7 @@ import { AddNewDialogComponent } from './components/dialogs/adduavcomp/add-new-d
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    NgxChartsModule,
 ],
   providers: [],
   bootstrap: [AppComponent]
