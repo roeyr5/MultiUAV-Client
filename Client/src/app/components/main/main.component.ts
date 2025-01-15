@@ -14,12 +14,15 @@ export class MainComponent implements OnInit {
   protected options: GridsterConfig ={};
   protected dashboard: Array<GridsterItem> =[];
 
-  protected items: Map<number,Map<string,string>> = new Map<number,Map<string,string>> ();
   protected selectedValue : string = '';
   public receivedmessage:string = '';
   protected parametersarray:string[]=[];
   protected uavsList:string[]=[];
+  protected communicationList:string[] = [];
   protected selectedUAV : string = '';
+  protected sidebarOpen: boolean = false;
+
+  protected items: Map<number,Map<string,string>> = new Map<number,Map<string,string>> ();
 
   constructor(private signalRService : SignalRService , private userservice:UserService , private ltsservice:LtsService){}
 
@@ -79,19 +82,17 @@ export class MainComponent implements OnInit {
       disablePushOnResize: false,
       disableAutoPositionOnConflict: false,
       api: {},
-      displayGrid: DisplayGrid.Always, // Options: 'Always', 'OnDrag&Resize', 'None'
+      displayGrid: DisplayGrid.Always,
       disableWindowResize: false,
       disableWarnings: false,
       scrollToNewItems: false,
     };
 
-    this.dashboard = [
-      { cols: 2, rows: 1, y: 0, x: 0 },
-      { cols: 2, rows: 2, y: 0, x: 2 },
-      { cols: 1, rows: 1, y: 2, x: 0 },
-      { cols: 1, rows: 1, y: 2, x: 1 },
-      { cols: 2, rows: 1, y: 2, x: 2 },
-    ];
+    
+  }
+
+  public toggleSidebar(): void {
+    this.sidebarOpen = !this.sidebarOpen;
   }
 
   private ChangedOptions() {

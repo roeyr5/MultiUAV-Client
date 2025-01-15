@@ -1,1 +1,11 @@
-<router-outlet></router-outlet>
+<div *ngIf="showSidebar" class="layout">
+    <app-sidebar></app-sidebar>
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+  
+  <div *ngIf="!showSidebar">
+    <router-outlet></router-outlet>
+  </div>
+  

@@ -16,7 +16,7 @@ const routes: Routes = [
   {path : 'monitor', component :MonitorComponent},
   {path : 'test', component :TestComponent},
   { path: 'config', component: ConfigComponent },
-  {path: '**',component:SigninComponent},
+  {path: '**',component:PageNotFoundComponent},
 
 ];
 

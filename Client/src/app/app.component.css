@@ -1,0 +1,17 @@
+.layout {
+    display: flex;
+    height: 100vh; 
+  }
+  
+  app-sidebar {
+    width: 200px;
+    flex-shrink: 0;
+    background-color: #333;
+  }
+  
+  .content {
+    flex-grow: 1;
+    overflow: auto;
+    padding: 20px;
+  }
+  

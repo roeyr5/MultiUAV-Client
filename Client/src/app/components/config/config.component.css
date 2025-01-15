@@ -1,34 +1,53 @@
+/* Device Manager Container */
 .device-manager {
-  border: 2px solid black;
+  background-color: #000000; /* Black background */
   border-radius: 15px;
   width: 500px;
   padding: 20px;
   text-align: center;
-  background-color: white;
+  color: white;
+  box-shadow: none; /* No border */
 }
 
+/* Device List */
 .device-list {
   margin: 0;
   padding: 0;
   list-style-type: none;
 }
-.div{
-  display: flex;
-  justify-content: center;
-  
-}
+
+/* Device list items */
 .device-list li {
-  background-color: purple;
+  background-color: #333333; /* Slightly lighter black */
   color: white;
   padding: 10px;
   margin: 5px 0;
   border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Buttons inside device list items */
+.device-list li button {
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 5px 10px;
+  margin-left: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+/* Hover effect for list item buttons */
+.device-list li button:hover {
+  background-color: #fbc02d; /* Gold on hover */
 }
 
 .connect-button {
   margin-top: 20px;
   padding: 10px 15px;
-  background-color: #007bff;
+  background-color: #fbc02d; 
   color: white;
   text-decoration: none;
   border: none;
@@ -36,6 +55,35 @@
   cursor: pointer;
 }
 
+
 .connect-button:hover {
-  background-color: #0056b3;
+  background-color: #f3a02d;
+}
+
+.div {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* File upload styling */
+.file-upload {
+  margin-top: 10px;
+  background-color: #fbc02d; /* Gold */
+  padding: 10px;
+  border-radius: 5px;
+  text-align: center;
+  color: white;
+}
+
+.upload-btn {
+  background-color: transparent;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.upload-btn mat-icon {
+  font-size: 24px;
 }

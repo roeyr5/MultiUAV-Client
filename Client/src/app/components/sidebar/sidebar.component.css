@@ -1,0 +1,30 @@
+.sidebar {
+    width: 200px;
+    height: 100vh; 
+    background-color: #333; 
+    color: white;
+    padding: 20px 0;
+    position: fixed; 
+  }
+  
+  .menu {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .menu li {
+    margin: 10px 0;
+  }
+  
+  .menu li a {
+    color: white;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+  }
+  
+  .menu li a.active {
+    background-color: #fbc02d; 
+    border-radius: 5px;
+  }
+  

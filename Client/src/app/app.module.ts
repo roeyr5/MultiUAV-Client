@@ -17,7 +17,8 @@ import { ConfigComponent } from './components/config/config.component';
 import { TestComponent } from './components/test/test.component';
 import { AddNewDialogComponent } from './components/dialogs/add-new-dialog.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
-import { MatIconModule } from '@angular/material/icon'; 
+import { MatIconModule } from '@angular/material/icon';
+import { SidebarComponent } from './components/sidebar/sidebar.component'; 
 
 
 @NgModule({
@@ -30,6 +31,7 @@ import { MatIconModule } from '@angular/material/icon';
     ConfigComponent,
     TestComponent,
     AddNewDialogComponent,
+    SidebarComponent,
     
   ],
   imports: [
