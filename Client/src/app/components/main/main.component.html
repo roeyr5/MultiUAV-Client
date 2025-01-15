@@ -1,13 +1,27 @@
 <div class="main">
   <h4>Select Parameter</h4>
   <mat-form-field>
+    <mat-label>Uav's</mat-label>
+    <mat-select >
+      <mat-option *ngFor="let uav of uavsList"  [value]="uavsList" (onSelectionChange)="onSelectUAV(uav)">
+        {{ uav }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <mat-form-field>
     <mat-label>Parameters</mat-label>
     <mat-select >
       <mat-option *ngFor="let parameter of parametersarray"  [value]="parameter" (onSelectionChange)="onSelect(parameter)">
         {{ parameter }}
       </mat-option>
     </mat-select>
+    
   </mat-form-field>
+  <div>
+    <button mat-raised-button (click)="joinGroup()">Join Group</button>
+    <button mat-raised-button (click)="leaveGroup()">Leave Group</button>
+  </div>
+
   <div>
     <button mat-raised-button (click)="MoveParameters()">Enable drag and move</button>
   </div>

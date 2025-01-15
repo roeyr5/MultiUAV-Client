@@ -18,13 +18,16 @@ export class MainComponent implements OnInit {
   protected selectedValue : string = '';
   public receivedmessage:string = '';
   protected parametersarray:string[]=[];
-  
+  protected uavsList:string[]=[];
+  protected selectedUAV : string = '';
+
   constructor(private signalRService : SignalRService , private userservice:UserService , private ltsservice:LtsService){}
 
   public ngOnInit(): void {
       this.StartConnection();
       this.GetParameters();
       this.InitGridsterOptions();
+      this.GetUAVS();
   }
 
   private InitGridsterOptions(): void {
@@ -121,7 +124,17 @@ export class MainComponent implements OnInit {
 
   protected GetParameters(){    
     this.userservice.list().subscribe((res)=>{
+      console.log(res);
       this.parametersarray=res;
+    },(err) =>{
+      console.error("error" , err);
+    }
+    )
+  }
+  protected GetUAVS(){
+    this.userservice.uavsNumberslist().subscribe((res)=>{
+      console.log(res)
+      this.uavsList =res;
     },(err) =>{
       console.error("error" , err);
     }
@@ -131,7 +144,6 @@ export class MainComponent implements OnInit {
   protected onSelect(event: any): void {
     const selectedValue = event.value;
 
-    
     this.dashboard.push({
       cols: 1, 
       rows: 1, 
@@ -142,9 +154,31 @@ export class MainComponent implements OnInit {
     this.signalRService.addParameter(selectedValue); 
   }
 
+   public onSelectUAV(event:any): void{
+      console.log(event);
+      this.selectedUAV = event;
+      this.joinGroup();
+    }
   protected onRemove(event: any): void {
     const selectedValue = event.value;
     this.signalRService.removeParameter(selectedValue);  
   }
-  
+
+  public joinGroup(): void {
+      this.signalRService.joinGroup(this.selectedUAV).subscribe({
+        next: () => console.log(`Joined group: ${this.selectedUAV}`),
+        error: (err) => console.error('Error joining group', err),
+      });
+  }
+
+  public leaveGroup(): void {
+    if (this.selectedUAV) {
+      this.signalRService.leaveGroup(this.selectedUAV).subscribe({
+        next: () => console.log(`Left group: ${this.selectedUAV}`),
+        error: (err) => console.error('Error leaving group', err),
+      });
+    } else {
+      console.warn('No UAV selected to leave a group');
+    } 
+  }
 }

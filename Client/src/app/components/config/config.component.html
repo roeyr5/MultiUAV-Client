@@ -14,7 +14,9 @@
   <ul class="device-list">
     <li *ngFor="let pcap of pcaps">{{ pcap }} <button>Pause</button> <button>Continue</button> <button>Delete</button></li>
   </ul>
+  
   <input type="file" class="file-upload" class="file-upload" (change)="onFileSelected($event) "#fileUpload>
+
     <div class="file-upload">
       {{fileName|| "No file uploaded yet."}}
 

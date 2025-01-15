@@ -8,9 +8,7 @@ import { Observable, partition } from 'rxjs';
 export class SignalRService {
   private hubConnection: signalR.HubConnection;
   constructor() {
-    this.hubConnection = new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:2000/ltshub') 
-      .build();
+    this.hubConnection = new signalR.HubConnectionBuilder().withUrl('http://localhost:2000/ltshub').build();
   }
 
   public startConnection(): Observable<void> {
@@ -24,6 +22,36 @@ export class SignalRService {
         })
         .catch((error) => {
           console.error('Error connecting to SignalR hub:', error);
+          observer.error(error);
+        });
+    });
+  }
+
+  public joinGroup(uavName: string): Observable<void> {
+    console.log(uavName);
+    return new Observable<void>((observer) => {
+      this.hubConnection.invoke('JoinGroup', uavName)
+        .then(() => {
+          observer.next();
+          observer.complete();
+        })
+        .catch((error) => {
+          console.error('Error joining group:', error);
+          observer.error(error);
+        });
+    });
+  }
+
+  public leaveGroup(uavName: string): Observable<void> {
+    return new Observable<void>((observer) => {
+      this.hubConnection.invoke('LeaveGroup', uavName)
+        .then(() => {
+          console.log(`Left group: ${uavName}`);
+          observer.next();
+          observer.complete();
+        })
+        .catch((error) => {
+          console.error('Error leaving group:', error);
           observer.error(error);
         });
     });

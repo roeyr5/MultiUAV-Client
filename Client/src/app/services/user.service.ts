@@ -24,5 +24,8 @@ export class UserService {
   public uavslist() :Observable<string[]>{
     return this.http.get<string[]>(`${this.ROOT_URL}/parameters/uavs`);
   }
+  public uavsNumberslist() :Observable<string[]>{
+    return this.http.get<string[]>(`${this.ROOT_URL}/parameters/uavslist`);
+  }
   
 }
