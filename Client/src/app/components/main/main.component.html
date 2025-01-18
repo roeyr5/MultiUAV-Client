@@ -5,8 +5,9 @@
   <div class="sidebar" [class.open]="sidebarOpen">
     <h4>Select Parameter</h4>
     
-    <mat-form-field>
-      <mat-label>Uav's</mat-label>
+     <!-- UAV Selection -->
+     <mat-form-field>
+      <mat-label>UAVs</mat-label>
       <mat-select (selectionChange)="onSelectUAV($event)">
         <mat-option *ngFor="let uav of uavsList" [value]="uav">
           {{ uav }}
@@ -14,24 +15,40 @@
       </mat-select>
     </mat-form-field>
 
+    <!-- Communication Type Selection -->
     <mat-form-field>
-      <mat-label>Commuincation</mat-label>
-      <mat-select (selectionChange)="onSelectUAV($event)">
-        <mat-option *ngFor="let uav of uavsList" [value]="uav">
-          {{ uav }}
-        </mat-option>
+      <mat-label>Communication</mat-label>
+      <mat-select (selectionChange)="onSelectCommunication($event)">
+        <mat-option value="FBDown">FBDown</mat-option>
+        <mat-option value="FBUp">FBUp</mat-option>
+        <mat-option value="MissionDown">MissionDown</mat-option>
+        <mat-option value="MissionUp">MissionUp</mat-option>
       </mat-select>
     </mat-form-field>
 
-
-    <mat-form-field>
-      <mat-label>Parameters</mat-label>
-      <mat-select (selectionChange)="onSelect($event)">
-        <mat-option *ngFor="let parameter of parametersarray" [value]="parameter">
+    <!-- Parameters Selection -->
+    <div class="parameters-selection">
+      <h4>Parameters for {{ selectedCommunication }}</h4>
+      <div *ngFor="let parameter of getCurrentParameters()" class="parameter-item">
+        <mat-checkbox
+          [checked]="isParameterSelected(parameter)"
+          (change)="toggleParameterSelection(parameter)"
+        >
           {{ parameter }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+        </mat-checkbox>
+      </div>
+    </div>
+    
+    
+    <!-- Display selected parameters for the current communication -->
+    <div>
+      <h4>Selected Parameters:</h4>
+      <ul>
+        <li *ngFor="let param of (selectedParametersMap.get(selectedCommunication) || [])">
+          {{ param }}
+        </li>
+      </ul>
+    </div>
     
     <div>
       <button mat-raised-button (click)="joinGroup()">Join Group</button>
@@ -46,7 +63,7 @@
   <gridster [options]="options">
     <gridster-item *ngFor="let item of dashboard" [item]="item">
       <div class="widget-content">
-        Item: {{ item.x }}, {{ item.y }}
+        {{ item }}
       </div>
     </gridster-item>
   </gridster>

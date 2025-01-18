@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.router.events.subscribe(() => {
-      this.showSidebar = !['/signin', '/signup' , '**'].includes(this.router.url);
+      this.showSidebar = !['/signin', '/signup' , '/**'].includes(this.router.url);
     });
   }
 }

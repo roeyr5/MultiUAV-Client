@@ -19,7 +19,7 @@ import { AddNewDialogComponent } from './components/dialogs/add-new-dialog.compo
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatIconModule } from '@angular/material/icon';
 import { SidebarComponent } from './components/sidebar/sidebar.component'; 
-
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   declarations: [
@@ -37,6 +37,7 @@ import { SidebarComponent } from './components/sidebar/sidebar.component';
   imports: [
     GridsterModule,
     MatSelectModule,
+    MatCheckboxModule,
     MatInputModule,
     MatIconModule,
     MatButtonModule,
