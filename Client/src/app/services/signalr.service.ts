@@ -27,10 +27,10 @@ export class SignalRService {
     });
   }
 
-  public joinGroup(uavName: string): Observable<void> {
+  public joinGroup(uavName: string , commuincate : string): Observable<void> {
     console.log(uavName);
     return new Observable<void>((observer) => {
-      this.hubConnection.invoke('JoinGroup', uavName)
+      this.hubConnection.invoke('JoinGroup', uavName+commuincate)
         .then(() => {
           observer.next();
           observer.complete();
@@ -57,12 +57,12 @@ export class SignalRService {
     });
   }
 
-  public receiveMessage(): Observable<{ message : Map<string,string> , partition : number}> {
+  public receiveMessage(): Observable<{ message: { [key: string]: string }; uavName: string }> {
     return new Observable((observer) => {
-      this.hubConnection.on('ReceiveMessage', (message: Map<string,string> , partition : number) => {
-        console.log(partition);
+      this.hubConnection.on('ReceiveMessage', (message:  { [key: string]: string } , uavName : string) => {
+        console.log(uavName);
         console.log(message);
-        observer.next({message,partition});
+        observer.next({message,uavName});
       });
     });
   }
@@ -71,12 +71,24 @@ export class SignalRService {
     this.hubConnection.invoke('SendMessage', message);
   }
 
-  public addParameter(parameter: string): void {
-    this.hubConnection.invoke('AddParameter', parameter);
+  public addParameter(uavName: string, parameter: string): void {
+    this.hubConnection.invoke('AddParameter', uavName, parameter)
+      .then(() => {
+        console.log(`Parameter added: ${parameter} for UAV: ${uavName}`);
+      })
+      .catch((error) => {
+        console.error('Error adding parameter:', error);
+      });
   }
 
-  // Method to remove parameter
-  public removeParameter(parameter: string): void {
-    this.hubConnection.invoke('RemoveParameter', parameter);
+  public removeParameter(uavName: string, parameter: string): void {
+    this.hubConnection.invoke('RemoveParameter', uavName, parameter)
+      .then(() => {
+        console.log(`Parameter removed: ${parameter} for UAV: ${uavName}`);
+      })
+      .catch((error) => {
+        console.error('Error removing parameter:', error);
+      });
   }
+  
 }

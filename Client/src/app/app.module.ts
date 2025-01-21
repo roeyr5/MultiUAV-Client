@@ -20,6 +20,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatIconModule } from '@angular/material/icon';
 import { SidebarComponent } from './components/sidebar/sidebar.component'; 
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ChartComponent } from './components/chart/chart.component';
 
 @NgModule({
   declarations: [
@@ -32,6 +33,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     TestComponent,
     AddNewDialogComponent,
     SidebarComponent,
+    ChartComponent,
     
   ],
   imports: [

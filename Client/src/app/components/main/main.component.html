@@ -63,7 +63,20 @@
   <gridster [options]="options">
     <gridster-item *ngFor="let item of dashboard" [item]="item">
       <div class="widget-content">
-        {{ item }}
+
+        <app-chart
+          [chartType]="item.chartType"
+          [chartData]="item.chartData"
+          [chartLabels]="item.chartLabels"
+          [parameterName]="item.parameter">
+        ></app-chart>
+  
+        <div class="chart-controls">
+          <button (click)="changeChartType(item, 'line')">Line</button>
+          <button (click)="changeChartType(item, 'bar')">Bar</button>
+          <button (click)="changeChartType(item, 'pie')">Pie</button>
+          <button (click)="changeChartType(item, 'pie')">Scatter</button>
+        </div>
       </div>
     </gridster-item>
   </gridster>
