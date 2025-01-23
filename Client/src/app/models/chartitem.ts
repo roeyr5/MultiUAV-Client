@@ -6,5 +6,5 @@ export interface ChartGridsterItem extends GridsterItem {
   chartData: number[]; 
   chartLabels: string[]; 
   parameter: string; 
+  parameterName?: string;
 }
-

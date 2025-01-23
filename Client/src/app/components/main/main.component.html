@@ -63,19 +63,31 @@
   <gridster [options]="options">
     <gridster-item *ngFor="let item of dashboard" [item]="item">
       <div class="widget-content">
-
-        <app-chart
-          [chartType]="item.chartType"
-          [chartData]="item.chartData"
-          [chartLabels]="item.chartLabels"
-          [parameterName]="item.parameter">
-        ></app-chart>
-  
+        <ng-container *ngIf="item.chartData.length > 0; else emptyChart">
+          <p-chart
+            type="{{ item.chartType }}"
+            [data]="{
+              labels: item.chartLabels,
+              datasets: [
+                {
+                  label: item.parameter,
+                  data: item.chartData,
+                  borderColor: '#FFFF00',
+                  fill: false
+                }
+              ]
+            }"
+            [responsive]="true"
+          ></p-chart>
+        </ng-container>
+        <ng-template #emptyChart>
+          <p>No data available. Waiting for updates...</p>
+        </ng-template>
+        
         <div class="chart-controls">
           <button (click)="changeChartType(item, 'line')">Line</button>
           <button (click)="changeChartType(item, 'bar')">Bar</button>
-          <button (click)="changeChartType(item, 'pie')">Pie</button>
-          <button (click)="changeChartType(item, 'pie')">Scatter</button>
+          <button (click)="changeChartType(item, 'scatter')">Scatter</button>
         </div>
       </div>
     </gridster-item>

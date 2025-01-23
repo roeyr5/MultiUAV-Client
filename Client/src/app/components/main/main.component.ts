@@ -1,4 +1,4 @@
-import { Component , OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component , OnInit, QueryList, ViewChildren } from '@angular/core';
 import { LtsService } from 'src/app/services/lts.service';
 import { SignalRService } from 'src/app/services/signalr.service';
 import { UserService } from 'src/app/services/user.service';
@@ -6,6 +6,8 @@ import { DisplayGrid, GridsterConfig, GridsterItem,GridType }  from 'angular-gri
 import {ChartGridsterItem} from 'src/app/models/chartitem'
 import Swal from 'sweetalert2';
 import { ChartType } from 'chart.js';
+import { basicData } from 'src/app/models/dataitem';
+import { UIChart } from 'primeng/chart';
 
 @Component({
   selector: 'app-main',
@@ -14,6 +16,8 @@ import { ChartType } from 'chart.js';
 })
 export class MainComponent implements OnInit {
   
+  @ViewChildren(UIChart) charts!: QueryList<UIChart>;
+
   protected options: GridsterConfig ={};
   protected dashboard: Array<ChartGridsterItem> =[];
 
@@ -29,7 +33,8 @@ export class MainComponent implements OnInit {
   protected selectedParametersMap: Map<string, string[]> = new Map<string, string[]>();
   protected items:Map<string,Map<string,string>> = new Map<string,Map<string,string>> ();
 
-  constructor(private signalRService : SignalRService , private userservice:UserService , private ltsservice:LtsService){}
+
+  constructor(private signalRService : SignalRService , private userservice:UserService , private ltsservice:LtsService , private cdr : ChangeDetectorRef){}
 
   public ngOnInit(): void {
       this.StartConnection();
@@ -91,22 +96,25 @@ export class MainComponent implements OnInit {
   }
 
   private updateChartData(parameterMap: { [key: string]: string }): void {
-    this.dashboard.forEach((item) => {
+    this.dashboard.forEach((item,index) => {
       if (item.parameter && parameterMap[item.parameter] !== undefined) {
+        
+        if (item.chartData.length > 10) item.chartData.shift();
+        if (item.chartLabels.length > 10) item.chartLabels.shift();
+
         const newValue = parseFloat(parameterMap[item.parameter]);
-  
-        item.chartData.push(newValue);
-        if (item.chartData.length > 10) {
-          item.chartData.shift(); 
-        }
-  
         const newLabel = new Date().toLocaleTimeString();
+        item.chartData.push(newValue);
         item.chartLabels.push(newLabel);
-        if (item.chartLabels.length > 10) {
-          item.chartLabels.shift(); 
-        }
+
+        const chart = this.charts.toArray()[index]; 
+        if (chart) {
+          chart.refresh(); 
+        } 
       }
     });
+  
+    this.cdr.detectChanges();
   }
   
   protected GetUAVS(){
@@ -182,18 +190,18 @@ export class MainComponent implements OnInit {
         x: this.dashboard.length % 5, 
         y: Math.floor(this.dashboard.length / 5), 
         parameter,
+        paramaterName : parameter,
         chartType: 'line', 
         chartData: [], 
         chartLabels: [], 
-        parameterName:parameter,
-        
       });
   
       this.signalRService.addParameter(fullUavName, parameter);
-    } else {
+    }
+    else {
 
       selectedParams.splice(index, 1);
-      // this.dashboard = this.dashboard.filter((item) => item.label !== parameter);
+      this.dashboard = this.dashboard.filter((item) => item.parameter !== parameter);
       this.signalRService.removeParameter(fullUavName, parameter);
     }
   
@@ -201,7 +209,6 @@ export class MainComponent implements OnInit {
     console.log(`Selected Parameters for ${this.selectedCommunication}:`, selectedParams);
   }
   
-
    public onSelectUAV(event:any): void{
       console.log(event);
       this.selectedUAV = event.value;
@@ -230,6 +237,19 @@ export class MainComponent implements OnInit {
   }
 
   protected changeChartType(item: ChartGridsterItem, chartType: ChartType): void {
-    item.chartType = chartType;
+  
+      item.chartType = chartType; 
+      const chart = this.charts.toArray()[this.dashboard.indexOf(item)];
+      if (chart) {
+        chart.chart.config.type = chartType; 
+        chart.refresh(); 
+      }
+      else {
+      Swal.fire({
+        icon: 'error',
+        title: 'Unsupported Chart Type',
+        text: `${chartType} is not supported for this data.`,
+      });
+    }
   }
 }

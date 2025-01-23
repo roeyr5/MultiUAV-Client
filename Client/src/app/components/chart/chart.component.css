@@ -1,0 +1,5 @@
+canvas {
+  display: block;
+  width: 100%; /* Adjust to fit the container */
+  height: 400px; /* Fixed height for testing */
+}

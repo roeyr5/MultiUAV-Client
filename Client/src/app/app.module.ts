@@ -21,6 +21,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { SidebarComponent } from './components/sidebar/sidebar.component'; 
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ChartComponent } from './components/chart/chart.component';
+import { ButtonModule } from "primeng/button"; 
+import { ToastModule } from "primeng/toast"; 
+import { RippleModule } from "primeng/ripple"; 
+import { ImageModule } from "primeng/image"; 
+import { ChartModule } from "primeng/chart"; 
 
 @NgModule({
   declarations: [
@@ -34,7 +39,7 @@ import { ChartComponent } from './components/chart/chart.component';
     AddNewDialogComponent,
     SidebarComponent,
     ChartComponent,
-    
+   
   ],
   imports: [
     GridsterModule,
@@ -49,6 +54,11 @@ import { ChartComponent } from './components/chart/chart.component';
     HttpClientModule,
     BrowserAnimationsModule,
     NgxChartsModule,
+    ChartModule,
+    ImageModule,
+    RippleModule,
+    ButtonModule,
+    ToastModule,
 ],
   providers: [],
   bootstrap: [AppComponent]
