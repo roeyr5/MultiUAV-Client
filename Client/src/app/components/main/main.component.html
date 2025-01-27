@@ -5,7 +5,6 @@
   <div class="sidebar" [class.open]="sidebarOpen">
     <h4>Select Parameter</h4>
     
-     <!-- UAV Selection -->
      <mat-form-field>
       <mat-label>UAVs</mat-label>
       <mat-select (selectionChange)="onSelectUAV($event)">
@@ -15,7 +14,6 @@
       </mat-select>
     </mat-form-field>
 
-    <!-- Communication Type Selection -->
     <mat-form-field>
       <mat-label>Communication</mat-label>
       <mat-select (selectionChange)="onSelectCommunication($event)">
@@ -26,7 +24,6 @@
       </mat-select>
     </mat-form-field>
 
-    <!-- Parameters Selection -->
     <div class="parameters-selection">
       <h4>Parameters for {{ selectedCommunication }}</h4>
       <div *ngFor="let parameter of getCurrentParameters()" class="parameter-item">
@@ -40,11 +37,10 @@
     </div>
     
     
-    <!-- Display selected parameters for the current communication -->
     <div>
       <h4>Selected Parameters:</h4>
       <ul>
-        <li *ngFor="let param of (selectedParametersMap.get(selectedCommunication) || [])">
+        <li *ngFor="let param of (selectedParametersMap.get(selectedUAV)?.get(selectedCommunication) || [])">
           {{ param }}
         </li>
       </ul>
@@ -63,22 +59,15 @@
   <gridster [options]="options">
     <gridster-item *ngFor="let item of dashboard" [item]="item">
       <div class="widget-content">
-        <ng-container *ngIf="item.chartData.length > 0; else emptyChart">
+        <ng-container *ngIf="item.datasets && item.datasets.length > 0; else emptyChart">
+          <div class="chart-parameter">
+            <strong>Parameter:</strong> {{ item.parameter }}
+          </div>
           <p-chart
-            type="{{ item.chartType }}"
-            [data]="{
-              labels: item.chartLabels,
-              datasets: [
-                {
-                  label: item.parameter,
-                  data: item.chartData,
-                  borderColor: '#FFFF00',
-                  fill: false
-                }
-              ]
-            }"
-            [responsive]="true"
-          ></p-chart>
+          [type]="item.chartType"
+          [data]="getChartData(item)"
+          [responsive]="true"
+        ></p-chart>
         </ng-container>
         <ng-template #emptyChart>
           <p>No data available. Waiting for updates...</p>
