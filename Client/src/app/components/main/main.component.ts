@@ -30,9 +30,7 @@ export class MainComponent implements OnInit {
   protected parametersarray: string[] = [];
 
   protected parametersMap: Map<string,string[]> = new Map<string,string[]>();
-  protected selectedParametersMap: Map<string, string[]> = new Map<string, string[]>();
-  protected items:Map<string,Map<string,string>> = new Map<string,Map<string,string>> ();
-
+  protected selectedParametersMap: Map<string, Map<string, string[]>> = new Map<string, Map<string, string[]>>();
 
   constructor(private signalRService : SignalRService , private userservice:UserService , private ltsservice:LtsService , private cdr : ChangeDetectorRef){}
 
@@ -40,7 +38,6 @@ export class MainComponent implements OnInit {
       this.StartConnection();
       this.InitGridsterOptions();
       this.GetUAVS();
-      this.getParameters();
   }
 
   private InitGridsterOptions(): void {
@@ -82,9 +79,10 @@ export class MainComponent implements OnInit {
 
       this.signalRService.receiveMessage().subscribe((message) => {
         console.log("Received message:", message);
-      
+        
         const parameterMap = message.message; 
-        this.updateChartData(parameterMap);
+        const uavName = message.uavName;
+        this.updateChartData(parameterMap,uavName);
     });
   });
   }
@@ -95,44 +93,64 @@ export class MainComponent implements OnInit {
 
   }
 
-  private updateChartData(parameterMap: { [key: string]: string }): void {
-    this.dashboard.forEach((item,index) => {
-      if (item.parameter && parameterMap[item.parameter] !== undefined) {
+  private updateChartData( parameterMap: { [key: string]: string }, incomingUavName: string ): void {
+
+    this.dashboard.forEach((item, itemIndex) => {
+      const datasetForThisUAV = item.datasets.find(
+        (ds) => ds.uavName === incomingUavName
+      );
+      
+      if (!datasetForThisUAV) return; 
+  
+      if (parameterMap[item.parameter] !== undefined) {
         
-        if (item.chartData.length > 10) item.chartData.shift();
-        if (item.chartLabels.length > 10) item.chartLabels.shift();
-
         const newValue = parseFloat(parameterMap[item.parameter]);
+        datasetForThisUAV.data.push(newValue);
         const newLabel = new Date().toLocaleTimeString();
-        item.chartData.push(newValue);
         item.chartLabels.push(newLabel);
-
-        const chart = this.charts.toArray()[index]; 
+        
+        if (datasetForThisUAV.data.length > 10) {
+          datasetForThisUAV.data.shift();
+        }
+        if (item.chartLabels.length > 10) {
+          item.chartLabels.shift();
+        }
+        const chart = this.charts.toArray()[itemIndex];
         if (chart) {
-          chart.refresh(); 
-        } 
+          chart.refresh();
+        }
       }
     });
   
     this.cdr.detectChanges();
   }
   
-  protected GetUAVS(){
-    this.userservice.uavsNumberslist().subscribe((res)=>{
-      console.log(res)
-      this.uavsList =res;
-    },(err) =>{
-      console.error("error" , err);
-    }
-    )
-  }
+  
+  protected GetUAVS(): void {
+    this.userservice.uavsNumberslist().subscribe(
+        (res) => {
+            console.log("UAVs List:", res);
+            this.uavsList = res;
+            this.getParameters(); 
+        },
+        (err) => {
+            console.error("Error fetching UAVs list:", err);
+        }
+    );
+}
+
 
  protected getParameters(): void {
   this.userservice.getAllParameters().subscribe(
     (res) => {
-      Object.entries(res).forEach(([key, value]) => {
-        this.parametersMap.set(key, value); 
-        this.selectedParametersMap.set(key, []); 
+      Object.entries(res).forEach(([communication, parameters]) => {
+        this.parametersMap.set(communication, parameters); 
+        this.uavsList.forEach(uav => {
+          if (!this.selectedParametersMap.has(uav)) {
+            this.selectedParametersMap.set(uav, new Map<string, string[]>());
+          }
+          this.selectedParametersMap.get(uav)?.set(communication, []);
+        });      
       });
       console.log('Parameters Map:', this.parametersMap);
     },
@@ -142,11 +160,26 @@ export class MainComponent implements OnInit {
   );
 }
 
-  public onSelectCommunication(event: any): void {
-    this.selectedCommunication = event.value;
-    this.updateParametersArray();
-    this.selectedParameters = this.selectedParametersMap.get(this.selectedCommunication) || [];
+public onSelectUAV(event:any): void{
+
+  this.selectedUAV = event.value;
+  this.updateParametersArray();
+  if (this.selectedCommunication) {
+    const uavMap = this.selectedParametersMap.get(this.selectedUAV);
+    this.selectedParameters = uavMap?.get(this.selectedCommunication) || [];
   }
+  }
+
+public onSelectCommunication(event: any): void {
+  this.selectedCommunication = event.value;
+  this.updateParametersArray();
+  if (this.selectedUAV) {
+      const uavMap = this.selectedParametersMap.get(this.selectedUAV);
+      this.selectedParameters = uavMap?.get(this.selectedCommunication) || [];
+    }
+  }
+
+
   
   protected getCurrentParameters(): string[] {
     const params = this.parametersMap.get(this.selectedCommunication) || [];
@@ -164,62 +197,106 @@ export class MainComponent implements OnInit {
     return this.selectedParameters.includes(parameter);
   }
 
+  protected toggleUAVParameterSelection(uavName: string, communication: string, parameter: string): void {
+
+    let chartItem = this.dashboard.find(
+      (item) => item.communication === communication && item.parameter === parameter
+    );
+  
+    if (!chartItem) {
+      chartItem = {
+        cols: 1,
+        rows: 1,
+        x: this.dashboard.length % 5,
+        y: Math.floor(this.dashboard.length / 5),
+  
+        chartType: 'line',
+        chartLabels: [],
+        communication,
+        parameter,
+        datasets: [],
+      };
+      this.dashboard.push(chartItem);
+    }
+
+    const existingDatasetIndex = chartItem.datasets.findIndex(ds => ds.uavName === uavName);
+  
+    if (existingDatasetIndex === -1) {
+      chartItem.datasets.push({
+        uavName: uavName,
+        data: [],
+        label: uavName,
+        color: this.getRandomColor()
+      });
+      const fullUavComm = `${uavName}${communication}`;
+      this.signalRService.addParameter(fullUavComm, parameter);
+  
+    } else {
+      chartItem.datasets.splice(existingDatasetIndex, 1);
+      const fullUavComm = `${uavName}${communication}`;
+      this.signalRService.removeParameter(fullUavComm, parameter);
+    }
+  }
+  private getRandomColor(): string {
+    const letters = '0123456789ABCDEF';
+    let color = '#';
+    for (let i = 0; i < 6; i++) {
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
+  }  
+  
   protected toggleParameterSelection(parameter: string): void {
     if (!this.selectedUAV || !this.selectedCommunication) {
-      Swal.fire({
-        icon: 'info',
-        title: 'Missing Selection',
-        text: 'Please select both a UAV and a communication type before adding parameters.',
-      });
-      return;
+        Swal.fire({
+            icon: 'info',
+            title: 'Missing Selection',
+            text: 'Please select both a UAV and a communication type before adding parameters.',
+        });
+        return;
     }
-  
-    this.joinGroup();
 
-    const fullUavName = `${this.selectedUAV}${this.selectedCommunication}`;
-    const selectedParams = this.selectedParametersMap.get(this.selectedCommunication) || [];
-    const index = selectedParams.indexOf(parameter);
-  
-    if (index === -1) {
-
-      selectedParams.push(parameter);
-
-      this.dashboard.push({
-        cols: 1, 
-        rows: 1, 
-        x: this.dashboard.length % 5, 
-        y: Math.floor(this.dashboard.length / 5), 
-        parameter,
-        paramaterName : parameter,
-        chartType: 'line', 
-        chartData: [], 
-        chartLabels: [], 
-      });
-  
-      this.signalRService.addParameter(fullUavName, parameter);
+    let uavMap = this.selectedParametersMap.get(this.selectedUAV);
+    if (!uavMap) {
+        uavMap = new Map<string, string[]>();
+        this.selectedParametersMap.set(this.selectedUAV, uavMap);
     }
-    else {
 
-      selectedParams.splice(index, 1);
-      this.dashboard = this.dashboard.filter((item) => item.parameter !== parameter);
-      this.signalRService.removeParameter(fullUavName, parameter);
+    let selectedParams = uavMap.get(this.selectedCommunication);
+    if (!selectedParams) {
+        selectedParams = [];
+        uavMap.set(this.selectedCommunication, selectedParams);
     }
+
+    const paramIndex = selectedParams.indexOf(parameter);
+    if (paramIndex === -1) {
+        selectedParams.push(parameter);
+    } else {
+        selectedParams.splice(paramIndex, 1);
+    }
+
+    uavMap.set(this.selectedCommunication, selectedParams);
+    this.selectedParametersMap.set(this.selectedUAV, uavMap);
+    console.log(`Selected Parameters for UAV: ${this.selectedUAV}, Communication: ${this.selectedCommunication}:`, selectedParams);
+
+    this.toggleUAVParameterSelection(this.selectedUAV, this.selectedCommunication, parameter);
+}
   
-    this.selectedParametersMap.set(this.selectedCommunication, selectedParams);
-    console.log(`Selected Parameters for ${this.selectedCommunication}:`, selectedParams);
+  protected getChartData(item: ChartGridsterItem) {
+    return {
+      labels: item.chartLabels,
+      datasets: item.datasets.map((ds, index) => ({
+        label: ds.label,
+        data: ds.data,
+        borderColor: ds.color,
+        fill: false
+      }))
+    };
   }
-  
-   public onSelectUAV(event:any): void{
-      console.log(event);
-      this.selectedUAV = event.value;
-    }
-  // protected onRemove(event: any): void {
-  //   const selectedValue = event.value;
-  //   this.signalRService.removeParameter(selectedValue);  
-  // }
+
 
   public joinGroup(): void {
-      this.signalRService.joinGroup(this.selectedUAV,this.selectedCommunication).subscribe({
+      this.signalRService.joinGroup(this.selectedUAV+this.selectedCommunication).subscribe({
         next: () => console.log(`Joined group: ${this.selectedUAV}`),
         error: (err) => console.error('Error joining group', err),
       });

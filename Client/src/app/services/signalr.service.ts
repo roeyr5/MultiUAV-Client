@@ -27,10 +27,10 @@ export class SignalRService {
     });
   }
 
-  public joinGroup(uavName: string , commuincate : string): Observable<void> {
-    console.log(uavName);
+  public joinGroup(fulluavName: string ): Observable<void> {
     return new Observable<void>((observer) => {
-      this.hubConnection.invoke('JoinGroup', uavName+commuincate)
+      console.log(fulluavName)
+      this.hubConnection.invoke('JoinGroup', fulluavName)
         .then(() => {
           observer.next();
           observer.complete();
