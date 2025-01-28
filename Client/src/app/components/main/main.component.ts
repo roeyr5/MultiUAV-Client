@@ -5,7 +5,7 @@ import { UserService } from 'src/app/services/user.service';
 import { DisplayGrid, GridsterConfig, GridsterItem,GridType }  from 'angular-gridster2';
 import {ChartGridsterItem} from 'src/app/models/chartitem'
 import Swal from 'sweetalert2';
-import { ChartType } from 'chart.js';
+import { ChartData, ChartType } from 'chart.js';
 import { basicData } from 'src/app/models/dataitem';
 import { UIChart } from 'primeng/chart';
 
@@ -17,6 +17,19 @@ import { UIChart } from 'primeng/chart';
 export class MainComponent implements OnInit {
   
   @ViewChildren(UIChart) charts!: QueryList<UIChart>;
+
+  public chartData: ChartData<'line', number[], string> = {
+    labels: [],
+    datasets: [
+      {
+        label: '',
+        data: [],
+        borderColor: '#42A5F5',
+        fill: false,
+      },
+    ],
+    
+  }
 
   protected options: GridsterConfig ={};
   protected dashboard: Array<ChartGridsterItem> =[];
@@ -39,7 +52,6 @@ export class MainComponent implements OnInit {
       this.InitGridsterOptions();
       this.GetUAVS();
   }
-
   private InitGridsterOptions(): void {
     this.options = {
       gridType: GridType.Fit,
@@ -93,31 +105,42 @@ export class MainComponent implements OnInit {
 
   }
 
-  private updateChartData( parameterMap: { [key: string]: string }, incomingUavName: string ): void {
-
+  private updateChartData(parameterMap: { [key: string]: string }, incomingFullUavName: string): void {
+    console.log(10)
     this.dashboard.forEach((item, itemIndex) => {
       const datasetForThisUAV = item.datasets.find(
-        (ds) => ds.uavName === incomingUavName
+        (ds) => ds.uavName + item.communication === incomingFullUavName
       );
-      
-      if (!datasetForThisUAV) return; 
+  
+      if (!datasetForThisUAV) return;
   
       if (parameterMap[item.parameter] !== undefined) {
-        
         const newValue = parseFloat(parameterMap[item.parameter]);
-        datasetForThisUAV.data.push(newValue);
         const newLabel = new Date().toLocaleTimeString();
-        item.chartLabels.push(newLabel);
-        
-        if (datasetForThisUAV.data.length > 10) {
+  
+        // Ensure the data arrays do not exceed the desired length
+        if (datasetForThisUAV.data.length >= 10) {
           datasetForThisUAV.data.shift();
         }
-        if (item.chartLabels.length > 10) {
+        if (item.chartLabels.length >= 10) {
           item.chartLabels.shift();
         }
+  
+        datasetForThisUAV.data.push(newValue);
+        item.chartLabels.push(newLabel);
+  
         const chart = this.charts.toArray()[itemIndex];
         if (chart) {
-          chart.refresh();
+          this.chartData.labels = item.chartLabels;
+          this.chartData.datasets = item.datasets.map((ds) => ({
+            label: ds.label || '',
+            data: ds.data || [],
+            borderColor: [...ds.color],
+            fill: false,
+          }));
+          chart.refresh()
+        } else {
+          console.warn('Chart instance not found for item index:', itemIndex);
         }
       }
     });
@@ -229,6 +252,7 @@ public onSelectCommunication(event: any): void {
         color: this.getRandomColor()
       });
       const fullUavComm = `${uavName}${communication}`;
+      this.joinGroup();
       this.signalRService.addParameter(fullUavComm, parameter);
   
     } else {
@@ -283,15 +307,16 @@ public onSelectCommunication(event: any): void {
 }
   
   protected getChartData(item: ChartGridsterItem) {
-    return {
-      labels: item.chartLabels,
-      datasets: item.datasets.map((ds, index) => ({
+    const chartData = {
+      labels: item.chartLabels, 
+      datasets: item.datasets.map((ds) => ({
         label: ds.label,
-        data: ds.data,
+        data: ds.data, 
         borderColor: ds.color,
-        fill: false
-      }))
+        fill: false,
+      })),
     };
+    return chartData;
   }
 
 
