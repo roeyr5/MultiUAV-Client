@@ -16,14 +16,13 @@ import { SimulatorService } from 'src/app/services/simulator.service';
 export class ConfigComponent implements OnInit {
   protected channel:string = '';
   protected port : number = 0;
-  protected communicate : string = 'FiberBox';
 
-  protected devices: string[] = ["test","test"];
+  protected devices: string[] = ["test", "test"];
   protected pcaps: string[] = ["test"];
   protected fileName :string = '';
 
   Object = Object;
-  protected uavsComm: { [key: string]: number } = {}; 
+  protected uavsComm: { [key: string]: string } = {}; 
 
   constructor(private http: HttpClient , private simulatorservice:SimulatorService) {} // private dialog:MatDialog 
 
@@ -45,14 +44,38 @@ export class ConfigComponent implements OnInit {
     this.simulatorservice.ChangePrimary(selectedUav).subscribe(
       (response) => {
         console.log('Primary UAV changed successfully:', response);
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Primary Communicate changed successfully.',
+          showConfirmButton: true,
+          timer: 2000
+        });
         this.SimulatorsCommunications(); 
       },
       (error) => {
         console.error('Error changing primary UAV:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to change primary UAV.',
+        });
       }
     );
   }
-  
+  getCommunicationType(value: string): string {
+    if (value === undefined) {
+      return 'Unknown';
+    }
+    switch (value) {
+      case '0':
+        return 'FiberBox';
+      case '1':
+        return 'Mission';
+      default:
+        return 'Unknown';
+    }
+  }
   
   protected onFileSelected(event:any){
 
@@ -85,11 +108,67 @@ export class ConfigComponent implements OnInit {
     return this.http.get(`http://localhost:7000/Stop`);
   }
 
+  
+  
   // protected StartAll<T>() : Observable<ApiResponse<T>>{
   //   console.log('h');
   //   return this.http.get<ApiResponse<T>>(`http://localhost:5000/StartAll`);
   // }
   protected StartOne(){
+    Swal.fire({
+      title: 'Start Telemetry',
+      html:
+        `<input id="swal-uavNumber" class="swal2-input" placeholder="UAV Number">` +
+        `<input id="swal-address" class="swal2-input" placeholder="Address">` +
+        `<input id="swal-channel" class="swal2-input" placeholder="Channel">` +
+        `<input id="swal-type" class="swal2-input" placeholder="Type">` +
+        `<input id="swal-port" type="number" class="swal2-input" placeholder="Port">`,
+      focusConfirm: false,
+      showCancelButton: true,
+      confirmButtonText: 'Start',
+      preConfirm: () => {
+        const uavNumber = (document.getElementById('swal-uavNumber') as HTMLInputElement).value.trim();
+        const address = (document.getElementById('swal-address') as HTMLInputElement).value.trim();
+        const channel = (document.getElementById('swal-channel') as HTMLInputElement).value.trim();
+        const type = (document.getElementById('swal-type') as HTMLInputElement).value.trim();
+        const portInput = (document.getElementById('swal-port') as HTMLInputElement).value.trim();
+        const port = Number(portInput);
+
+        // Basic Validation
+        if (!uavNumber) {
+          Swal.showValidationMessage('Please enter UAV Number.');
+          return;
+        }
+
+        if (!address) {
+          Swal.showValidationMessage('Please enter Address.');
+          return;
+        }
+
+        if (!channel) {
+          Swal.showValidationMessage('Please enter Channel.');
+          return;
+        }
+
+        if (!type) {
+          Swal.showValidationMessage('Please enter Type.');
+          return;
+        }
+
+        if (!portInput || isNaN(port) || port < 1 || port > 65535) {
+          Swal.showValidationMessage('Please enter a valid Port (1-65535).');
+          return;
+        }
+
+        return { uavNumber, address, channel, type, port };
+      }
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        const { uavNumber, address, channel, type, port } = result.value;
+        // this.executeStartTelemetry(uavNumber, address, channel, type, port);
+      }
+    });
+  }
     // Swal.fire({
     //   title:'Start channel listening',
     //   html:
@@ -109,10 +188,10 @@ export class ConfigComponent implements OnInit {
     // });
    // http://localhost:5000/Start // channeldto - channel (string) , Type(string) , port (int)
   }
-  protected StopChannel(){
+  // protected StopChannel(){
    // http://localhost:5000/Stop //body - port (int)
-  }
-}
+  // }
+// }
 
 // Swal.fire({
 //   title: 'Enter Group Name',

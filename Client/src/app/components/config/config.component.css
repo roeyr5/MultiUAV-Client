@@ -50,11 +50,6 @@
   cursor: pointer;
 }
 
-
-.connect-button:hover {
-  background-color: #f3a02d;
-}
-
 .div {
   display: flex;
   justify-content: center;

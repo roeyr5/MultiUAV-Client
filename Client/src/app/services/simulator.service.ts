@@ -24,8 +24,8 @@ export class SimulatorService {
   // public uavslist() :Observable<string[]>{
   //   return this.http.get<string[]>(`${this.ROOT_URL}/parameters/uavs`);
   
-  public PrimaryUavs() :Observable<{[key: number]: number}> {
-    return this.http.get<{[key: number]: number}>(`${this.ROOT_URL}/simulator/PrimaryCommunications`);
+  public PrimaryUavs() :Observable<{[key: string]: string}> {
+    return this.http.get<{[key: string]: string}>(`${this.ROOT_URL}/simulator/PrimaryCommunications`);
   }
 
   public ChangePrimary(uavNumber : string) :Observable<any> {
