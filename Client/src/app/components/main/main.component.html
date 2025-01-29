@@ -64,23 +64,10 @@
               <strong>Parameter:</strong> {{ item.parameter }}
             </div>
             <p-chart
-            type="line"
-            [data]="chartData"
-            [options]="{
-              scales: {
-                yAxes: [{
-                  scaleLabel: {
-                    display: true,
-                    labelString: 'value'
-                  },
-                  ticks: {
-                    max: 100,
-                    min: -100
-                  }
-                }]
-              }
-            }"
-          ></p-chart>
+              type="line"
+              [data]="chartData"
+            ></p-chart>
+          
           </ng-container>
           <ng-template #emptyChart>
             <p>No data available. Waiting for updates...</p>

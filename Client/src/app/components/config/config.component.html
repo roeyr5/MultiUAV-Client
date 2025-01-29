@@ -1,11 +1,29 @@
 <div class="div"> 
+
   <div class="device-manager">
-  <h1>Device Manager</h1>
-  <ul class="device-list">
-    <li *ngFor="let device of devices">{{ device }} <button>Pause</button> <button>Continue</button> <button>Delete</button></li>
-  </ul>
-  <button class="connect-button" (click)="StartOne()">Connect a new device</button>
-  </div>
+    <div>
+      <h2>Simulator Manager</h2>
+      <ul class="device-list">
+        <li *ngFor="let key of Object.keys(uavsComm)">{{ key }} 
+          <button (click)="SwitchCommunication(key)">Primary Communication : {{uavsComm}}</button>
+        </li>
+      </ul>
+      <button class="connect-button" (click)="StartOne()">Connect a new device</button>
+      </div>
+    </div>
+
+    <div class="device-manager">
+      <div>
+        <h2>Telemetry Manager</h2>
+        <ul class="device-list">
+          <li *ngFor="let device of devices">{{ device }} <button>Pause</button> <button>Continue</button> <button>Delete</button></li>
+        </ul>
+        
+        
+        <button class="connect-button" (click)="StartOne()">Connect a new device</button>
+        </div>
+      </div>
+ 
 </div>
 
 <div class="div"> 
