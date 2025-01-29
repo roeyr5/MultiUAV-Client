@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { ApiResponse } from 'src/app/models/apirepsonse';
 import Swal from 'sweetalert2';
 import { AddNewDialogComponent } from '../dialogs/add-new-dialog.component';
+import { SimulatorService } from 'src/app/services/simulator.service';
 
 @Component({
   selector: 'app-config',
@@ -15,17 +16,43 @@ import { AddNewDialogComponent } from '../dialogs/add-new-dialog.component';
 export class ConfigComponent implements OnInit {
   protected channel:string = '';
   protected port : number = 0;
+  protected communicate : string = 'FiberBox';
 
-  devices: string[] = ["test","test"];
-  pcaps: string[] = ["test"];
-  fileName :string = '';
+  protected devices: string[] = ["test","test"];
+  protected pcaps: string[] = ["test"];
+  protected fileName :string = '';
 
+  Object = Object;
+  protected uavsComm: { [key: string]: number } = {}; 
 
-  constructor(private http: HttpClient , private userservice:UserService) {} // private dialog:MatDialog 
+  constructor(private http: HttpClient , private simulatorservice:SimulatorService) {} // private dialog:MatDialog 
 
   ngOnInit(): void {
-      
+      this.SimulatorsCommunications();
   }
+
+
+  protected SimulatorsCommunications ()
+  {
+    this.simulatorservice.PrimaryUavs().subscribe((response=>{
+      console.log(response);
+      this.uavsComm = response;
+    }))
+  }
+
+  public SwitchCommunication(selectedUav: string) {
+    console.log(selectedUav);
+    this.simulatorservice.ChangePrimary(selectedUav).subscribe(
+      (response) => {
+        console.log('Primary UAV changed successfully:', response);
+        this.SimulatorsCommunications(); 
+      },
+      (error) => {
+        console.error('Error changing primary UAV:', error);
+      }
+    );
+  }
+  
   
   protected onFileSelected(event:any){
 
@@ -57,6 +84,7 @@ export class ConfigComponent implements OnInit {
   protected Stop(){
     return this.http.get(`http://localhost:7000/Stop`);
   }
+
   // protected StartAll<T>() : Observable<ApiResponse<T>>{
   //   console.log('h');
   //   return this.http.get<ApiResponse<T>>(`http://localhost:5000/StartAll`);

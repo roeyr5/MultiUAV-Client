@@ -1,24 +1,21 @@
-/* Device Manager Container */
 .device-manager {
-  background-color: #000000; /* Black background */
+  background-color: #333333; 
   border-radius: 15px;
-  width: 500px;
+  width: 100vw;
   padding: 20px;
   text-align: center;
   color: white;
-  box-shadow: none; /* No border */
+  box-shadow: none;
 }
 
-/* Device List */
 .device-list {
   margin: 0;
   padding: 0;
   list-style-type: none;
 }
 
-/* Device list items */
 .device-list li {
-  background-color: #333333; /* Slightly lighter black */
+  background-color: #444444;
   color: white;
   padding: 10px;
   margin: 5px 0;
@@ -28,7 +25,6 @@
   align-items: center;
 }
 
-/* Buttons inside device list items */
 .device-list li button {
   background-color: transparent;
   border: 1px solid white;
@@ -39,9 +35,8 @@
   cursor: pointer;
 }
 
-/* Hover effect for list item buttons */
 .device-list li button:hover {
-  background-color: #fbc02d; /* Gold on hover */
+  background-color: #fbc02d; 
 }
 
 .connect-button {
@@ -66,7 +61,6 @@
   margin-top: 20px;
 }
 
-/* File upload styling */
 .file-upload {
   margin-top: 10px;
   background-color: #fbc02d; /* Gold */

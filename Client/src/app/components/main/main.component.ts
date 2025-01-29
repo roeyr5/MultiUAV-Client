@@ -118,7 +118,6 @@ export class MainComponent implements OnInit {
         const newValue = parseFloat(parameterMap[item.parameter]);
         const newLabel = new Date().toLocaleTimeString();
   
-        // Ensure the data arrays do not exceed the desired length
         if (datasetForThisUAV.data.length >= 10) {
           datasetForThisUAV.data.shift();
         }
