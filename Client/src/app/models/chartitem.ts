@@ -1,9 +1,8 @@
 import { GridsterItem } from "angular-gridster2";
-import { Chart } from "chart.js";
-import { ChartType } from "chart.js";
+import { ChartType } from "angular-google-charts";
 
 export interface ChartGridsterItem extends GridsterItem {
-  chartType: ChartType;
+  chartType: ChartType; 
   chartLabels: string[];
   communication: string;
   parameter: string;
@@ -13,6 +12,4 @@ export interface ChartGridsterItem extends GridsterItem {
     label: string;
     color: string;
   }>;
-  chartInstance?: Chart;
-
 }

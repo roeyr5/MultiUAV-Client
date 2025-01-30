@@ -4,8 +4,12 @@
     <div>
       <h2>Simulator Manager</h2>
       <ul class="device-list">
-        <li *ngFor="let key of Object.keys(uavsComm)">{{ key }} 
-          <button (click)="SwitchCommunication(key)">Primary Communication : {{uavsComm}}</button>
+        <li *ngFor="let key of Object.keys(uavsCommunications)">
+          {{ key }} 
+          <button (click)="SwitchCommunication(key)">
+            Primary Communication: {{ getCommunicationType(uavsCommunications[key]!) }}
+          </button>
+          
         </li>
       </ul>
       <button class="connect-button" (click)="StartOne()">Connect a new device</button>
@@ -16,10 +20,16 @@
       <div>
         <h2>Telemetry Manager</h2>
         <ul class="device-list">
-          <li *ngFor="let device of devices">{{ device }} <button>Pause</button> <button>Continue</button> <button>Delete</button></li>
+          <li *ngFor="let uav of uavsTelemetry">
+            <strong>UAV Number:</strong> {{ uav.uavnumber }} |
+            <strong>Channel:</strong> {{ uav.channel }} |
+            <strong>Type:</strong> {{ uav.type }}
+            <button *ngIf="uav.status =='run'" (click)="pauseTelemetry(uav.address,uav.port)">Pause</button>
+            <button *ngIf="uav.status == 'paused'" (click)= "continueTelemetry(uav.address,uav.port)">Continue</button>
+            <button (click)="deleteTelemetry(uav.address,uav.port)">Remove</button>
+          </li>        
         </ul>
-        
-        
+
         <button class="connect-button" (click)="StartOne()">Connect a new device</button>
         </div>
       </div>
@@ -30,7 +40,8 @@
   <div class="device-manager">
   <h1>Pcap Manager</h1>
   <ul class="device-list">
-    <li *ngFor="let pcap of pcaps">{{ pcap }} <button>Pause</button> <button>Continue</button> <button>Delete</button></li>
+    <li *ngFor="let pcap of pcaps">{{ pcap }} <button>Pause</button> <button>Continue</button><button class="delete-button">Delete</button>
+    </li>
   </ul>
   
   <input type="file" class="file-upload" class="file-upload" (change)="onFileSelected($event) "#fileUpload>

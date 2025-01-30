@@ -63,10 +63,13 @@
             <div class="chart-parameter">
               <strong>Parameter:</strong> {{ item.parameter }}
             </div>
-            <p-chart
-              type="line"
-              [data]="chartData"
-            ></p-chart>
+            <app-chart
+             [datasets]="item.datasets"
+             [chartLabels]="item.chartLabels"
+             [chartType]="item.chartType"
+             [chartTitle]="item.parameter"
+             [chartOptions]="getChartOptions(item)"> 
+            </app-chart>
           
           </ng-container>
           <ng-template #emptyChart>
@@ -74,10 +77,11 @@
           </ng-template>
           
           <div class="chart-controls">
-            <button (click)="changeChartType(item, 'line')">Line</button>
-            <button (click)="changeChartType(item, 'bar')">Bar</button>
-            <button (click)="changeChartType(item, 'scatter')">Scatter</button>
+            <button mat-button (click)="changeChartType(item, ChartType.LineChart)">Line</button>
+            <button mat-button (click)="changeChartType(item, ChartType.BarChart)">Bar</button>
+            <button mat-button (click)="changeChartType(item, ChartType.ScatterChart)">Scatter</button>
           </div>
+
         </div>
       </gridster-item>
     </gridster>

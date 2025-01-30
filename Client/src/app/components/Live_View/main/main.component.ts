@@ -5,9 +5,9 @@ import { UserService } from 'src/app/services/user.service';
 import { DisplayGrid, GridsterConfig, GridsterItem,GridType }  from 'angular-gridster2';
 import {ChartGridsterItem} from 'src/app/models/chartitem'
 import Swal from 'sweetalert2';
-import { ChartData, ChartType } from 'chart.js';
+import { ChartType } from 'angular-google-charts';
 import { basicData } from 'src/app/models/dataitem';
-import { UIChart } from 'primeng/chart';
+import { ChartComponent } from '../chart/chart.component';
 
 @Component({
   selector: 'app-main',
@@ -16,20 +16,10 @@ import { UIChart } from 'primeng/chart';
 })
 export class MainComponent implements OnInit {
   
-  @ViewChildren(UIChart) charts!: QueryList<UIChart>;
+  @ViewChildren(ChartComponent) charts!: QueryList<ChartComponent>;
 
-  public chartData: ChartData<'line', number[], string> = {
-    labels: [],
-    datasets: [
-      {
-        label: '',
-        data: [],
-        borderColor: '#42A5F5',
-        fill: false,
-      },
-    ],
-    
-  }
+
+  ChartType = ChartType; 
 
   protected options: GridsterConfig ={};
   protected dashboard: Array<ChartGridsterItem> =[];
@@ -130,14 +120,18 @@ export class MainComponent implements OnInit {
   
         const chart = this.charts.toArray()[itemIndex];
         if (chart) {
-          this.chartData.labels = item.chartLabels;
-          this.chartData.datasets = item.datasets.map((ds) => ({
-            label: ds.label || '',
-            data: ds.data || [],
-            borderColor: [...ds.color],
-            fill: false,
+          // Update the ChartComponent's inputs
+          chart.datasets = item.datasets.map(ds => ({
+            label: ds.label,
+            data: ds.data,
+            color: ds.color
           }));
-          chart.refresh()
+          chart.chartLabels = item.chartLabels;
+          chart.chartTitle = item.parameter;
+          // chart.chartType = item.chartType as ChartType;
+          chart.chartOptions = {
+          };
+          chart.updateChart(); 
         } else {
           console.warn('Chart instance not found for item index:', itemIndex);
         }
@@ -221,44 +215,30 @@ public onSelectCommunication(event: any): void {
 
   protected toggleUAVParameterSelection(uavName: string, communication: string, parameter: string): void {
 
-    let chartItem = this.dashboard.find(
+    let foundItem  = this.dashboard.find(
       (item) => item.communication === communication && item.parameter === parameter
     );
   
-    if (!chartItem) {
-      chartItem = {
-        cols: 1,
-        rows: 1,
-        x: this.dashboard.length % 5,
-        y: Math.floor(this.dashboard.length / 5),
-  
-        chartType: 'line',
-        chartLabels: [],
-        communication,
-        parameter,
-        datasets: [],
-      };
+  var chartItem: ChartGridsterItem;
+  if (!foundItem) {
+    chartItem = {
+      cols: 1,
+      rows: 1,
+      x: this.dashboard.length % 5,
+      y: Math.floor(this.dashboard.length / 5),
+      chartType: ChartType.LineChart, 
+      chartLabels: [],
+      communication,
+      parameter,
+      datasets: [],
+    };
       this.dashboard.push(chartItem);
     }
-
-    const existingDatasetIndex = chartItem.datasets.findIndex(ds => ds.uavName === uavName);
-  
-    if (existingDatasetIndex === -1) {
-      chartItem.datasets.push({
-        uavName: uavName,
-        data: [],
-        label: uavName,
-        color: this.getRandomColor()
-      });
-      const fullUavComm = `${uavName}${communication}`;
-      this.joinGroup();
-      this.signalRService.addParameter(fullUavComm, parameter);
-  
-    } else {
-      chartItem.datasets.splice(existingDatasetIndex, 1);
-      const fullUavComm = `${uavName}${communication}`;
-      this.signalRService.removeParameter(fullUavComm, parameter);
-    }
+    const fullUavComm = `${uavName}${communication}`;
+    this.joinGroup();
+    this.signalRService.addParameter(fullUavComm, parameter);
+    this.signalRService.addParameter(uavName+communication,parameter);
+    this.signalRService.joinGroup(uavName+communication);
   }
   private getRandomColor(): string {
     const letters = '0123456789ABCDEF';
@@ -326,6 +306,15 @@ public onSelectCommunication(event: any): void {
       });
   }
 
+  getChartOptions(item: ChartGridsterItem): any {
+    return {
+      hAxis: { title: 'Time' },
+      vAxis: { title: 'Value' },
+      legend: { position: 'bottom' },
+      colors: item.datasets.map(ds => ds.color)
+    };
+  }
+
   public leaveGroup(): void {
     if (this.selectedUAV) {
       this.signalRService.leaveGroup(this.selectedUAV).subscribe({
@@ -338,14 +327,13 @@ public onSelectCommunication(event: any): void {
   }
 
   protected changeChartType(item: ChartGridsterItem, chartType: ChartType): void {
-  
-      item.chartType = chartType; 
-      const chart = this.charts.toArray()[this.dashboard.indexOf(item)];
-      if (chart) {
-        chart.chart.config.type = chartType; 
-        chart.refresh(); 
-      }
-      else {
+    item.chartType = chartType;
+    const chart = this.charts.toArray()[this.dashboard.indexOf(item)];
+    if (chart) {
+      // chart.chartType = chartType;
+      chart.updateChart();
+    }
+    else {
       Swal.fire({
         icon: 'error',
         title: 'Unsupported Chart Type',
