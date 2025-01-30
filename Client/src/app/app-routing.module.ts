@@ -1,12 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SigninComponent } from './components/signin/signin.component';
-import { MainComponent } from './components/main/main.component';
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
-import { MonitorComponent } from './components/monitor/monitor.component';
-import { SignupComponent } from './components/signup/signup.component';
-import { ConfigComponent } from './components/config/config.component';
+import { SigninComponent } from './components/Login_Register/signin/signin.component';
 import { TestComponent } from './components/test/test.component';
+import { MainComponent } from './components/Live_View/main/main.component';
+import { ConfigComponent } from './components/Live_View/config/config.component';
+import { SignupComponent } from './components/Login_Register/signup/signup.component';
+import { PageNotFoundComponent } from './components/Other_Logic/page-not-found/page-not-found.component';
+import { MonitorComponent } from './components/Live_View/monitor/monitor.component';
+
 
 const routes: Routes = [
   { path: 'signin', component: SigninComponent },
