@@ -1,9 +1,10 @@
 
 export interface channeldto {
-  uavnumber:number;
+  uavNumber:number;
   address:string;
-  channel: string;
-  type: string;
   port:number;
+  channel?: string;
+  type?: string;
   status?:string;
+  pcap?:boolean;
 }
