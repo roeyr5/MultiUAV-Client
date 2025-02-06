@@ -22,12 +22,12 @@ import { MatIconModule } from '@angular/material/icon';
 import { SidebarComponent } from './components/Other_Logic/sidebar/sidebar.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ChartComponent } from './components/Live_View/chart/chart.component';
-import { ButtonModule } from "primeng/button"; 
-import { ToastModule } from "primeng/toast"; 
-import { RippleModule } from "primeng/ripple"; 
-import { ImageModule } from "primeng/image"; 
+import { ButtonModule } from 'primeng/button';
+import { ToastModule } from 'primeng/toast';
+import { RippleModule } from 'primeng/ripple';
+import { ImageModule } from 'primeng/image';
 import { GoogleChartsModule } from 'angular-google-charts';
-
+import { MatTableModule } from '@angular/material/table';
 
 @NgModule({
   declarations: [
@@ -59,10 +59,14 @@ import { GoogleChartsModule } from 'angular-google-charts';
     RippleModule,
     ButtonModule,
     ToastModule,
-    GoogleChartsModule.forRoot(), 
+    MatTableModule,
+    MatTableModule,
+    MatButtonModule,
+    MatIconModule,
+    GoogleChartsModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],
-  schemas: [CUSTOM_ELEMENTS_SCHEMA] 
+  schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
-export class AppModule { }
+export class AppModule {}

@@ -5,37 +5,43 @@ import Swal from 'sweetalert2';
 import { SimulatorService } from 'src/app/services/simulator.service';
 import { channeldto } from 'src/app/models/channeldto';
 
-
 @Component({
   selector: 'app-config',
   templateUrl: './config.component.html',
-  styleUrls: ['./config.component.css']
+  styleUrls: ['./config.component.css'],
 })
 export class ConfigComponent implements OnInit {
-
-  protected pcaps: string[] = ["test"];
-
+  dataSource: channeldto[] = [];
   Object = Object;
   protected uavsCommunications: { [key: string]: string } = {};
-  protected uavsTelemetry: channeldto[] = [];
-  
+  protected uavsTelemetry: Map<number, channeldto[]>;
+  expandedUAV: number | null = null;
 
-  constructor(private http: HttpClient , private simulatorservice:SimulatorService) {} 
-
-  ngOnInit(): void {
-      this.initData();
+  constructor(
+    private http: HttpClient,
+    private simulatorservice: SimulatorService
+  ) {
+    this.uavsTelemetry = new Map<number, channeldto[]>();
   }
 
-  protected initData ()
-  {
-    this.simulatorservice.SimulatorPrimaryUavs().subscribe((response=>{
+  ngOnInit(): void {
+    this.initData();
+  }
+
+  toggleUAVExpansion(uavNumber: number) {
+    // Toggle the expanded UAV
+    this.expandedUAV = this.expandedUAV === uavNumber ? null : uavNumber;
+  }
+
+  protected initData() {
+    this.simulatorservice.SimulatorPrimaryUavs().subscribe((response) => {
       this.uavsCommunications = response;
-    }))
-    
-    this.simulatorservice.TelemetryUavs().subscribe((response)=>{
-      console.log(response)
+    });
+
+    this.simulatorservice.TelemetryUavs().subscribe((response) => {
+      console.log(response);
       this.uavsTelemetry = response;
-    })
+    });
   }
 
   public SwitchCommunication(selectedUav: string) {
@@ -48,9 +54,9 @@ export class ConfigComponent implements OnInit {
           title: 'Success!',
           text: 'Primary Communicate changed successfully.',
           showConfirmButton: true,
-          timer: 2000
+          timer: 2000,
         });
-        this.initData(); 
+        this.initData();
       },
       (error) => {
         console.error('Error changing primary UAV:', error);
@@ -76,11 +82,10 @@ export class ConfigComponent implements OnInit {
         return 'Unknown';
     }
   }
-  protected StartOne(){
+  protected StartOne() {
     Swal.fire({
       title: 'Start Telemetry',
-      html: 
-      `
+      html: `
       <input
           id="swal-uavNumber"
           type="number"
@@ -105,10 +110,16 @@ export class ConfigComponent implements OnInit {
       showCancelButton: true,
       confirmButtonText: 'Start',
       preConfirm: () => {
-        const uavNumberInput = (document.getElementById('swal-uavNumber') as HTMLInputElement).value.trim();
+        const uavNumberInput = (
+          document.getElementById('swal-uavNumber') as HTMLInputElement
+        ).value.trim();
         const uavNumber = Number(uavNumberInput);
-        const address = (document.getElementById('swal-address') as HTMLInputElement).value.trim();
-        const portInput = (document.getElementById('swal-port') as HTMLInputElement).value.trim();
+        const address = (
+          document.getElementById('swal-address') as HTMLInputElement
+        ).value.trim();
+        const portInput = (
+          document.getElementById('swal-port') as HTMLInputElement
+        ).value.trim();
         const port = Number(portInput);
 
         if (!uavNumber) {
@@ -127,45 +138,44 @@ export class ConfigComponent implements OnInit {
         }
 
         return { uavNumber, address, port };
-      }
+      },
     }).then((result) => {
       if (result.isConfirmed && result.value) {
-        this.simulatorservice.StartSimulate(result.value).subscribe((response)=>{
-          this.initData();
+        this.simulatorservice.StartSimulate(result.value).subscribe(
+          (response) => {
+            this.initData();
 
-          Swal.fire({
-            icon: 'success',
-            title: 'Opened Channel',
-            text: 'Simulator and Telemetry starting!',
-          })         
-        },
+            Swal.fire({
+              icon: 'success',
+              title: 'Opened Channel',
+              text: 'Simulator and Telemetry starting!',
+            });
+          },
 
-        (error)=>{
-          console.log(error)
-          if(error.status === 500)
-          {
-            Swal.fire({
-              icon: 'error',
-              title: 'Error open simulator',
-              text: 'Failed to start Simulate.',
-            })
+          (error) => {
+            console.log(error);
+            if (error.status === 500) {
+              Swal.fire({
+                icon: 'error',
+                title: 'Error open simulator',
+                text: 'Failed to start Simulate.',
+              });
+            }
+            if (error.status === 409) {
+              Swal.fire({
+                icon: 'info',
+                title: 'Error open simulator',
+                text: error.error.message,
+              });
+            }
           }
-           if(error.status === 409)
-          {
-            Swal.fire({
-              icon: 'info',
-              title: 'Error open simulator',
-              text: error.error.message,
-            })
-          }
-           });
-          }
-        });
+        );
+      }
+    });
   }
-  
-  protected pauseTelemetry(address : string , port:number) {
 
-    this.simulatorservice.pauseTelemetry(port,address).subscribe(
+  protected pauseTelemetry(address: string, port: number) {
+    this.simulatorservice.pauseTelemetry(port, address).subscribe(
       (response) => {
         console.log('Paused listening', response);
         Swal.fire({
@@ -173,9 +183,9 @@ export class ConfigComponent implements OnInit {
           title: 'Success!',
           text: 'Channel has been paused.',
           showConfirmButton: true,
-          timer: 2000
+          timer: 2000,
         });
-        this.initData(); 
+        this.initData();
       },
       (error) => {
         console.error('Error pausing UAV:', error);
@@ -188,8 +198,8 @@ export class ConfigComponent implements OnInit {
     );
   }
 
-  protected continueTelemetry(address:string,port:number){
-    this.simulatorservice.continueListening(port,address).subscribe(
+  protected continueTelemetry(address: string, port: number) {
+    this.simulatorservice.continueListening(port, address).subscribe(
       (response) => {
         console.log('Continue listening', response);
         Swal.fire({
@@ -197,9 +207,9 @@ export class ConfigComponent implements OnInit {
           title: 'Success!',
           text: 'Channel now listening.',
           showConfirmButton: true,
-          timer: 2000
+          timer: 2000,
         });
-        this.initData(); 
+        this.initData();
       },
       (error) => {
         console.error('Error continue listening UAV:', error);
@@ -212,8 +222,9 @@ export class ConfigComponent implements OnInit {
     );
   }
 
-  protected deleteTelemetry(address:string,port:number){
-    this.simulatorservice.deleteChannel(port,address).subscribe(
+  protected deleteTelemetry(address: string, port: number, pcap?: boolean) {
+    console.log(pcap);
+    this.simulatorservice.deleteChannel(port, address, pcap!).subscribe(
       (response) => {
         console.log('Channel Removed', response);
         Swal.fire({
@@ -221,9 +232,9 @@ export class ConfigComponent implements OnInit {
           title: 'Success!',
           text: 'Channel has been removed.',
           showConfirmButton: true,
-          timer: 2000
+          timer: 2000,
         });
-        this.initData(); 
+        this.initData();
       },
       (error) => {
         console.error('Error remove channel:', error);
@@ -235,7 +246,7 @@ export class ConfigComponent implements OnInit {
       }
     );
   }
-  
+
   protected openFileSelector(): void {
     Swal.fire({
       title: 'Select a File',
@@ -250,51 +261,37 @@ export class ConfigComponent implements OnInit {
           <option value=240>240</option>
         </select>
         <br/><br/>
-        <label for="communicate">Communication:</label>
-        <select id="communicate" class="swal2-select">
-          <option value="">Communication</option>
-          <option value="FiberBox">FiberBox</option>
-          <option value="Mission">Mission</option>
-        </select>
-        <br/><br/>
-        <label for="type">Type:</label>
-        <select id="type" class="swal2-select">
-          <option value="">Select Type</option>
-          <option value="Down">Down</option>
-          <option value="Up">Up</option>
-        </select>
       `,
       showCancelButton: true,
       confirmButtonText: 'Upload',
       cancelButtonText: 'Cancel',
       preConfirm: () => {
-
-        const fileInput = document.getElementById('file-input') as HTMLInputElement;
+        const fileInput = document.getElementById(
+          'file-input'
+        ) as HTMLInputElement;
         const file = fileInput?.files?.[0];
-  
-        const uavSelect = document.getElementById('uav-number') as HTMLSelectElement;
-        const communicateSelect = document.getElementById('communicate') as HTMLSelectElement;
-        const typeSelect = document.getElementById('type') as HTMLSelectElement;
-  
+
+        const uavSelect = document.getElementById(
+          'uav-number'
+        ) as HTMLSelectElement;
+
         const uavNumberString = uavSelect?.value;
-        const uavNumber = Number(uavNumberString); 
-        const channel = communicateSelect?.value;
-        const type = typeSelect?.value;
-  
-        if (!uavNumber || !channel || !type || !file) {
-          Swal.showValidationMessage('Please select all options: File , UAV Number, Communication, and Type');
+        const uavNumber = Number(uavNumberString);
+
+        if (!uavNumber || !file) {
+          Swal.showValidationMessage(
+            'Please select all options: File , UAV Number, Communication, and Type'
+          );
           return;
         }
-        console.log(file.name)
-        this.startPcap(file.name,uavNumber,channel,type);
-      }
+        console.log(file.name);
+        this.startPcap(file.name, uavNumber);
+      },
     });
   }
-  
 
-  protected startPcap(fileName:string , uavNumber :number,channel:string , type: string){
-
-  this.simulatorservice.startPcap(fileName,uavNumber,channel,type).subscribe(
+  protected startPcap(fileName: string, uavNumber: number) {
+    this.simulatorservice.startPcap(fileName, uavNumber).subscribe(
       (response) => {
         console.log('Starting pcap history ', response);
         Swal.fire({
@@ -302,9 +299,9 @@ export class ConfigComponent implements OnInit {
           title: 'Success!',
           text: 'Pcap data starting.',
           showConfirmButton: true,
-          timer: 2000
+          timer: 2000,
         });
-        this.initData(); 
+        this.initData();
       },
       (error) => {
         console.error('Error start the pcap :', error);
@@ -316,10 +313,7 @@ export class ConfigComponent implements OnInit {
       }
     );
   }
-  protected Stop(){
+  protected Stop() {
     return this.http.get(`http://localhost:7000/Stop`);
   }
-  
-
- 
 }

@@ -8,6 +8,7 @@ import Swal from 'sweetalert2';
 import { ChartType } from 'angular-google-charts';
 import { basicData } from 'src/app/models/dataitem';
 import { ChartComponent } from '../chart/chart.component';
+import { SimulatorService } from 'src/app/services/simulator.service';
 
 @Component({
   selector: 'app-main',
@@ -35,7 +36,7 @@ export class MainComponent implements OnInit {
   protected parametersMap: Map<string,string[]> = new Map<string,string[]>();
   protected selectedParametersMap: Map<string, Map<string, string[]>> = new Map<string, Map<string, string[]>>();
 
-  constructor(private signalRService : SignalRService , private userservice:UserService , private ltsservice:LtsService , private cdr : ChangeDetectorRef){}
+  constructor(private simulatorservice: SimulatorService, private signalRService : SignalRService , private userservice:UserService , private cdr : ChangeDetectorRef){}
 
   public ngOnInit(): void {
       this.StartConnection();
@@ -143,10 +144,10 @@ export class MainComponent implements OnInit {
   
   
   protected GetUAVS(): void {
-    this.userservice.uavsNumberslist().subscribe(
+    this.simulatorservice.TelemetryUavs().subscribe(
         (res) => {
             console.log("UAVs List:", res);
-            this.uavsList = res;
+            this.uavsList = Object.keys(res);
             this.getParameters(); 
         },
         (err) => {
