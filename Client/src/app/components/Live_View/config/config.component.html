@@ -1,49 +1,46 @@
-<div class="div"> 
-
-  <div class="device-manager">
+<div class="table-container">
+  <div class="table">
     <div>
-      <h2>Simulator Manager</h2>
+      <h2>Telemetry Uavs</h2>
       <ul class="device-list">
-        <li *ngFor="let key of Object.keys(uavsCommunications)">
-          {{ key }} 
-          <button (click)="SwitchCommunication(key)">
-            Primary Communication: {{ getCommunicationType(uavsCommunications[key]!) }}
-          </button>
-          
+        <li (click)="toggleUAVExpansion(uav.key)" *ngFor="let uav of uavsTelemetry | keyvalue">
+          <div  style="cursor: pointer">
+            <span>UAV Number: {{ uav.key }}</span>
+          </div>
+          <div *ngIf="expandedUAV === uav.key">
+            <table class="open-table">
+              <thead>
+                <tr>
+                  <th>IP Address</th>
+                  <th>Port</th>
+                  <th>Communication</th>
+                  <th>IsPcap</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let channel of uav.value">
+                  <td>{{ channel.address }}</td>
+                  <td>{{ channel.port }}</td>
+                  <td>{{ channel.channel }}</td>
+                  <td>{{ channel.pcap }}</td>
+                  <td>
+                    <button *ngIf="channel.status == 'run'" (click)="pauseTelemetry(channel.address, channel.port)">Pause</button>
+                    <button *ngIf="channel.status == 'paused'"(click)="continueTelemetry(channel.address, channel.port)" >Continue </button>
+                    <button (click)="deleteTelemetry( channel.address, channel.port, channel.pcap)"> Remove</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </li>
       </ul>
-      <button class="connect-button" (click)="StartOne()">Connect a new device</button>
-      </div>
+      <button class="connect-button" (click)="openFileSelector()">
+        Connect a new device
+      </button>
+      <button class="connect-button" (click)="StartOne()">
+        Connect a new device
+      </button>
     </div>
-
-    <div class="device-manager">
-      <div>
-        <h2>Telemetry Manager</h2>
-        <ul class="device-list">
-          <li *ngFor="let uav of uavsTelemetry">
-            <strong>IsPcap</strong> {{ uav.pcap }} |
-            <strong>UAV Number:</strong> {{ uav.uavNumber }} |
-            <strong>Channel:</strong> {{ uav.channel }} 
-            <button *ngIf="uav.status =='run'" (click)="pauseTelemetry(uav.address,uav.port)">Pause</button>
-            <button *ngIf="uav.status == 'paused'" (click)= "continueTelemetry(uav.address,uav.port)">Continue</button>
-            <button (click)="deleteTelemetry(uav.address,uav.port)">Remove</button>
-          </li>        
-        </ul>
-
-        <button class="connect-button" (click)="StartOne()">Connect a new device</button>
-        </div>
-      </div>
- 
-</div>
-
-<div class="div"> 
-  <div class="device-manager">
-  <h1>Pcap Manager</h1>
-  <ul class="device-list">
-    <li *ngFor="let pcap of pcaps">{{ pcap }} <button>Pause</button> <button>Continue</button><button class="delete-button">Delete</button>
-    </li>
-  </ul>
-
-  <button class="connect-button" (click)="openFileSelector()">Select File </button>
   </div>
 </div>
