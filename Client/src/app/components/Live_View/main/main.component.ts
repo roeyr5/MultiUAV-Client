@@ -144,7 +144,7 @@ export class MainComponent implements OnInit {
   
   
   protected GetUAVS(): void {
-    this.simulatorservice.TelemetryUavs().subscribe(
+    this.simulatorservice.telemetryUavs().subscribe(
         (res) => {
             console.log("UAVs List:", res);
             this.uavsList = Object.keys(res);

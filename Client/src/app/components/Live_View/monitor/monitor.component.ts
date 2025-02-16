@@ -1,9 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { MonitorRService } from 'src/app/services/monitorR.service';
-import { SignalRService } from 'src/app/services/signalr.service';
-import { UserService } from 'src/app/services/user.service';
-import { KeyValue, KeyValuePipe } from '@angular/common';
-import { map } from 'rxjs';
 
 @Component({
   selector: 'app-monitor',
@@ -12,11 +8,23 @@ import { map } from 'rxjs';
 })
 export class MonitorComponent implements OnInit {
 
-  
-  public receivedmessage:string = 'UnActive';
-  public activeUavs = new Map<string,string>();
-
-  constructor(private  monitorservice: MonitorRService , private userservice:UserService ){}
+  public activeUavs: { 
+    [uavNumber: string]: { 
+        [partition: number]: number } } = {
+    "100": {
+        0:3,
+        1: 1,
+        2: 0,
+        3:2
+    },
+    "200": {
+        0:1,
+        1: 2,
+        2:3,
+        3: 3,
+    }
+};
+  constructor(private  monitorservice: MonitorRService){}
   
   public ngOnInit(): void 
   {
@@ -28,15 +36,19 @@ export class MonitorComponent implements OnInit {
    this.monitorservice.startConnection().subscribe((response)=>{
     console.log("worked signalR");
 
-    this.monitorservice.MonitorActiveMessage().subscribe((message)=>{
-      this.activeUavs.set(message.partition,message.status);
+    this.monitorservice.MonitorActiveMessage().subscribe((data)=>{
+      console.log("Received Dictionary:", data);
+      for (let uav in data) {
+        console.log(`Uav Number: ${uav}, partitions count data :`, data[uav]);
+        this.activeUavs[uav] = data[uav];
+      }     
+      //  this.activeUavs.set(message.partition,message.status);
     });
   });
   }
-
-  protected get UavsAsarray(){
-    return Array.from(this.activeUavs.entries());
-  }
   
-  //red , green in monitor
+  getClass(value: number): string {
+    return value > 0 ? 'green' : 'red';
+  }
 }
+

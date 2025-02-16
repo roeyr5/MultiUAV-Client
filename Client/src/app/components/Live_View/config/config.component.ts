@@ -13,14 +13,13 @@ import { channeldto } from 'src/app/models/channeldto';
 export class ConfigComponent implements OnInit {
   dataSource: channeldto[] = [];
   Object = Object;
+
+  protected uavsTimeSimulate : {[key:number] : number} = {};
   protected uavsCommunications: { [key: string]: string } = {};
   protected uavsTelemetry: Map<number, channeldto[]>;
   expandedUAV: number | null = null;
 
-  constructor(
-    private http: HttpClient,
-    private simulatorservice: SimulatorService
-  ) {
+  constructor( private http: HttpClient, private simulatorservice: SimulatorService) {
     this.uavsTelemetry = new Map<number, channeldto[]>();
   }
 
@@ -29,24 +28,29 @@ export class ConfigComponent implements OnInit {
   }
 
   toggleUAVExpansion(uavNumber: number) {
-    // Toggle the expanded UAV
     this.expandedUAV = this.expandedUAV === uavNumber ? null : uavNumber;
   }
 
   protected initData() {
-    this.simulatorservice.SimulatorPrimaryUavs().subscribe((response) => {
+    this.simulatorservice.simulatorPrimaryUavs().subscribe((response) => {
       this.uavsCommunications = response;
     });
 
-    this.simulatorservice.TelemetryUavs().subscribe((response) => {
+    this.simulatorservice.simulatorTimes().subscribe((res)=>{
+      this.uavsTimeSimulate = res;
+    })
+
+    this.simulatorservice.telemetryUavs().subscribe((response) => {
       console.log(response);
       this.uavsTelemetry = response;
     });
+
+
   }
 
   public SwitchCommunication(selectedUav: string) {
     console.log(selectedUav);
-    this.simulatorservice.ChangePrimary(selectedUav).subscribe(
+    this.simulatorservice.changePrimary(selectedUav).subscribe(
       (response) => {
         console.log('Primary UAV changed successfully:', response);
         Swal.fire({
@@ -69,7 +73,40 @@ export class ConfigComponent implements OnInit {
     );
   }
 
-  getCommunicationType(value: string): string {
+  protected toggleEditable(input: HTMLInputElement, key: number): void {
+    if (input.readOnly) {
+      input.readOnly = false;
+      input.focus();
+    } else {
+      input.readOnly = true;
+      this.updateSimulateTime(key,this.uavsTimeSimulate[key]);
+    }
+  }
+  protected updateSimulateTime(key: number, newTime: number): void {
+    this.simulatorservice.updateSimulating(key, newTime).subscribe(
+      (response) => {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success!',
+          text: 'Update simulate time!',
+          showConfirmButton: true,
+          timer: 2000,
+        });
+        this.initData();
+      },
+      (error) => {
+        console.error('Error change the simulate UAV:', error);
+        Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to Pause UAV.',
+        });
+      } 
+    )
+    }
+    
+
+  protected getCommunicationType(value: string): string {
     if (value === undefined) {
       return 'Unknown';
     }
@@ -84,95 +121,111 @@ export class ConfigComponent implements OnInit {
   }
   protected StartOne() {
     Swal.fire({
-      title: 'Start Telemetry',
-      html: `
-      <input
-          id="swal-uavNumber"
-          type="number"
-          class="swal2-input"
-          placeholder="Tail Number"
-          min="1"
+        title: 'Start Telemetry',
+        html: `
+          <button id="random-button" class="swal2-confirm swal2-styled">Generate Random Values</button>
+
+        <input
+            id="swal-uavNumber"
+            type="number"
+            class="swal2-input"
+            placeholder="Tail Number"
+            min="1"
         />
         <input
-          id="swal-address"
-          type="text"
-          class="swal2-input"
-          placeholder="IP Address (127.0.0.1)"
+            id="swal-address"
+            type="text"
+            class="swal2-input"
+            placeholder="IP Address (127.0.0.1)"
         />
         <input
-          id="swal-port"
-          type="number"
-          class="swal2-input"
-          placeholder="Start Port (1-65535)"
+            id="swal-port"
+            type="number"
+            class="swal2-input"
+            placeholder="Start Port (1-65535)"
         />
-    `,
-      focusConfirm: false,
-      showCancelButton: true,
-      confirmButtonText: 'Start',
-      preConfirm: () => {
-        const uavNumberInput = (
-          document.getElementById('swal-uavNumber') as HTMLInputElement
-        ).value.trim();
-        const uavNumber = Number(uavNumberInput);
-        const address = (
-          document.getElementById('swal-address') as HTMLInputElement
-        ).value.trim();
-        const portInput = (
-          document.getElementById('swal-port') as HTMLInputElement
-        ).value.trim();
-        const port = Number(portInput);
+        `,
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText: 'Start',
+        preConfirm: () => {
+            const uavNumberInput = (
+                document.getElementById('swal-uavNumber') as HTMLInputElement
+            ).value.trim();
+            const uavNumber = Number(uavNumberInput);
+            const address = (
+                document.getElementById('swal-address') as HTMLInputElement
+            ).value.trim();
+            const portInput = (
+                document.getElementById('swal-port') as HTMLInputElement
+            ).value.trim();
+            const port = Number(portInput);
 
-        if (!uavNumber) {
-          Swal.showValidationMessage('Please enter Tail Number.');
-          return;
-        }
+            if (!uavNumber) {
+                Swal.showValidationMessage('Please enter Tail Number.');
+                return;
+            }
 
-        if (!address) {
-          Swal.showValidationMessage('Please enter Address.');
-          return;
-        }
+            if (!address) {
+                Swal.showValidationMessage('Please enter Address.');
+                return;
+            }
 
-        if (!portInput || isNaN(port) || port < 1 || port > 65535) {
-          Swal.showValidationMessage('Please enter a valid Port (1-65535).');
-          return;
-        }
+            if (!portInput || isNaN(port) || port < 1 || port > 65535) {
+                Swal.showValidationMessage('Please enter a valid Port (1-65535).');
+                return;
+            }
 
-        return { uavNumber, address, port };
-      },
+            return { uavNumber, address, port };
+        },
     }).then((result) => {
-      if (result.isConfirmed && result.value) {
-        this.simulatorservice.StartSimulate(result.value).subscribe(
-          (response) => {
-            this.initData();
+        if (result.isConfirmed && result.value) {
+            this.simulatorservice.startSimulate(result.value).subscribe(
+                (response) => {
+                    this.initData();
 
-            Swal.fire({
-              icon: 'success',
-              title: 'Opened Channel',
-              text: 'Simulator and Telemetry starting!',
-            });
-          },
-
-          (error) => {
-            console.log(error);
-            if (error.status === 500) {
-              Swal.fire({
-                icon: 'error',
-                title: 'Error open simulator',
-                text: 'Failed to start Simulate.',
-              });
-            }
-            if (error.status === 409) {
-              Swal.fire({
-                icon: 'info',
-                title: 'Error open simulator',
-                text: error.error.message,
-              });
-            }
-          }
-        );
-      }
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Opened Channel',
+                        text: 'Simulator and Telemetry starting!',
+                    });
+                },
+                (error) => {
+                    console.log(error);
+                    if (error.status === 500) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error open simulator',
+                            text: 'Failed to start Simulate.',
+                        });
+                    }
+                    if (error.status === 409) {
+                        Swal.fire({
+                            icon: 'info',
+                            title: 'Error open simulator',
+                            text: error.error.message,
+                        });
+                    }
+                }
+            );
+        }
     });
-  }
+
+    const randomButton = document.getElementById('random-button');
+    if (randomButton) {
+        randomButton.addEventListener('click', () => {
+            const randomPort = Math.floor(Math.random() * (10000 - 1024 + 1)) + 1024;
+            const randomUav = Math.floor(Math.random() * 1000) + 1;
+            const randomIp = '127.0.0.1';
+
+            // Populate inputs with random values
+            (document.getElementById('swal-uavNumber') as HTMLInputElement).value = randomUav.toString();
+            (document.getElementById('swal-address') as HTMLInputElement).value = randomIp;
+            (document.getElementById('swal-port') as HTMLInputElement).value = randomPort.toString();
+        });
+    }
+}
+
 
   protected pauseTelemetry(address: string, port: number) {
     this.simulatorservice.pauseTelemetry(port, address).subscribe(
@@ -313,7 +366,162 @@ export class ConfigComponent implements OnInit {
       }
     );
   }
-  protected Stop() {
-    return this.http.get(`http://localhost:7000/Stop`);
-  }
+  protected openCombinedModal(): void {
+    Swal.fire({
+      title: 'Connect Device',
+      html: `
+        <!-- Device Type Selector -->
+        <select id="deviceType" class="swal2-select" style="margin-bottom: 1rem;">
+          <option value="regular">Regular Device</option>
+          <option value="pcap">PCAP Device</option>
+        </select>
+        
+        <div id="regularInputs">
+          <input
+            id="swal-uavNumber"
+            type="number"
+            class="swal2-input"
+            placeholder="Tail Number"
+            min="1"
+          />
+          <input
+            id="swal-address"
+            type="text"
+            class="swal2-input"
+            placeholder="IP Address (127.0.0.1)"
+          />
+          <input
+            id="swal-port"
+            type="number"
+            class="swal2-input"
+            placeholder="Start Port (1-65535)"
+          />
+        </div>
+        
+        <button id="random-button" class="swal2-confirm swal2-styled">Generate Random Values</button>
+
+        <div id="pcapInputs" style="display:none;">
+          <input
+            id="uav-number"
+            type="number"
+            class="swal2-input"
+            placeholder="Tail Number"
+            min="1"
+          />
+          <input type="file" id="file-input" class="swal2-input" />
+        </div>
+      `,
+      showCancelButton: true,
+      confirmButtonText: 'Connect',
+      cancelButtonText: 'Cancel',
+      didOpen: () => {
+        const deviceTypeSelect = document.getElementById('deviceType') as HTMLSelectElement;
+        deviceTypeSelect.addEventListener('change', () => {
+          const regularInputs = document.getElementById('regularInputs') as HTMLElement;
+          const pcapInputs = document.getElementById('pcapInputs') as HTMLElement;
+          if (deviceTypeSelect.value === 'regular') {
+            regularInputs.style.display = 'block';
+            pcapInputs.style.display = 'none';
+          } else {
+            regularInputs.style.display = 'none';
+            pcapInputs.style.display = 'block';
+          }
+        });
+
+        // Add event listener for the random button
+        const randomButton = document.getElementById('random-button');
+        if (randomButton) {
+          randomButton.addEventListener('click', () => {
+            const randomPort = Math.floor(Math.random() * (10000 - 1024 + 1)) + 1024;
+            const randomUav = Math.floor(Math.random() * 1000) + 1;
+            const randomIp = '127.0.0.1';
+
+            // Populate the fields with random values
+            (document.getElementById('swal-uavNumber') as HTMLInputElement).value = randomUav.toString();
+            (document.getElementById('swal-address') as HTMLInputElement).value = randomIp;
+            (document.getElementById('swal-port') as HTMLInputElement).value = randomPort.toString();
+          });
+        }
+      },
+      preConfirm: () => {
+        const deviceType = (document.getElementById('deviceType') as HTMLSelectElement).value;
+        
+        if (deviceType === 'regular') {
+          // Regular Device validation
+          const uavNumberInput = (document.getElementById('swal-uavNumber') as HTMLInputElement).value.trim();
+          const uavNumber = Number(uavNumberInput);
+          const address = (document.getElementById('swal-address') as HTMLInputElement).value.trim();
+          const portInput = (document.getElementById('swal-port') as HTMLInputElement).value.trim();
+          const port = Number(portInput);
+
+          if (!uavNumber) {
+            Swal.showValidationMessage('Please enter Tail Number.');
+            return;
+          }
+          if (!address) {
+            Swal.showValidationMessage('Please enter Address.');
+            return;
+          }
+          if (!portInput || isNaN(port) || port < 1 || port > 65535) {
+            Swal.showValidationMessage('Please enter a valid Port (1-65535).');
+            return;
+          }
+
+          return { deviceType, uavNumber, address, port };
+
+        } else {
+          // PCAP Device validation
+          const fileInput = document.getElementById('file-input') as HTMLInputElement;
+          const file = fileInput?.files?.[0];
+          const tailNumberInput = document.getElementById('uav-number') as HTMLInputElement;
+          const tailNumberString = tailNumberInput?.value.trim();
+
+          if (!file || !tailNumberString) {
+            Swal.showValidationMessage('Please select a file and enter a Tail Number.');
+            return;
+          }
+
+          const uavNumber = Number(tailNumberString);
+          return { deviceType, fileName: file.name, uavNumber };
+        }
+      }
+    }).then((result) => {
+      if (result.isConfirmed && result.value) {
+        const data = result.value;
+        if (data.deviceType === 'regular') {
+          this.simulatorservice.startSimulate(data).subscribe(
+            (response) => {
+              this.initData();
+              Swal.fire({
+                icon: 'success',
+                title: 'Opened Channel',
+                text: 'Simulator and Telemetry starting!',
+              });
+            },
+            (error) => {
+              console.error(error);
+              if (error.status === 500) {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'Error open simulator',
+                  text: 'Failed to start Simulate.',
+                });
+              } else if (error.status === 409) {
+                Swal.fire({
+                  icon: 'info',
+                  title: 'Error open simulator',
+                  text: error.error.message,
+                });
+              }
+            }
+          );
+        } else {
+          // Handle PCAP Device logic
+          this.startPcap(data.fileName, data.uavNumber);
+        }
+      }
+    });
+}
+
+  
 }
