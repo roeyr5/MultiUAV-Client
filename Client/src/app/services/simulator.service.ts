@@ -11,25 +11,24 @@ export class SimulatorService {
   private readonly ROOT_URL = 'http://localhost:3000';
   constructor(private http: HttpClient) {}
 
-  public SimulatorPrimaryUavs(): Observable<{ [key: string]: string }> {
-    return this.http.get<{ [key: string]: string }>(
-      `${this.ROOT_URL}/simulator/PrimaryCommunications`
-    );
+  public simulatorPrimaryUavs(): Observable<{ [key: string]: string }> {
+    return this.http.get<{ [key: string]: string }>(`${this.ROOT_URL}/simulator/PrimaryCommunications`);
   }
-  public ChangePrimary(uavNumber: string): Observable<any> {
-    return this.http.post(
-      `${this.ROOT_URL}/simulator/ChangePrimaryCommunications`,
-      { uavNumber: uavNumber }
-    );
+  public simulatorTimes(): Observable<{ [key: number]: number }> {
+    return this.http.get<{ [key: number]: number }>(`${this.ROOT_URL}/simulator/TimeCommunications`);
   }
-  public StartSimulate(dto: channeldto): Observable<any> {
+    public changePrimary(uavNumber: string): Observable<any> {
+    return this.http.post( `${this.ROOT_URL}/simulator/ChangePrimaryCommunications`, { uavNumber: uavNumber });
+  }
+  public startSimulate(dto: channeldto): Observable<any> {
     return this.http.post(`${this.ROOT_URL}/simulator/StartIcd`, dto);
   }
+  public updateSimulating(uavNumber : number,time:number) : Observable<any>{
+    return this.http.post(`${this.ROOT_URL}/simulator/ChangeSimulateTime`, {uavNumber : uavNumber , time : time});
+  }
 
-  public TelemetryUavs(): Observable<Map<number, channeldto[]>> {
-    return this.http.get<Map<number, channeldto[]>>(
-      `${this.ROOT_URL}/simulator/GetChannels`
-    );
+  public telemetryUavs(): Observable<Map<number, channeldto[]>> {
+    return this.http.get<Map<number, channeldto[]>>(`${this.ROOT_URL}/simulator/GetChannels`);
   }
   public pauseTelemetry(port: number, address: string): Observable<any> {
     return this.http.post(`${this.ROOT_URL}/simulator/Pause`, {

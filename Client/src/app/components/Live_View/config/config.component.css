@@ -39,10 +39,28 @@
 .open-table{
   width: 50rem;
 }
-.table-container {
-  width: 49rem;
-  display: flex;
 
+.uav-selection{
+  cursor: pointer;
+}
+.uav-simulator-settings{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content:space-evenly;
+  width: 100%;
+}
+
+.input-simulate {
+  width: 20%;
+  background: transparent;
+  border: none;
+  color: aliceblue;
+}
+
+.table-container {
+  /* width: 49rem; */
+  display: flex;
 
   .table {
     

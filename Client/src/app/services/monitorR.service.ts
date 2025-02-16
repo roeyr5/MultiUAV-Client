@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { Observable, Observer } from 'rxjs';
+import { Observable, Observer, partition } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -28,17 +28,12 @@ export class MonitorRService {
     });
   }
 
-  public MonitorActiveMessage(): Observable<{ partition: string, status: string }> {
-    return new Observable<{ partition: string, status: string }>((observer) => {
-      this.connection.on('MonitorActive', (partition: { value: string; isSpecial: string }, status: string) => {
-        console.log("Partition:", partition);
-        console.log("Status:", status);
-        observer.next({ partition: partition.value, status });
+  public MonitorActiveMessage(): Observable<{ [uavNumber: string]: { [partition: number]: number } }> {
+    return new Observable<{ [uavNumber: string]: { [partition: number]: number } }>((observer) => {
+      this.connection.on('UpdateMessageCounts', (data: { [uavNumber: string]: { [partition: number]: number } }) => {
+          observer.next(data);
       });
     });
   }
-  
-
-
   
 }

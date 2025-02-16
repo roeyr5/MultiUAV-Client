@@ -1,0 +1,111 @@
+
+.table-container {
+  /* width: 49rem; */
+  display: flex;
+
+  .table {
+    
+    background-color: #333333; 
+    border-radius: 15px;
+    width: 100vw;
+    padding: 20px;
+    text-align: center;
+    color: white;
+    box-shadow: none;
+
+    .device-list {
+      margin: 0;
+      padding: 0;
+      list-style-type: none;
+    }
+    
+    .device-list li {
+      background-color: #444444;
+      color: white;
+      padding: 10px;
+      margin: 5px 0;
+      border-radius: 5px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      align-content: stretch;
+      flex-wrap: nowrap;
+      flex-direction: column;
+   }
+
+    
+    .device-list li button {
+      background-color: transparent;
+      border: 1px solid white;
+      color: white;
+      padding: 5px 10px;
+      margin-left: 5px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    
+    .device-list li button:hover {
+      background-color: #fbc02d; 
+    }
+  }
+}
+.communication {
+  display: flex;
+  align-items: center;
+}
+
+.status-point {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  margin-right: 10px;
+  transition: all 0.3s ease;
+}
+
+.green {
+  background-color: green;
+  animation: popGreen 2s ease-in-out infinite; /* קצב איטי יותר */
+}
+
+.red {
+  background-color: red;
+  animation: popRed 2s ease-in-out infinite; /* קצב איטי יותר */
+}
+
+/* אנימציה להבהוב של הצבע הירוק עם שינוי עדין בצבע */
+@keyframes popGreen {
+  0% {
+    transform: scale(1);
+    background-color: green;
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2); /* הגדלת הדוט */
+    background-color: #66cc66; /* ירוק בהיר יותר, לא משתנה יותר מדי */
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    background-color: green;
+    opacity: 1;
+  }
+}
+
+/* אנימציה להבהוב של הצבע האדום עם שינוי עדין בצבע */
+@keyframes popRed {
+  0% {
+    transform: scale(1);
+    background-color: red;
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.2); /* הגדלת הדוט */
+    background-color: #ff6666; /* אדום בהיר יותר, לא משתנה יותר מדי */
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    background-color: red;
+    opacity: 1;
+  }
+}

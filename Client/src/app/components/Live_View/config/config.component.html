@@ -3,10 +3,26 @@
     <div>
       <h2>Telemetry Uavs</h2>
       <ul class="device-list">
-        <li (click)="toggleUAVExpansion(uav.key)" *ngFor="let uav of uavsTelemetry | keyvalue">
-          <div  style="cursor: pointer">
-            <span>UAV Number: {{ uav.key }}</span>
+        <li *ngFor="let uav of uavsTelemetry | keyvalue">
+          <div class="uav-simulator-settings">
+            <div class="uav-selection">
+              <span (click)="toggleUAVExpansion(uav.key)" >Tail Number: {{ uav.key }}</span>
+            </div>
+
+            <div> 
+              <span>Simulate Time :</span>
+              <input  class="input-simulate" #simulateTimeInput type="number" [(ngModel)]="uavsTimeSimulate[uav.key]" readonly/>
+              <button (click)="toggleEditable(simulateTimeInput, uav.key)" class="edit-button" [title]="simulateTimeInput.readOnly ?     'Edit' : 'Save'" >
+                <span *ngIf="simulateTimeInput.readOnly">✏️</span>
+                <span *ngIf="!simulateTimeInput.readOnly">✅</span>
+              </button>
+            </div>
+            <div >
+              <span>Primary Comm:</span>
+              <button (click)="SwitchCommunication(uav.key.toString())">{{getCommunicationType(uavsCommunications[uav.key])}}</button>
+            </div>
           </div>
+
           <div *ngIf="expandedUAV === uav.key">
             <table class="open-table">
               <thead>
@@ -35,11 +51,8 @@
           </div>
         </li>
       </ul>
-      <button class="connect-button" (click)="openFileSelector()">
-        Connect a new device
-      </button>
-      <button class="connect-button" (click)="StartOne()">
-        Connect a new device
+      <button class="connect-button" (click)="openCombinedModal()">
+        Connect device
       </button>
     </div>
   </div>
