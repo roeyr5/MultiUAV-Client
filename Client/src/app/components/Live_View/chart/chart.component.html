@@ -1,7 +1,14 @@
-<google-chart
-  [data]="chartData"
-  [columns]="chartColumns"
-  [options]="chartOptions"
-  [title]="chartTitle"
-  style="width: 100%; height: 400px;">
-</google-chart>
+<apx-chart
+  [series]="chartOptions.series"
+  [chart]="chartOptions.chart"
+  [xaxis]="chartOptions.xaxis"
+  [yaxis]="chartOptions.yaxis"
+  [dataLabels]="chartOptions.dataLabels"
+  [stroke]="chartOptions.stroke"
+  [markers]="chartOptions.markers"
+  [tooltip]="chartOptions.tooltip"
+  [legend]="chartOptions.legend"
+  [title]="chartOptions.title"
+  [fill]="chartOptions.fill"
+  [autoUpdateSeries]="true">
+</apx-chart>

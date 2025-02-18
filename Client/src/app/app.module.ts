@@ -28,6 +28,8 @@ import { RippleModule } from 'primeng/ripple';
 import { ImageModule } from 'primeng/image';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { MatTableModule } from '@angular/material/table';
+import { NgApexchartsModule } from 'ng-apexcharts';
+
 
 @NgModule({
   declarations: [
@@ -64,6 +66,7 @@ import { MatTableModule } from '@angular/material/table';
     MatButtonModule,
     MatIconModule,
     GoogleChartsModule.forRoot(),
+    NgApexchartsModule
   ],
   providers: [],
   bootstrap: [AppComponent],

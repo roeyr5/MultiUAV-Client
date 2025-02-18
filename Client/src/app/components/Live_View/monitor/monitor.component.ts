@@ -47,7 +47,7 @@ export class MonitorComponent implements OnInit {
   });
   }
   
-  getClass(value: number): string {
+  getStatus(value: number): string {
     return value > 0 ? 'green' : 'red';
   }
 }
