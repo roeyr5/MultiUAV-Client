@@ -8,19 +8,19 @@
         <span>uav: {{uav.key}}</span>
         <div class="communication">
           <span>FiberBoxDown</span>
-          <span class="status-point" [ngClass]="getClass(uav.value[0])"></span> 
+          <span class="status-point" [ngClass]="getStatus(uav.value[0])"></span> 
         </div>
         <div class="communication">
           <span>FiberBoxUp</span>
-          <span class="status-point" [ngClass]="getClass(uav.value[1])"></span>
+          <span class="status-point" [ngClass]="getStatus(uav.value[1])"></span>
         </div>
         <div class="communication">
           <span>MissionDown</span>
-          <span class="status-point" [ngClass]="getClass(uav.value[2])"></span>
+          <span class="status-point" [ngClass]="getStatus(uav.value[2])"></span>
         </div>
         <div class="communication">
           <span>MissionDown</span>
-          <span class="status-point" [ngClass]="getClass(uav.value[3])"></span>
+          <span class="status-point" [ngClass]="getStatus(uav.value[3])"></span>
         </div>
       </li>
     </ul>

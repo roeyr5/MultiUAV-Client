@@ -1,8 +1,7 @@
 import { GridsterItem } from "angular-gridster2";
-import { ChartType } from "angular-google-charts";
 
 export interface ChartGridsterItem extends GridsterItem {
-  chartType: ChartType; 
+  chartType: 'line' | 'area' | 'bar' | 'scatter'| 'gauge' ; 
   chartLabels: string[];
   communication: string;
   parameter: string;

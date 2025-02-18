@@ -64,15 +64,14 @@
 
 .green {
   background-color: green;
-  animation: popGreen 2s ease-in-out infinite; /* קצב איטי יותר */
+  animation: popGreen 2s ease-in-out infinite;
 }
 
 .red {
   background-color: red;
-  animation: popRed 2s ease-in-out infinite; /* קצב איטי יותר */
+  animation: popRed 2s ease-in-out infinite; 
 }
 
-/* אנימציה להבהוב של הצבע הירוק עם שינוי עדין בצבע */
 @keyframes popGreen {
   0% {
     transform: scale(1);
@@ -80,8 +79,8 @@
     opacity: 1;
   }
   50% {
-    transform: scale(1.2); /* הגדלת הדוט */
-    background-color: #66cc66; /* ירוק בהיר יותר, לא משתנה יותר מדי */
+    transform: scale(1.2); 
+    background-color: #66cc66;
     opacity: 1;
   }
   100% {
@@ -91,7 +90,6 @@
   }
 }
 
-/* אנימציה להבהוב של הצבע האדום עם שינוי עדין בצבע */
 @keyframes popRed {
   0% {
     transform: scale(1);
@@ -99,8 +97,8 @@
     opacity: 1;
   }
   50% {
-    transform: scale(1.2); /* הגדלת הדוט */
-    background-color: #ff6666; /* אדום בהיר יותר, לא משתנה יותר מדי */
+    transform: scale(1.2); 
+    background-color: #ff6666; 
     opacity: 1;
   }
   100% {

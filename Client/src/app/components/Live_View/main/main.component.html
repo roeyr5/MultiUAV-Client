@@ -63,24 +63,22 @@
             <div class="chart-parameter">
               <strong>Parameter:</strong> {{ item.parameter }}
             </div>
+            <div class="chart-controls">
+              <button mat-button (click)="changeChartType(item, 'line')">Line</button>
+              <button mat-button (click)="changeChartType(item, 'bar')">Bar</button>
+              <button mat-button (click)="changeChartType(item, 'area')">Area</button>
+              <button mat-button (click)="changeChartType(item, 'scatter')">Scatter</button>
+              <button mat-button (click)="changeChartType(item, 'gauge')">Gauge</button>
+            </div>
             <app-chart
              [datasets]="item.datasets"
              [chartLabels]="item.chartLabels"
-             [chartType]="item.chartType"
-             [chartTitle]="item.parameter"
-             [chartOptions]="getChartOptions(item)"> 
+             [chartTitle]="item.parameter">
             </app-chart>
-          
           </ng-container>
           <ng-template #emptyChart>
             <p>No data available. Waiting for updates...</p>
           </ng-template>
-          
-          <div class="chart-controls">
-            <button mat-button (click)="changeChartType(item, ChartType.LineChart)">Line</button>
-            <button mat-button (click)="changeChartType(item, ChartType.BarChart)">Bar</button>
-            <button mat-button (click)="changeChartType(item, ChartType.ScatterChart)">Scatter</button>
-          </div>
 
         </div>
       </gridster-item>
