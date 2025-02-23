@@ -14,5 +14,6 @@
     overflow: auto;
     padding: 20px;
     background-color: #444444;
+    overflow: hidden;
   }
   

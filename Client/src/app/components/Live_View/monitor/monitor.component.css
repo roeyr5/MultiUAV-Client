@@ -1,67 +1,74 @@
-
 .table-container {
-  /* width: 49rem; */
   display: flex;
-
-  .table {
-    
-    background-color: #333333; 
-    border-radius: 15px;
-    width: 100vw;
-    padding: 20px;
-    text-align: center;
-    color: white;
-    box-shadow: none;
-
-    .device-list {
-      margin: 0;
-      padding: 0;
-      list-style-type: none;
-    }
-    
-    .device-list li {
-      background-color: #444444;
-      color: white;
-      padding: 10px;
-      margin: 5px 0;
-      border-radius: 5px;
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      align-content: stretch;
-      flex-wrap: nowrap;
-      flex-direction: column;
-   }
-
-    
-    .device-list li button {
-      background-color: transparent;
-      border: 1px solid white;
-      color: white;
-      padding: 5px 10px;
-      margin-left: 5px;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    
-    .device-list li button:hover {
-      background-color: #fbc02d; 
-    }
-  }
+  justify-content: center;
+  padding: 20px;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  box-sizing: border-box;
 }
+
+.table {
+  background-color: #cacaca;
+  border-radius: 15px;
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+  color: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.table h2 {
+  font-size: 1.8rem;
+  margin-bottom: 20px;
+  color: #fff;
+}
+
+.device-list {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+
+.device-list li {
+  background-color: #444444;
+  color: white;
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  box-sizing: border-box;
+}
+
+.device-list li .uav-name {
+  font-weight: bold;
+  margin-right: 20px;
+}
+
+/* Styling for the communication block */
 .communication {
   display: flex;
   align-items: center;
+  margin-bottom: 10px;
+  flex-basis: 100%;
+}
+
+.communication span {
+  margin-right: 10px;
 }
 
 .status-point {
-  width: 12px;
-  height: 12px;
+  width: 16px;
+  height: 16px;
   border-radius: 50%;
-  margin-right: 10px;
+  margin-left: 10px;
   transition: all 0.3s ease;
 }
 
+/* Status colors and animations */
 .green {
   background-color: green;
   animation: popGreen 2s ease-in-out infinite;
@@ -69,7 +76,7 @@
 
 .red {
   background-color: red;
-  animation: popRed 2s ease-in-out infinite; 
+  animation: popRed 2s ease-in-out infinite;
 }
 
 @keyframes popGreen {
@@ -79,7 +86,7 @@
     opacity: 1;
   }
   50% {
-    transform: scale(1.2); 
+    transform: scale(1.3);
     background-color: #66cc66;
     opacity: 1;
   }
@@ -97,13 +104,44 @@
     opacity: 1;
   }
   50% {
-    transform: scale(1.2); 
-    background-color: #ff6666; 
+    transform: scale(1.3);
+    background-color: #ff6666;
     opacity: 1;
   }
   100% {
     transform: scale(1);
     background-color: red;
     opacity: 1;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .table {
+    padding: 15px;
+  }
+
+  .device-list li {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .communication {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .status-point {
+    margin-top: 5px;
+  }
+}
+
+@media (max-width: 480px) {
+  .table h2 {
+    font-size: 1.5rem;
+  }
+
+  .device-list li {
+    padding: 10px;
   }
 }
