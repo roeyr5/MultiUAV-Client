@@ -11,7 +11,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { GridsterModule } from 'angular-gridster2';
-import { MainComponent } from './components/Live_View/main/main.component';
+import { LiveComponent } from './components/Live_View/live/live.component';
 import { MonitorComponent } from './components/Live_View/monitor/monitor.component';
 import { SignupComponent } from './components/Login_Register/signup/signup.component';
 import { ConfigComponent } from './components/Live_View/config/config.component';
@@ -29,13 +29,15 @@ import { ImageModule } from 'primeng/image';
 import { GoogleChartsModule } from 'angular-google-charts';
 import { MatTableModule } from '@angular/material/table';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { DropdownModule } from 'primeng/dropdown'; 
+
 
 
 @NgModule({
   declarations: [
     AppComponent,
     SigninComponent,
-    MainComponent,
+    LiveComponent,
     MonitorComponent,
     SignupComponent,
     ConfigComponent,
@@ -66,7 +68,8 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     MatButtonModule,
     MatIconModule,
     GoogleChartsModule.forRoot(),
-    NgApexchartsModule
+    NgApexchartsModule,
+    DropdownModule
   ],
   providers: [],
   bootstrap: [AppComponent],

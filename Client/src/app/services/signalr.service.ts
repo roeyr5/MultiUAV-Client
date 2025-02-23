@@ -60,8 +60,6 @@ export class SignalRService {
   public receiveMessage(): Observable<{ message: { [key: string]: string }; uavName: string  }> {
     return new Observable((observer) => {
       this.hubConnection.on('ReceiveMessage', (message:  { [key: string]: string } , uavName : string) => {
-        console.log(uavName);
-        console.log(message);
         observer.next({message,uavName});
       });
     });

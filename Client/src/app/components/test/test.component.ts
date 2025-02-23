@@ -149,7 +149,7 @@ export class TestComponent {
       }
     ];
     this.chart = {
-      type: "area",
+      type: "pie",
       stacked: false,
       height: 350,
       zoom: {
