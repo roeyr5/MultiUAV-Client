@@ -13,3 +13,4 @@ export interface ChartGridsterItem extends GridsterItem {
   }>;
   showOptions:boolean;
 }
+//using ICHartEntity

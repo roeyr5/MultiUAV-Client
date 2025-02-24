@@ -9,10 +9,6 @@ import { ChartType } from 'angular-google-charts';
 import { basicData } from 'src/app/models/dataitem';
 import { ChartComponent } from '../chart/chart.component';
 import { SimulatorService } from 'src/app/services/simulator.service';
-import { UIChart } from 'primeng/chart';
-import {
-  ApexAxisChartSeries,ApexChart,ApexXAxis,ApexYAxis,ApexDataLabels,ApexTooltip,ApexStroke,ApexMarkers,ApexLegend, ApexTitleSubtitle
-} from 'ng-apexcharts';
 
 
 @Component({
@@ -34,9 +30,11 @@ export class LiveComponent implements OnInit , AfterViewInit {
     { label: 'bar', image: 'assets/images/bar_chart_icon.png' },
     { label: 'pie', image: 'assets/images/pie_chart_icon.png' },
     { label: 'gauge', image: 'assets/images/gauge_chart_icon.png' },
+    { label: 'area', image: 'assets/images/area_chart_icon.png' },
+
   ];
   selectedGraph: any; 
-
+  
   temp : string[] = [];
   protected options: GridsterConfig ={};
   protected dashboard: ChartGridsterItem[] = [];
@@ -48,12 +46,12 @@ export class LiveComponent implements OnInit , AfterViewInit {
 
   protected selectedParameters: string[] = [];
   protected parametersarray: string[] = [];
-
+  
   protected parametersMap: Map<string,string[]> = new Map<string,string[]>();
   protected selectedParametersMap: Map<string, Map<string, string[]>> = new Map<string, Map<string, string[]>>();
-
+  
   constructor(private simulatorservice: SimulatorService, private signalRService : SignalRService , private userservice:UserService , private cdr : ChangeDetectorRef){}
-
+  
   public ngAfterViewInit() {
     if (this.gridster) {
       this.gridster.onResize();  
@@ -127,28 +125,33 @@ export class LiveComponent implements OnInit , AfterViewInit {
         const newValue = parseFloat(parameterMap[item.parameter]);
         if (isNaN(newValue)) {
           console.error('Received invalid value:', parameterMap[item.parameter]);
-          return; // Skip updating if the value is invalid
+          return;
         }
   
         const newLabel = new Date().toLocaleTimeString();
   
         if (['pie', 'gauge'].includes(item.chartType)) {
-          datasetForThisUAV.data = [newValue];  // Pie and Gauge only use the latest value
+          datasetForThisUAV.data = [newValue];
           item.chartLabels = [newLabel];
         } else {
-          if (datasetForThisUAV.data.length >= 10) datasetForThisUAV.data.shift();
-          if (item.chartLabels.length >= 10) item.chartLabels.shift();
           datasetForThisUAV.data.push(newValue);
           item.chartLabels.push(newLabel);
         }
+        
+        if (datasetForThisUAV.data.length >= 10)
+          datasetForThisUAV.data.shift();
+        if (item.chartLabels.length >= 10)
+          item.chartLabels.shift();
   
         const chart = this.charts.toArray()[itemIndex];
         if (chart) {
           chart.datasets = item.datasets.map(ds => ({
             label: ds.label,
             data: ds.data,
+            uavName: ds.uavName,
             color: ds.color
           }));
+  
           chart.chartLabels = item.chartLabels;
           chart.chartTitle = item.parameter;
           chart.updateChart();
@@ -156,7 +159,6 @@ export class LiveComponent implements OnInit , AfterViewInit {
       }
     });
   }
-  
   
   
   
@@ -226,41 +228,11 @@ public onSelectCommunication(event: any): void {
     }
   }
   protected isParameterSelected(parameter: string): boolean {
-    return this.selectedParameters.includes(parameter);
-  }
-
-  protected toggleUAVParameterSelection(uavName: string, communication: string, parameter: string): void {
-    let foundItem = this.dashboard.find(item => item.communication === communication && item.parameter === parameter);
+    const uavMap = this.selectedParametersMap.get(this.selectedUAV);
+    if (!uavMap) return false;
   
-    if (!foundItem) {
-      foundItem = {
-        cols: 2,
-        rows: 2,
-        x: this.dashboard.length % 5,
-        y: Math.floor(this.dashboard.length / 5),
-        chartType: 'line',
-        chartLabels: [],
-        communication,
-        parameter,
-        datasets: [],
-        showOptions: false
-      };
-      this.dashboard.push(foundItem);
-    }
-  
-    const fullUavComm = `${uavName}${communication}`;
-  
-    const newDataset = {
-      label: `${uavName} - ${parameter}`,
-      data: [],
-      color: this.getRandomColor(),
-      uavName
-    };
-  
-    foundItem.datasets.push(newDataset);
-  
-    this.signalRService.addParameter(fullUavComm, parameter);
-    this.joinGroup();
+    const selectedParams = uavMap.get(this.selectedCommunication) || [];
+    return selectedParams.includes(parameter);
   }
   
 
@@ -274,17 +246,23 @@ public onSelectCommunication(event: any): void {
   }  
 
   private removeParameterFromGridster(parameter: string, uavName: string, communication: string): void {
-    const foundItem = this.dashboard.find(item => 
-      item.communication === communication && 
-      item.parameter === parameter
-    );
+    const foundItem = this.dashboard.find(item => item.communication === communication && item.parameter === parameter);
   
     if (foundItem) {
       foundItem.datasets = foundItem.datasets.filter(ds => ds.uavName !== uavName);
   
-      if (foundItem.datasets.length === 0) {
+      const otherUAVsUsingSameParam = foundItem.datasets.filter(ds => ds.uavName !== uavName);
+      if (otherUAVsUsingSameParam.length === 0) {
         this.dashboard = this.dashboard.filter(item => item !== foundItem);
-        this.ChangedOptions(); 
+        this.ChangedOptions();
+      }
+  
+      const chart = this.charts.toArray()[this.dashboard.indexOf(foundItem)];
+      if (chart) {
+        chart.datasets = foundItem.datasets;
+        chart.chartLabels = foundItem.chartLabels;
+        chart.chartTitle = foundItem.parameter;
+        chart.updateChart();
       }
     }
   }
@@ -319,6 +297,9 @@ public onSelectCommunication(event: any): void {
       };
       foundItem.datasets.push(newDataset);
     }
+
+    this.signalRService.addParameter(uavName+communication, parameter);
+    this.joinGroup();
   }
   protected toggleParameterSelection(parameter: string): void {
     if (!this.selectedUAV || !this.selectedCommunication) {
@@ -347,17 +328,18 @@ public onSelectCommunication(event: any): void {
     if (paramIndex === -1) {
       this.addParameterToGridster(parameter, this.selectedUAV, this.selectedCommunication);
       this.joinGroup();
+      selectedParams.push(parameter);
     } 
     else {
-      selectedParams.splice(paramIndex, 1);
       this.removeParameterFromGridster(parameter, this.selectedUAV, this.selectedCommunication);
+      selectedParams.splice(paramIndex, 1);
     }
   
     uavMap.set(this.selectedCommunication, selectedParams);
     this.selectedParametersMap.set(this.selectedUAV, uavMap);
     console.log(`Selected Parameters for UAV: ${this.selectedUAV}, Communication: ${this.selectedCommunication}:`, selectedParams);
 
-    this.toggleUAVParameterSelection(this.selectedUAV, this.selectedCommunication, parameter);
+    // this.toggleUAVParameterSelection(this.selectedUAV, this.selectedCommunication, parameter);
 }
   
   protected getChartData(item: ChartGridsterItem) {
@@ -406,7 +388,7 @@ public onSelectCommunication(event: any): void {
     console.log(newType.label)
     const chart = this.charts.toArray()[this.dashboard.indexOf(item)];
     if (chart) {
-      chart.updateChartType(newType.label);  
+      // chart.updateChartType(newType.label);  
     } else {
       console.warn('Chart instance not found for item:', item);
     }

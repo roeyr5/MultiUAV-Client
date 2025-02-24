@@ -30,7 +30,17 @@ import { GoogleChartsModule } from 'angular-google-charts';
 import { MatTableModule } from '@angular/material/table';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { DropdownModule } from 'primeng/dropdown'; 
-
+import { HighchartsChartModule } from 'highcharts-angular';
+import * as Highcharts from 'highcharts';
+import { ChartModule } from 'angular-highcharts';
+import { HighchartsService } from './components/test/highcharts.service';
+import { SideBarParametersComponent } from './components/generic-components/side-bar-parameters/side-bar-parameters.component';
+import { LiveDashboardComponent } from './components/Live_View/live/live-dashboard/live-dashboard.component';
+import { ChartEntityComponent } from './components/generic-components/chart-entity/chart-entity.component';
+import { GaugeChartComponent } from './components/generic-components/chart-entity/charts-types/gauge-chart/gauge-chart.component';
+import { GraphChartComponent } from './components/generic-components/chart-entity/charts-types/graph-chart/graph-chart.component';
+import { PieChartComponent } from './components/generic-components/chart-entity/charts-types/pie-chart/pie-chart.component';
+import {MatMenuModule} from '@angular/material/menu';
 
 
 @NgModule({
@@ -41,10 +51,16 @@ import { DropdownModule } from 'primeng/dropdown';
     MonitorComponent,
     SignupComponent,
     ConfigComponent,
-    TestComponent,
     AddNewDialogComponent,
     SidebarComponent,
     ChartComponent,
+    TestComponent,
+    SideBarParametersComponent,
+    LiveDashboardComponent,
+    ChartEntityComponent,
+    GaugeChartComponent,
+    GraphChartComponent,
+    PieChartComponent
   ],
   imports: [
     GridsterModule,
@@ -61,17 +77,19 @@ import { DropdownModule } from 'primeng/dropdown';
     NgxChartsModule,
     ImageModule,
     RippleModule,
+    MatMenuModule,
     ButtonModule,
     ToastModule,
     MatTableModule,
     MatTableModule,
     MatButtonModule,
     MatIconModule,
-    GoogleChartsModule.forRoot(),
     NgApexchartsModule,
-    DropdownModule
+    DropdownModule,
+    HighchartsChartModule,
+    ChartModule,
   ],
-  providers: [],
+  providers: [HighchartsService],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })
