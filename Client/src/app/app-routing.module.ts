@@ -7,6 +7,7 @@ import { ConfigComponent } from './components/Live_View/config/config.component'
 import { SignupComponent } from './components/Login_Register/signup/signup.component';
 import { PageNotFoundComponent } from './components/Other_Logic/page-not-found/page-not-found.component';
 import { MonitorComponent } from './components/Live_View/monitor/monitor.component';
+import { ArchiveDataComponent } from './components/Other_Logic/archive-data/archive-data.component';
 
 const routes: Routes = [
   { path: 'signin', component: SigninComponent },
@@ -14,6 +15,7 @@ const routes: Routes = [
   {path : 'live' , component : LiveComponent},
   {path : 'error' , component : PageNotFoundComponent},
   {path : 'monitor', component :MonitorComponent},
+  {path : 'archive', component :ArchiveDataComponent},
   {path : 'test', component :TestComponent},
   { path: 'config', component: ConfigComponent },
   {path: '**',component:PageNotFoundComponent},

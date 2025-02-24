@@ -1,0 +1,36 @@
+<div class="sidebar">
+  <h4>Select Parameter</h4>
+  
+  <mat-form-field>
+    <mat-label>UAVs</mat-label>
+    <mat-select (selectionChange)="onSelectUAV($event)">
+      <mat-option *ngFor="let uav of uavsList" [value]="uav">
+        {{ uav }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field>
+    <mat-label>Communication</mat-label>
+    <mat-select (selectionChange)="onSelectCommunication($event)">
+      <mat-option value="FBDown">FBDown</mat-option>
+      <mat-option value="FBUp">FBUp</mat-option>
+      <mat-option value="MissionDown">MissionDown</mat-option>
+      <mat-option value="MissionUp">MissionUp</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div class="parameters-selection">
+    <h4>Parameters for {{ selectedCommunication }}</h4>
+    <div *ngFor="let parameter of getCurrentParameters()" class="parameter-item">
+      <mat-checkbox
+        [checked]="isParameterSelected(parameter)"
+        (change)="toggleParameterSelection(parameter)"
+      >
+        {{ parameter }}
+      </mat-checkbox>   
+    </div>
+    
+  </div>
+
+</div>

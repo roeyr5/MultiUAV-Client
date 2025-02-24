@@ -1,4 +1,4 @@
-<div class="main">
+<!-- <div class="main">
   <button mat-raised-button class="sidebar-toggle" (click)="toggleSidebar()">
     {{ sidebarOpen ? 'Close Sidebar' : 'Open Sidebar' }}
   </button>
@@ -64,9 +64,6 @@
         </p-dropdown>
   
         <ng-container *ngIf="item.datasets && item.datasets.length > 0; else emptyChart">
-          <div class="chart-parameter">
-            <span>Parameter:</span> {{ item.parameter }} 
-          </div>
   
           <app-chart
             [datasets]="item.datasets"
@@ -85,4 +82,7 @@
   
 
   
+</div> -->
+<div class="main">
+  <app-live-dashboard></app-live-dashboard>
 </div>

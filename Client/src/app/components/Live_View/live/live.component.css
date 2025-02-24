@@ -1,4 +1,4 @@
-body {
+/* body {
   background-color: black;
   color: white;
   font-family: Arial, sans-serif;
@@ -36,7 +36,7 @@ body {
   transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
   opacity: 0; 
   z-index: 100;
-  overflow-y: auto; /* Enable scrolling when content overflows */
+  overflow-y: auto;
 }
 
 .sidebar.open {
@@ -152,4 +152,18 @@ app-chart {
 
 ::ng-deep .p-dropdown {
   font-size: 20px;
+} */
+
+.main {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+  position: relative;
+  height: 100%;
+
+  app-live-dashboard {
+    height: 100%;
+    width: 100%;
+  }
 }

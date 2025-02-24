@@ -1,0 +1,44 @@
+<div class="container">
+  <div class="top">
+    <button mat-raised-button class="sidebar-toggle" (click)="toggleParameterSidebar()">
+      Add Parameter
+    </button>
+    <div>
+      <button mat-raised-button class="sidebar-toggle"  (click)="MoveParameters()">Enable drag and move</button>
+    </div>
+  </div>
+
+  <div class="body">
+    <gridster [options]="options">
+      <gridster-item *ngFor="let item of dashboard" [item]="item">
+        <div class="widget-content">
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Settings">
+            <mat-icon>settings</mat-icon>
+          </button>
+          
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item *ngFor="let graph of graphOptions" (click)="changeChartType(item, graph.value)">
+              <img [src]="graph.image" style="width: 18px; height: 18px;" />
+              <span>{{ graph.label }}</span>
+            </button>
+          </mat-menu>
+          
+          <ng-container *ngIf="item.datasets && item.datasets.length > 0; else emptyChart">
+    
+            <app-chart
+              [datasets]="item.datasets"
+              [chartLabels]="item.chartLabels"
+              [chartTitle]="item.parameter"
+              [chartType]="item.chartType">
+            </app-chart>
+          </ng-container>
+    
+          <ng-template #emptyChart>
+            <p>No data available. Waiting for updates...</p>
+          </ng-template>
+        </div>
+      </gridster-item>
+    </gridster>
+  </div>
+</div>
+<app-side-bar-parameters *ngIf="isSideBarOpen" ></app-side-bar-parameters>
