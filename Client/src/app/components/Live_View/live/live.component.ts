@@ -3,10 +3,10 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component , 
 import { SignalRService } from 'src/app/services/signalr.service';
 import { UserService } from 'src/app/services/user.service';
 import { DisplayGrid, GridsterComponent, GridsterConfig, GridsterItem,GridType }  from 'angular-gridster2';
-import {ChartGridsterItem} from 'src/app/models/chartitem'
+import {ChartGridsterItem} from 'src/app/entities/models/chartitem'
 import Swal from 'sweetalert2';
 import { ChartType } from 'angular-google-charts';
-import { basicData } from 'src/app/models/dataitem';
+import { basicData } from 'src/app/entities/models/dataitem';
 import { ChartComponent } from '../chart/chart.component';
 import { SimulatorService } from 'src/app/services/simulator.service';
 
@@ -60,41 +60,41 @@ export class LiveComponent implements OnInit , AfterViewInit {
 
   public ngOnInit(): void {
       this.StartConnection();
-      this.InitGridsterOptions();
-      this.GetUAVS();
+      // this.InitGridsterOptions();
+      // this.GetUAVS();
   }
-  private InitGridsterOptions(): void {
-    this.options = {
-      gridType: GridType.Fit,
-      compactType: 'none',
-      margin: 10,
-      outerMargin: true,
-      mobileBreakpoint: 640,
-      minCols: 1,
-      maxCols: 10,
-      minRows: 1,
-      maxRows: 10,
-      draggable: { enabled: false },
-      resizable: { enabled: false },
-      displayGrid: DisplayGrid.Always,
-    };
+  // private InitGridsterOptions(): void {
+  //   this.options = {
+  //     gridType: GridType.Fit,
+  //     compactType: 'none',
+  //     margin: 10,
+  //     outerMargin: true,
+  //     mobileBreakpoint: 640,
+  //     minCols: 1,
+  //     maxCols: 10,
+  //     minRows: 1,
+  //     maxRows: 10,
+  //     draggable: { enabled: false },
+  //     resizable: { enabled: false },
+  //     displayGrid: DisplayGrid.Always,
+  //   };
 
-  }
+  // }
 
-  public toggleSidebar(): void {
-    this.sidebarOpen = !this.sidebarOpen;
-  }
+  // public toggleSidebar(): void {
+  //   this.sidebarOpen = !this.sidebarOpen;
+  // }
 
-  private ChangedOptions() {
-    if (this.options.api && this.options.api.optionsChanged) {
-      this.options.api.optionsChanged();
-    }
-  }
-  public MoveParameters(){
-    this.options.draggable ={enabled : true};
-    this.options.resizable = {enabled : true};
-    this.ChangedOptions();
-  }
+  // private ChangedOptions() {
+  //   if (this.options.api && this.options.api.optionsChanged) {
+  //     this.options.api.optionsChanged();
+  //   }
+  // }
+  // public MoveParameters(){
+  //   this.options.draggable ={enabled : true};
+  //   this.options.resizable = {enabled : true};
+  //   this.ChangedOptions();
+  // }
   
   private StartConnection(){
     this.signalRService.startConnection().subscribe((response)=>{
@@ -214,12 +214,10 @@ public onSelectCommunication(event: any): void {
     }
   }
 
-
   protected getCurrentParameters(): string[] {
     const params = this.parametersMap.get(this.selectedCommunication) || [];
     return params;
   }
-  
   
   private updateParametersArray() {
     if (this.selectedCommunication) {
@@ -227,6 +225,7 @@ public onSelectCommunication(event: any): void {
       this.parametersarray = this.parametersMap.get(type) || [];
     }
   }
+
   protected isParameterSelected(parameter: string): boolean {
     const uavMap = this.selectedParametersMap.get(this.selectedUAV);
     if (!uavMap) return false;
@@ -235,7 +234,6 @@ public onSelectCommunication(event: any): void {
     return selectedParams.includes(parameter);
   }
   
-
   private getRandomColor(): string {
     const letters = '0123456789ABCDEF';
     let color = '#';
@@ -254,7 +252,7 @@ public onSelectCommunication(event: any): void {
       const otherUAVsUsingSameParam = foundItem.datasets.filter(ds => ds.uavName !== uavName);
       if (otherUAVsUsingSameParam.length === 0) {
         this.dashboard = this.dashboard.filter(item => item !== foundItem);
-        this.ChangedOptions();
+        // this.ChangedOptions();
       }
   
       const chart = this.charts.toArray()[this.dashboard.indexOf(foundItem)];
@@ -301,6 +299,7 @@ public onSelectCommunication(event: any): void {
     this.signalRService.addParameter(uavName+communication, parameter);
     this.joinGroup();
   }
+
   protected toggleParameterSelection(parameter: string): void {
     if (!this.selectedUAV || !this.selectedCommunication) {
         Swal.fire({

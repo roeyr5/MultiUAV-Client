@@ -26,7 +26,6 @@ import { ButtonModule } from 'primeng/button';
 import { ToastModule } from 'primeng/toast';
 import { RippleModule } from 'primeng/ripple';
 import { ImageModule } from 'primeng/image';
-import { GoogleChartsModule } from 'angular-google-charts';
 import { MatTableModule } from '@angular/material/table';
 import { NgApexchartsModule } from 'ng-apexcharts';
 import { DropdownModule } from 'primeng/dropdown'; 
@@ -41,6 +40,7 @@ import { GaugeChartComponent } from './components/generic-components/chart-entit
 import { GraphChartComponent } from './components/generic-components/chart-entity/charts-types/graph-chart/graph-chart.component';
 import { PieChartComponent } from './components/generic-components/chart-entity/charts-types/pie-chart/pie-chart.component';
 import {MatMenuModule} from '@angular/material/menu';
+
 
 
 @NgModule({
@@ -60,7 +60,7 @@ import {MatMenuModule} from '@angular/material/menu';
     ChartEntityComponent,
     GaugeChartComponent,
     GraphChartComponent,
-    PieChartComponent
+    PieChartComponent,
   ],
   imports: [
     GridsterModule,

@@ -9,15 +9,15 @@ import { MonitorRService } from 'src/app/services/monitorR.service';
 export class MonitorComponent implements OnInit {
 
   public activeUavs: { 
-    [uavNumber: string]: { 
+    [uavNumber: number]: { 
         [partition: number]: number } } = {
-    "100": {
+    100: {
         0:3,
         1: 1,
         2: 0,
         3:2
     },
-    "200": {
+    200: {
         0:1,
         1: 2,
         2:3,

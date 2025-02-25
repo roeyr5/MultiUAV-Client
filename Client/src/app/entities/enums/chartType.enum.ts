@@ -14,7 +14,7 @@ export enum graphChartTypes {
 }
 
 export enum pieChartTypes {
-  
+  regular = 'regular-pie',
 }
 
 export const ChartSubTypes:

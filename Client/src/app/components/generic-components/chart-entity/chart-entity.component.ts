@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ChartType } from 'src/app/enums/chartType.enum';
+import { ChartType } from 'src/app/entities/enums/chartType.enum';
 
 @Component({
   selector: 'app-chart-entity',
@@ -7,7 +7,10 @@ import { ChartType } from 'src/app/enums/chartType.enum';
   styleUrls: ['./chart-entity.component.css']
 })
 export class ChartEntityComponent {
-// @Input() entity: ChartType = ;
+
+  @Input() entity: ChartType = ChartType.Gauge;
+
+  }
 
 
-}
+
