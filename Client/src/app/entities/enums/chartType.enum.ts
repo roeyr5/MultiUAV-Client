@@ -1,6 +1,6 @@
 export enum ChartType {
   Gauge = 'gauge',
-  Graph = 'graph',
+  Graph = 'spline',
   Pie = 'pie',
 }
 
@@ -14,7 +14,7 @@ export enum graphChartTypes {
 }
 
 export enum pieChartTypes {
-  
+  regular = 'regular-pie',
 }
 
 export const ChartSubTypes:

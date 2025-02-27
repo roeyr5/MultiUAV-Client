@@ -3,10 +3,9 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component , 
 import { SignalRService } from 'src/app/services/signalr.service';
 import { UserService } from 'src/app/services/user.service';
 import { DisplayGrid, GridsterComponent, GridsterConfig, GridsterItem,GridType }  from 'angular-gridster2';
-import {ChartGridsterItem} from 'src/app/models/chartitem'
+import {ChartGridsterItem} from 'src/app/entities/models/chartitem'
 import Swal from 'sweetalert2';
 import { ChartType } from 'angular-google-charts';
-import { basicData } from 'src/app/models/dataitem';
 import { ChartComponent } from '../chart/chart.component';
 import { SimulatorService } from 'src/app/services/simulator.service';
 
@@ -59,56 +58,56 @@ export class LiveComponent implements OnInit , AfterViewInit {
   }
 
   public ngOnInit(): void {
-      this.StartConnection();
-      this.InitGridsterOptions();
-      this.GetUAVS();
+      // this.StartConnection();
+      // this.InitGridsterOptions();
+      // this.GetUAVS();
   }
-  private InitGridsterOptions(): void {
-    this.options = {
-      gridType: GridType.Fit,
-      compactType: 'none',
-      margin: 10,
-      outerMargin: true,
-      mobileBreakpoint: 640,
-      minCols: 1,
-      maxCols: 10,
-      minRows: 1,
-      maxRows: 10,
-      draggable: { enabled: false },
-      resizable: { enabled: false },
-      displayGrid: DisplayGrid.Always,
-    };
+  // private InitGridsterOptions(): void {
+  //   this.options = {
+  //     gridType: GridType.Fit,
+  //     compactType: 'none',
+  //     margin: 10,
+  //     outerMargin: true,
+  //     mobileBreakpoint: 640,
+  //     minCols: 1,
+  //     maxCols: 10,
+  //     minRows: 1,
+  //     maxRows: 10,
+  //     draggable: { enabled: false },
+  //     resizable: { enabled: false },
+  //     displayGrid: DisplayGrid.Always,
+  //   };
 
-  }
+  // }
 
-  public toggleSidebar(): void {
-    this.sidebarOpen = !this.sidebarOpen;
-  }
+  // public toggleSidebar(): void {
+  //   this.sidebarOpen = !this.sidebarOpen;
+  // }
 
-  private ChangedOptions() {
-    if (this.options.api && this.options.api.optionsChanged) {
-      this.options.api.optionsChanged();
-    }
-  }
-  public MoveParameters(){
-    this.options.draggable ={enabled : true};
-    this.options.resizable = {enabled : true};
-    this.ChangedOptions();
-  }
+  // private ChangedOptions() {
+  //   if (this.options.api && this.options.api.optionsChanged) {
+  //     this.options.api.optionsChanged();
+  //   }
+  // }
+  // public MoveParameters(){
+  //   this.options.draggable ={enabled : true};
+  //   this.options.resizable = {enabled : true};
+  //   this.ChangedOptions();
+  // }
   
-  private StartConnection(){
-    this.signalRService.startConnection().subscribe((response)=>{
-      console.log("worked signalR");
+  // private StartConnection(){
+  //   this.signalRService.startConnection().subscribe((response)=>{
+  //     console.log("worked signalR");
 
-      this.signalRService.receiveMessage().subscribe((message) => {
-        console.log("Received message:", message);
+  //     this.signalRService.receiveMessage().subscribe((message) => {
+  //       console.log("Received message:", message);
         
-        const parameterMap = message.message; 
-        const uavName = message.uavName;
-        this.updateChartData(parameterMap,uavName);
-    });
-  });
-  }
+  //       const parameterMap = message.message; 
+  //       const uavName = message.uavName;
+  //       // this.updateChartData(parameterMap,uavName);
+  //     });
+  //   });
+  // }
 
   protected sendMessage(message: string): void {
     this.signalRService.sendMessage(message);
@@ -116,126 +115,124 @@ export class LiveComponent implements OnInit , AfterViewInit {
 
   }
 
-  private updateChartData(parameterMap: { [key: string]: string }, incomingFullUavName: string): void {
-    this.dashboard.forEach((item, itemIndex) => {
-      let datasetForThisUAV = item.datasets.find(ds => ds.uavName + item.communication === incomingFullUavName);
-      if (!datasetForThisUAV) return;
+  // private updateChartData(parameterMap: { [key: string]: string }, incomingFullUavName: string): void {
+  //   this.dashboard.forEach((item, itemIndex) => {
+  //     let datasetForThisUAV = item.datasets.find(ds => ds.uavName + item.communication === incomingFullUavName);
+  //     if (!datasetForThisUAV) return;
   
-      if (parameterMap[item.parameter] !== undefined) {
-        const newValue = parseFloat(parameterMap[item.parameter]);
-        if (isNaN(newValue)) {
-          console.error('Received invalid value:', parameterMap[item.parameter]);
-          return;
-        }
+  //     if (parameterMap[item.parameter] !== undefined) {
+  //       const newValue = parseFloat(parameterMap[item.parameter]);
+  //       if (isNaN(newValue)) {
+  //         console.error('Received invalid value:', parameterMap[item.parameter]);
+  //         return;
+  //       }
   
-        const newLabel = new Date().toLocaleTimeString();
+  //       const newLabel = new Date().toLocaleTimeString();
   
-        if (['pie', 'gauge'].includes(item.chartType)) {
-          datasetForThisUAV.data = [newValue];
-          item.chartLabels = [newLabel];
-        } else {
-          datasetForThisUAV.data.push(newValue);
-          item.chartLabels.push(newLabel);
-        }
+  //       if (['pie', 'gauge'].includes(item.chartType)) {
+  //         datasetForThisUAV.data = [newValue];
+  //         item.chartLabels = [newLabel];
+  //       } else {
+  //         datasetForThisUAV.data.push(newValue);
+  //         item.chartLabels.push(newLabel);
+  //       }
         
-        if (datasetForThisUAV.data.length >= 10)
-          datasetForThisUAV.data.shift();
-        if (item.chartLabels.length >= 10)
-          item.chartLabels.shift();
+  //       if (datasetForThisUAV.data.length >= 10)
+  //         datasetForThisUAV.data.shift();
+  //       if (item.chartLabels.length >= 10)
+  //         item.chartLabels.shift();
   
-        const chart = this.charts.toArray()[itemIndex];
-        if (chart) {
-          chart.datasets = item.datasets.map(ds => ({
-            label: ds.label,
-            data: ds.data,
-            uavName: ds.uavName,
-            color: ds.color
-          }));
+  //       const chart = this.charts.toArray()[itemIndex];
+  //       if (chart) {
+  //         chart.datasets = item.datasets.map(ds => ({
+  //           label: ds.label,
+  //           data: ds.data,
+  //           uavName: ds.uavName,
+  //           color: ds.color
+  //         }));
   
-          chart.chartLabels = item.chartLabels;
-          chart.chartTitle = item.parameter;
-          chart.updateChart();
-        }
-      }
-    });
-  }
+  //         chart.chartLabels = item.chartLabels;
+  //         chart.chartTitle = item.parameter;
+  //         chart.updateChart();
+  //       }
+  //     }
+  //   });
+  // }
   
   
   
-  protected GetUAVS(): void {
-    this.simulatorservice.telemetryUavs().subscribe(
-        (res) => {
-            console.log("UAVs List:", res);
-            this.uavsList = Object.keys(res);
-            this.getParameters(); 
-        },
-        (err) => {
-            console.error("Error fetching UAVs list:", err);
-        }
-    );
-}
+//   protected GetUAVS(): void {
+//     this.simulatorservice.telemetryUavs().subscribe(
+//         (res) => {
+//             console.log("UAVs List:", res);
+//             this.uavsList = Object.keys(res);
+//             this.getParameters(); 
+//         },
+//         (err) => {
+//             console.error("Error fetching UAVs list:", err);
+//         }
+//     );
+// }
 
- protected getParameters(): void {
-  this.userservice.getAllParameters().subscribe(
-    (res) => {
-      Object.entries(res).forEach(([communication, parameters]) => {
-        this.parametersMap.set(communication, parameters); 
-        this.uavsList.forEach(uav => {
-          if (!this.selectedParametersMap.has(uav)) {
-            this.selectedParametersMap.set(uav, new Map<string, string[]>());
-          }
-          this.selectedParametersMap.get(uav)?.set(communication, []);
-        });      
-      });
-      console.log('Parameters Map:', this.parametersMap);
-    },
-    (err) => {
-      console.error('error :', err);
-    }
-  );
-}
+//  protected getParameters(): void {
+//   this.userservice.getAllParameters().subscribe(
+//     (res) => {
+//       Object.entries(res).forEach(([communication, parameters]) => {
+//         this.parametersMap.set(communication, parameters); 
+//         this.uavsList.forEach(uav => {
+//           if (!this.selectedParametersMap.has(uav)) {
+//             this.selectedParametersMap.set(uav, new Map<string, string[]>());
+//           }
+//           this.selectedParametersMap.get(uav)?.set(communication, []);
+//         });      
+//       });
+//       console.log('Parameters Map:', this.parametersMap);
+//     },
+//     (err) => {
+//       console.error('error :', err);
+//     }
+//   );
+// }
 
-public onSelectUAV(event:any): void{
+// public onSelectUAV(event:any): void{
 
-  this.selectedUAV = event.value;
-  this.updateParametersArray();
-  if (this.selectedCommunication) {
-    const uavMap = this.selectedParametersMap.get(this.selectedUAV);
-    this.selectedParameters = uavMap?.get(this.selectedCommunication) || [];
-  }
-  }
+//   this.selectedUAV = event.value;
+//   this.updateParametersArray();
+//   if (this.selectedCommunication) {
+//     const uavMap = this.selectedParametersMap.get(this.selectedUAV);
+//     this.selectedParameters = uavMap?.get(this.selectedCommunication) || [];
+//   }
+//   }
 
-public onSelectCommunication(event: any): void {
-  this.selectedCommunication = event.value;
-  this.updateParametersArray();
-  if (this.selectedUAV) {
-      const uavMap = this.selectedParametersMap.get(this.selectedUAV);
-      this.selectedParameters = uavMap?.get(this.selectedCommunication) || [];
-    }
-  }
+// public onSelectCommunication(event: any): void {
+//   this.selectedCommunication = event.value;
+//   this.updateParametersArray();
+//   if (this.selectedUAV) {
+//       const uavMap = this.selectedParametersMap.get(this.selectedUAV);
+//       this.selectedParameters = uavMap?.get(this.selectedCommunication) || [];
+//     }
+//   }
 
-
-  protected getCurrentParameters(): string[] {
-    const params = this.parametersMap.get(this.selectedCommunication) || [];
-    return params;
-  }
+  // protected getCurrentParameters(): string[] {
+  //   const params = this.parametersMap.get(this.selectedCommunication) || [];
+  //   return params;
+  // }
   
-  
-  private updateParametersArray() {
-    if (this.selectedCommunication) {
-      const type = this.selectedCommunication as 'FBDown' | 'FBUp' | 'MissionDown' | 'MissionUp';
-      this.parametersarray = this.parametersMap.get(type) || [];
-    }
-  }
-  protected isParameterSelected(parameter: string): boolean {
-    const uavMap = this.selectedParametersMap.get(this.selectedUAV);
-    if (!uavMap) return false;
-  
-    const selectedParams = uavMap.get(this.selectedCommunication) || [];
-    return selectedParams.includes(parameter);
-  }
-  
+  // private updateParametersArray() {
+  //   if (this.selectedCommunication) {
+  //     const type = this.selectedCommunication as 'FBDown' | 'FBUp' | 'MissionDown' | 'MissionUp';
+  //     this.parametersarray = this.parametersMap.get(type) || [];
+  //   }
+  // }
 
+  // protected isParameterSelected(parameter: string): boolean {
+  //   const uavMap = this.selectedParametersMap.get(this.selectedUAV);
+  //   if (!uavMap) return false;
+  
+  //   const selectedParams = uavMap.get(this.selectedCommunication) || [];
+  //   return selectedParams.includes(parameter);
+  // }
+  
   private getRandomColor(): string {
     const letters = '0123456789ABCDEF';
     let color = '#';
@@ -245,102 +242,103 @@ public onSelectCommunication(event: any): void {
     return color;
   }  
 
-  private removeParameterFromGridster(parameter: string, uavName: string, communication: string): void {
-    const foundItem = this.dashboard.find(item => item.communication === communication && item.parameter === parameter);
+  // private removeParameterFromGridster(parameter: string, uavName: string, communication: string): void {
+  //   const foundItem = this.dashboard.find(item => item.communication === communication && item.parameter === parameter);
   
-    if (foundItem) {
-      foundItem.datasets = foundItem.datasets.filter(ds => ds.uavName !== uavName);
+  //   if (foundItem) {
+  //     foundItem.datasets = foundItem.datasets.filter(ds => ds.uavName !== uavName);
   
-      const otherUAVsUsingSameParam = foundItem.datasets.filter(ds => ds.uavName !== uavName);
-      if (otherUAVsUsingSameParam.length === 0) {
-        this.dashboard = this.dashboard.filter(item => item !== foundItem);
-        this.ChangedOptions();
-      }
+  //     const otherUAVsUsingSameParam = foundItem.datasets.filter(ds => ds.uavName !== uavName);
+  //     if (otherUAVsUsingSameParam.length === 0) {
+  //       this.dashboard = this.dashboard.filter(item => item !== foundItem);
+  //       // this.ChangedOptions();
+  //     }
   
-      const chart = this.charts.toArray()[this.dashboard.indexOf(foundItem)];
-      if (chart) {
-        chart.datasets = foundItem.datasets;
-        chart.chartLabels = foundItem.chartLabels;
-        chart.chartTitle = foundItem.parameter;
-        chart.updateChart();
-      }
-    }
-  }
+  //     const chart = this.charts.toArray()[this.dashboard.indexOf(foundItem)];
+  //     if (chart) {
+  //       chart.datasets = foundItem.datasets;
+  //       chart.chartLabels = foundItem.chartLabels;
+  //       chart.chartTitle = foundItem.parameter;
+  //       chart.updateChart();
+  //     }
+  //   }
+  // }
   
   
-  private addParameterToGridster(parameter: string, uavName: string, communication: string): void {
-    let foundItem = this.dashboard.find(item => item.communication === communication && item.parameter === parameter);
+  // private addParameterToGridster(parameter: string, uavName: string, communication: string): void {
+  //   let foundItem = this.dashboard.find(item => item.communication === communication && item.parameter === parameter);
   
-    if (!foundItem) {
-      foundItem = {
-        cols: 1,
-        rows: 1,
-        x: this.dashboard.length % 5,
-        y: Math.floor(this.dashboard.length / 5),
-        chartType: 'line',
-        chartLabels: [],
-        communication,
-        parameter,
-        datasets: [],
-        showOptions : false
-      };
-      this.dashboard.push(foundItem);
-    }
+  //   if (!foundItem) {
+  //     foundItem = {
+  //       cols: 1,
+  //       rows: 1,
+  //       x: this.dashboard.length % 5,
+  //       y: Math.floor(this.dashboard.length / 5),
+  //       chartType: 'line',
+  //       chartLabels: [],
+  //       communication,
+  //       parameter,
+  //       datasets: [],
+  //       showOptions : false
+  //     };
+  //     this.dashboard.push(foundItem);
+  //   }
   
-    const existingDataset = foundItem.datasets.find(ds => ds.uavName === uavName);
-    if (!existingDataset) {
-      const newDataset = {
-        label: `${uavName} - ${parameter}`,
-        data: [],
-        color: this.getRandomColor(),
-        uavName,
-      };
-      foundItem.datasets.push(newDataset);
-    }
+  //   const existingDataset = foundItem.datasets.find(ds => ds.uavName === uavName);
+  //   if (!existingDataset) {
+  //     const newDataset = {
+  //       label: `${uavName} - ${parameter}`,
+  //       data: [],
+  //       color: this.getRandomColor(),
+  //       uavName,
+  //     };
+  //     foundItem.datasets.push(newDataset);
+  //   }
 
-    this.signalRService.addParameter(uavName+communication, parameter);
-    this.joinGroup();
-  }
-  protected toggleParameterSelection(parameter: string): void {
-    if (!this.selectedUAV || !this.selectedCommunication) {
-        Swal.fire({
-            icon: 'info',
-            title: 'Missing Selection',
-            text: 'Please select both a UAV and a communication type before adding parameters.',
-        });
-        return;
-    }
+  //   this.signalRService.addParameter(uavName+communication, parameter);
+  //   this.joinGroup();
+  // }
 
-    let uavMap = this.selectedParametersMap.get(this.selectedUAV);
-    if (!uavMap) {
-        uavMap = new Map<string, string[]>();
-        this.selectedParametersMap.set(this.selectedUAV, uavMap);
-    }
+//   protected toggleParameterSelection(parameter: string): void {
+//     if (!this.selectedUAV || !this.selectedCommunication) {
+//         Swal.fire({
+//             icon: 'info',
+//             title: 'Missing Selection',
+//             text: 'Please select both a UAV and a communication type before adding parameters.',
+//         });
+//         return;
+//     }
 
-    let selectedParams = uavMap.get(this.selectedCommunication);
-    if (!selectedParams) {
-        selectedParams = [];
-        uavMap.set(this.selectedCommunication, selectedParams);
-    }
+//     let uavMap = this.selectedParametersMap.get(this.selectedUAV);
+//     if (!uavMap) {
+//         uavMap = new Map<string, string[]>();
+//         this.selectedParametersMap.set(this.selectedUAV, uavMap);
+//     }
 
-    const paramIndex = selectedParams.indexOf(parameter);
+//     let selectedParams = uavMap.get(this.selectedCommunication);
+//     if (!selectedParams) {
+//         selectedParams = [];
+//         uavMap.set(this.selectedCommunication, selectedParams);
+//     }
 
-    if (paramIndex === -1) {
-      this.addParameterToGridster(parameter, this.selectedUAV, this.selectedCommunication);
-      this.joinGroup();
-      selectedParams.push(parameter);
-    } 
-    else {
-      this.removeParameterFromGridster(parameter, this.selectedUAV, this.selectedCommunication);
-      selectedParams.splice(paramIndex, 1);
-    }
+//     const paramIndex = selectedParams.indexOf(parameter);
+
+//     if (paramIndex === -1) {
+//       // this.addParameterToGridster(parameter, this.selectedUAV, this.selectedCommunication);
+//       this.joinGroup();
+//       selectedParams.push(parameter);
+//     } 
+//     else {
+//       // this.removeParameterFromGridster(parameter, this.selectedUAV, this.selectedCommunication);
+//       selectedParams.splice(paramIndex, 1);
+//     }
   
-    uavMap.set(this.selectedCommunication, selectedParams);
-    this.selectedParametersMap.set(this.selectedUAV, uavMap);
-    console.log(`Selected Parameters for UAV: ${this.selectedUAV}, Communication: ${this.selectedCommunication}:`, selectedParams);
+//     uavMap.set(this.selectedCommunication, selectedParams);
+//     this.selectedParametersMap.set(this.selectedUAV, uavMap);
+//     console.log(`Selected Parameters for UAV: ${this.selectedUAV}, Communication: ${this.selectedCommunication}:`, selectedParams);
 
-    // this.toggleUAVParameterSelection(this.selectedUAV, this.selectedCommunication, parameter);
-}
+//     // this.toggleUAVParameterSelection(this.selectedUAV, this.selectedCommunication, parameter);
+// }
   
   protected getChartData(item: ChartGridsterItem) {
     const chartData = {

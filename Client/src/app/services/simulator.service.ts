@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { channeldto } from '../models/channeldto';
+import { channeldto } from '../entities/models/channeldto';
 import { path } from 'd3';
 
 @Injectable({
@@ -17,7 +17,7 @@ export class SimulatorService {
   public simulatorTimes(): Observable<{ [key: number]: number }> {
     return this.http.get<{ [key: number]: number }>(`${this.ROOT_URL}/simulator/TimeCommunications`);
   }
-    public changePrimary(uavNumber: string): Observable<any> {
+    public changePrimary(uavNumber: number): Observable<any> {
     return this.http.post( `${this.ROOT_URL}/simulator/ChangePrimaryCommunications`, { uavNumber: uavNumber });
   }
   public startSimulate(dto: channeldto): Observable<any> {

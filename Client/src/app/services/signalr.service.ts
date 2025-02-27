@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Observable, partition } from 'rxjs';
+import { IcdParameter } from '../entities/IcdParameter';
 
 @Injectable({
   providedIn: 'root',
@@ -69,20 +70,20 @@ export class SignalRService {
     this.hubConnection.invoke('SendMessage', message);
   }
 
-  public addParameter(uavName: string, parameter: string): void {
-    this.hubConnection.invoke('AddParameter', uavName, parameter)
+  public addParameter(parameter:IcdParameter): void {
+    this.hubConnection.invoke('AddParameter', parameter.uavNumber+parameter.communication, parameter.parameterName)
       .then(() => {
-        console.log(`Parameter added: ${parameter} for UAV: ${uavName}`);
+        console.log(`Parameter added: ${parameter.parameterName} for UAV: ${parameter.uavNumber}`);
       })
       .catch((error) => {
         console.error('Error adding parameter:', error);
       });
   }
 
-  public removeParameter(uavName: string, parameter: string): void {
-    this.hubConnection.invoke('RemoveParameter', uavName, parameter)
+  public removeParameter(parameter:IcdParameter): void {
+    this.hubConnection.invoke('RemoveParameter', parameter.uavNumber+parameter.communication, parameter.parameterName)
       .then(() => {
-        console.log(`Parameter removed: ${parameter} for UAV: ${uavName}`);
+        console.log(`Parameter removed: ${parameter.parameterName} for UAV: ${parameter.uavNumber}`);
       })
       .catch((error) => {
         console.error('Error removing parameter:', error);

@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { SimulatorService } from 'src/app/services/simulator.service';
-import { channeldto } from 'src/app/models/channeldto';
+import { channeldto } from 'src/app/entities/models/channeldto';
 
 @Component({
   selector: 'app-config',
@@ -48,7 +48,7 @@ export class ConfigComponent implements OnInit {
 
   }
 
-  public SwitchCommunication(selectedUav: string) {
+  public SwitchCommunication(selectedUav: number) {
     console.log(selectedUav);
     this.simulatorservice.changePrimary(selectedUav).subscribe(
       (response) => {

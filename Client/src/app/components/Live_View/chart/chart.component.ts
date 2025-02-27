@@ -9,7 +9,7 @@ import * as Highcharts from 'highcharts';
 })
 export class ChartComponent implements OnInit, OnChanges {
 
-  @Input() datasets: { label: string, data: number[],uavName:string, color: string }[] = [];
+  @Input() datasets: { label: string, data: number[],uavName:number, color: string }[] = [];
   @Input() chartLabels: string[] = [];
   @Input() chartTitle: string = '';
   @Input() chartType: 'line' | 'area' | 'bar' | 'scatter' | 'pie' | 'gauge' = 'line';

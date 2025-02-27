@@ -64,7 +64,7 @@
 
   .table {
     
-    background-color: #333333; 
+    background-color: #000000; 
     border-radius: 15px;
     width: 100vw;
     padding: 20px;
@@ -79,7 +79,7 @@
     }
     
     .device-list li {
-      background-color: #444444;
+      background-color: #000000;
       color: white;
       padding: 10px;
       margin: 5px 0;

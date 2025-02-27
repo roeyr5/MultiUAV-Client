@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import * as Highcharts from 'highcharts';
-import { ChartType } from 'src/app/enums/chartType.enum';
+import { ChartType } from 'src/app/entities/enums/chartType.enum';
 
 @Component({
   selector: 'app-pie-chart',

@@ -1,8 +1,8 @@
-<div class="sidebar">
-  <h4>Select Parameter</h4>
-  
+<div class="sidebar-container">
+  <mat-icon class="close-sidebar" (click)="closeSideBar()">close</mat-icon>
+  <h4 class="headline">Parameters</h4>
   <mat-form-field>
-    <mat-label>UAVs</mat-label>
+    <mat-label>Select Uav</mat-label>
     <mat-select (selectionChange)="onSelectUAV($event)">
       <mat-option *ngFor="let uav of uavsList" [value]="uav">
         {{ uav }}
@@ -10,10 +10,10 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field>
-    <mat-label>Communication</mat-label>
+  <mat-form-field *ngIf="selectedUAV">
+    <mat-label >Select Comn</mat-label>
     <mat-select (selectionChange)="onSelectCommunication($event)">
-      <mat-option value="FBDown">FBDown</mat-option>
+      <mat-option value="FBDown">FBXDown</mat-option>
       <mat-option value="FBUp">FBUp</mat-option>
       <mat-option value="MissionDown">MissionDown</mat-option>
       <mat-option value="MissionUp">MissionUp</mat-option>
@@ -21,16 +21,16 @@
   </mat-form-field>
 
   <div class="parameters-selection">
-    <h4>Parameters for {{ selectedCommunication }}</h4>
-    <div *ngFor="let parameter of getCurrentParameters()" class="parameter-item">
-      <mat-checkbox
+    <h4 *ngIf="selectedCommunication" class="headline">Parameters for {{ selectedCommunication }}</h4>
+    <div
+      *ngFor="let parameter of filteredParameters" class="parameter-item" (click)="toggleParameterSelection(parameter)">
+      <span [ngClass]="isParameterSelected(parameter)? 'parameter-selected' : 'parameter-unSelected'"> {{ parameter}} </span>
+      <!-- <mat-checkbox
         [checked]="isParameterSelected(parameter)"
         (change)="toggleParameterSelection(parameter)"
       >
         {{ parameter }}
-      </mat-checkbox>   
+      </mat-checkbox> -->
     </div>
-    
   </div>
-
 </div>

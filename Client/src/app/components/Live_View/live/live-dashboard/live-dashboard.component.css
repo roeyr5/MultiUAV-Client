@@ -3,12 +3,38 @@
   width: 100%;
 
   .top {
+    display: flex;
     height: 10%;
     width: 100%;
+    justify-content: flex-end;
+
+    .top-buttons {
+      width: fit-content;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-evenly;
+      margin-right: 1.5rem;
+
+      .button {
+        background-color: white;
+      }
+    }
   }
 
   .body {
     height: 90%;
     width: 100%;
+
+    .gridster {
+      background: #131417;
+    }
   }
+}
+
+app-side-bar-parameters {
+  z-index: 1;
+  right: 0;
+  top: 0;
+  position: fixed;
 }
