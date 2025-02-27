@@ -22,7 +22,6 @@
     "@angular/router": "^16.2.0",
     "@microsoft/signalr": "^8.0.7",
     "@swimlane/ngx-charts": "^20.1.0",
-    "angular-google-charts": "^16.0.2",
     "angular-gridster": "^0.13.14",
     "angular-gridster2": "^16.0.0",
     "angular-highcharts": "^16.0.0",

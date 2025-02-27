@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MonitorRService } from 'src/app/services/monitorR.service';
+import { SimulatorService } from 'src/app/services/simulator.service';
 
 @Component({
   selector: 'app-monitor',
@@ -8,23 +9,9 @@ import { MonitorRService } from 'src/app/services/monitorR.service';
 })
 export class MonitorComponent implements OnInit {
 
-  public activeUavs: { 
-    [uavNumber: number]: { 
-        [partition: number]: number } } = {
-    100: {
-        0:3,
-        1: 1,
-        2: 0,
-        3:2
-    },
-    200: {
-        0:1,
-        1: 2,
-        2:3,
-        3: 3,
-    }
-};
-  constructor(private  monitorservice: MonitorRService){}
+  public activeUavs: { [uavNumber: number]: {  [partition: number]: number } } = {};
+
+  constructor(private monitorservice: MonitorRService, private simulatorService: SimulatorService){}
   
   public ngOnInit(): void 
   {
@@ -46,8 +33,24 @@ export class MonitorComponent implements OnInit {
     });
   });
   }
+
+  protected getUavs(): void {
+    console.log(1)
+    this.simulatorService.telemetryUavs().subscribe(
+      (res) => {
+        console.log(res)
+        res.forEach((channels, uavNumber) => {
+          if (!this.activeUavs[uavNumber]) {
+            this.activeUavs[uavNumber] = { 0: 0, 1: 0, 2: 0, 3: 0 };
+          }
+          console.log(this.activeUavs)
+          console.log(res)
+        }
+    );
+    })
+  }
   
-  getStatus(value: number): string {
+  protected getStatus(value: number): string {
     return value > 0 ? 'green' : 'red';
   }
 }

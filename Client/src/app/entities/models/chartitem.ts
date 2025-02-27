@@ -1,16 +1,25 @@
 import { GridsterItem } from "angular-gridster2";
+import { IChartEntity } from "./IChartEntity";
+import { ChartType } from "../enums/chartType.enum";
+
+export interface Dataset {
+  uavNumber: number;
+  data: number[];
+  label: string;
+  color: string;
+}
 
 export interface ChartGridsterItem extends GridsterItem {
-  chartType: 'line' | 'bar' | 'gauge' | 'pie' ; 
+  x: number;
+  y: number;
+  rows: number;
+  cols: number;
+  chartType: ChartType; 
   chartLabels: string[];
   communication: string;
   parameter: string;
-  datasets: Array<{
-    uavName: string;
-    data: number[] ;
-    label: string;
-    color: string;
-  }>;
-  showOptions:boolean;
+  datasets: Dataset[];
+  showOptions: boolean;
 }
+
 //using ICHartEntity

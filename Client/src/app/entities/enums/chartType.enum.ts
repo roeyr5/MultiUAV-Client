@@ -1,6 +1,6 @@
 export enum ChartType {
   Gauge = 'gauge',
-  Graph = 'graph',
+  Graph = 'spline',
   Pie = 'pie',
 }
 

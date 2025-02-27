@@ -40,6 +40,7 @@ import { GaugeChartComponent } from './components/generic-components/chart-entit
 import { GraphChartComponent } from './components/generic-components/chart-entity/charts-types/graph-chart/graph-chart.component';
 import { PieChartComponent } from './components/generic-components/chart-entity/charts-types/pie-chart/pie-chart.component';
 import {MatMenuModule} from '@angular/material/menu';
+import { GridsterBlockComponent } from './components/generic-components/chart-entity/charts-types/gridster-block/gridster-block.component';
 
 
 
@@ -61,6 +62,7 @@ import {MatMenuModule} from '@angular/material/menu';
     GaugeChartComponent,
     GraphChartComponent,
     PieChartComponent,
+    GridsterBlockComponent,
   ],
   imports: [
     GridsterModule,

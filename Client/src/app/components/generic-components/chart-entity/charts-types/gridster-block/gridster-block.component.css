@@ -1,0 +1,60 @@
+Gridster Block Specific Styles
+
+/* Ensures the chart takes the full width and height of its container */
+#container {
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  display: block; /* Ensures it's treated as a block element */
+  margin: 0 auto; /* Centers the chart if there's extra space in its container */
+  box-sizing: border-box; /* Ensures padding/border are included in the element’s width/height */
+}
+
+/* Optional: Make the chart responsive to larger screens */
+@media (min-width: 768px) {
+  #container {
+    height: 400px; /* Increase the height on larger screens */
+  }
+}
+
+@media (min-width: 1200px) {
+  #container {
+    height: 450px; /* Even larger height on very large screens */
+  }
+}
+
+/* Container styling for the chart (chart container) */
+.gridster-item {
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow to make the chart pop */
+  padding: 15px;
+  margin-bottom: 20px;  /* Margin below each chart container */
+  overflow: hidden;     /* Ensures no content goes outside the rounded corners */
+  display: flex;
+  flex-direction: column;
+  height: 100%;         /* Ensure it fills the available space */
+}
+
+/* Controls section if needed inside the chart container */
+.gridster-item .chart-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+}
+
+/* Button styles inside the chart controls */
+.gridster-item .chart-controls button {
+  background-color: #ea5555;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.gridster-item .chart-controls button:hover {
+  background-color: #ea5555;
+}

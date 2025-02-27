@@ -115,13 +115,10 @@ export class SideBarParametersComponent implements OnInit {
 
     const paramterICd = new IcdParameter(parameterName,this.selectedCommunication, this.selectedUAV)
     if (paramIndex === -1) {
-      // this.addParameterToGridster(parameter, this.selectedUAV, this.selectedCommunication);
-      // this.joinGroup();
-      
       selectedParams.push(parameterName);
       this.onAddParameter.emit(paramterICd);
     } else {
-      // this.removeParameterFromGridster(parameter, this.selectedUAV, this.selectedCommunication);
+      
       selectedParams.splice(paramIndex, 1);
       this.onRemoveParameter.emit(paramterICd);
     }
