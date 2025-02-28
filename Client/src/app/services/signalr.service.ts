@@ -58,10 +58,10 @@ export class SignalRService {
     });
   }
 
-  public receiveMessage(): Observable<{ message: { [key: string]: string }; uavName: string  }> {
+  public receiveMessage(): Observable<{ message: Array<{ parameterName: string, parameterValue: string }>; uavName: string }> {
     return new Observable((observer) => {
-      this.hubConnection.on('ReceiveMessage', (message:  { [key: string]: string } , uavName : string) => {
-        observer.next({message,uavName});
+      this.hubConnection.on('ReceiveMessage', (message: Array<{ parameterName: string, parameterValue: string }>, uavName: string) => {
+        observer.next({ message, uavName });
       });
     });
   }

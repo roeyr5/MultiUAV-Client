@@ -13,17 +13,8 @@ export class GridsterBlockComponent implements OnInit,AfterViewInit {
   public chartId: string = '';
   ngZone = inject(NgZone);
 
+  
   @Input() item!:ChartGridsterItem;
-  // @Input() x: number = 0;
-  // @Input() y: number = 0;
-  // @Input() rows: number = 1;
-  // @Input() cols: number = 1;
-  // @Input() communication: string = '';
-  // @Input() parameterName: string = '';
-  // @Input() chartType: ChartType = ChartType.Graph;
-  // @Input() chartLabels: string[] = [];
-  // @Input() datasets: Dataset[] = [];
-
   @Output() updateChange = new EventEmitter<boolean>();
   @Output() chartDataUpdated = new EventEmitter<void>();
 
@@ -34,14 +25,11 @@ export class GridsterBlockComponent implements OnInit,AfterViewInit {
 
   ngOnInit(): void {
     this.chartId = `chart-container-${Math.random().toString(36).substr(2, 9)}`;
-    this.createChart();  
   }
 
   ngAfterViewInit(): void {
-    if (this.item.datasets.length > 0) {
       this.createChart();
-  }  
-}
+  }
 
   createChart() {
     this.chartOptions = {
@@ -56,9 +44,16 @@ export class GridsterBlockComponent implements OnInit,AfterViewInit {
       },
       series: this.item.datasets.map(dataset => ({
         type: this.item.chartType,
+        width: '100%',
+        height: '100%',
+        backgroundColor: 'transparent',
+        animation: false ,
         name: `UAV ${dataset.uavNumber}`,
         data: dataset.data,
         color: dataset.color,
+        marker: {
+          enabled: false,
+        },
       })) as Highcharts.SeriesOptionsType[],
 
       responsive: {
@@ -81,46 +76,85 @@ export class GridsterBlockComponent implements OnInit,AfterViewInit {
 
   }
 
-  
-  handleNewData() {
-    this.updateChart();
+  handleNewData(uavNumber: number, communication:string,parameter:string) {
+    this.updateChart(uavNumber,communication,parameter);
     this.chartDataUpdated.emit(); 
   }
 
 
-  updateChart() {
+public removeSpecificSeries(uavNumber: number): void {
+  if (!this.chart) return;
+
+  const seriesName = `UAV ${uavNumber}`;
+  const seriesIndex = this.chart.series.findIndex(s => s.name === seriesName);
+  
+  if (seriesIndex !== -1) {
+    this.chart.series[seriesIndex].remove();
+    this.updateXAxisLabels(); 
+  }
+}
+
+private updateXAxisLabels(): void {
+  if (this.chart?.xAxis[0]) {
+    this.chart.xAxis[0].update({
+      categories: this.item.chartLabels
+    });
+  }
+}
+
+public recreateChart(): void {
+  if (this.chart) {
+    this.chart.destroy();
+  }
+  console.log(1)
+  this.createChart();
+}
+
+  public updateChart(uavNumber:number,communication:string,parameter:string) {
+
     if (!this.chart) {
       console.error('Chart is not initialized yet');
       return;
     }
-  
+    
     // console.log('Current Datasets:', this.item.datasets);
     // console.log('Current Chart Labels:', this.item.chartLabels);
-  
-    this.item.datasets.forEach((dataset, index) => {
-      let series = this.chart?.series ? this.chart.series[index] : undefined;
-  
-      if (series) {
-        console.log(`Updating Series ${index} with data:`, dataset.data);
-        series.setData(dataset.data, false); 
+
+    const foundDataset = this.item.datasets.find(dataset => dataset.uavNumber === uavNumber);
+
+    if (foundDataset) {
+      const seriesName = `UAV ${uavNumber}`;
+      let series = this.chart.series.find(s => s.name === seriesName);
+
+     if (series) {
+        series.setData([...foundDataset.data], false);
       } 
-      else 
-      {
-        series = this.chart?.addSeries({
-          name: `UAV ${dataset.uavNumber}`,
-          data: dataset.data,
-          color: dataset.color,
-          type: this.item.chartType, 
-        }, false);
-      }
-    });
-  
-    if (this.chart.xAxis && this.item.chartLabels.length > 0) {
-      console.log('Updating X-Axis Categories:', this.item.chartLabels);
-      this.chart.xAxis[0].update({
-        categories: this.item.chartLabels,
-      }, false);  
+      else {
+      this.chart.addSeries({
+        name: seriesName,
+        data: [...foundDataset.data],
+        color: foundDataset.color,
+        type: this.item.chartType,
+        marker:{enabled : false}
+      }, false);
     }
+  }
+  
+   if (this.item.datasets[0].uavNumber === uavNumber) {
+      if (this.chart.xAxis && this.item.chartLabels.length > 0) {
+        console.log('Updating X-Axis Categories for the first UAV:', this.item.chartLabels);
+        this.chart.xAxis[0].update({
+          categories: this.item.chartLabels,
+        }, false);  // Update without redrawing the entire chart
+      }
+    }
+
+    // if (this.chart.xAxis && this.item.chartLabels.length > 0) {
+    //   console.log('Updating X-Axis Categories:', this.item.chartLabels);
+    //   this.chart.xAxis[0].update({
+    //     categories: this.item.chartLabels,
+    //   }, false);  
+    // }
   
     this.chart.redraw();  
     this.updateChange.emit(true); 
