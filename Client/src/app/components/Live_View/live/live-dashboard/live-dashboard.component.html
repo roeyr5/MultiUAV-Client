@@ -19,7 +19,7 @@
           </button>
 
           <mat-menu #menu="matMenu">
-            <button mat-menu-item *ngFor="let graph of graphOptions" (click)="changeChartType(item, graph.value)" >
+            <button mat-menu-item *ngFor="let graph of graphOptions" (click)="changeChartType(item, graph.label)" >
               <img [src]="graph.image" style="width: 18px; height: 18px" />
               <span>{{ graph.label }}</span>
             </button>

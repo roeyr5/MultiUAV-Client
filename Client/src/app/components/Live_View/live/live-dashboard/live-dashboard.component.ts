@@ -3,7 +3,9 @@ import { DisplayGrid, GridsterConfig, GridType } from 'angular-gridster2';
 import { GridsterBlockComponent } from 'src/app/components/generic-components/chart-entity/charts-types/gridster-block/gridster-block.component';
 import { ChartType } from 'src/app/entities/enums/chartType.enum';
 import { IcdParameter } from 'src/app/entities/IcdParameter';
+import { gaugeChartTypes, graphChartTypes, pieChartTypes } from 'src/app/entities/enums/chartType.enum';
 import { ChartGridsterItem } from 'src/app/entities/models/chartitem';
+import { IChartEntity } from 'src/app/entities/models/IChartEntity';
 import { SignalRService } from 'src/app/services/signalr.service';
 import { SimulatorService } from 'src/app/services/simulator.service';
 import { UserService } from 'src/app/services/user.service';
@@ -33,6 +35,8 @@ export class LiveDashboardComponent implements AfterViewChecked{
   protected parametersMap: Map<string, string[]> = new Map<string, string[]>();
   protected selectedParametersMap: Map<number, Map<string, string[]>> = new Map<number,Map<string, string[]>>();
 
+  public parametersChartEntityMap: Map<string,IChartEntity> = new Map<string,IChartEntity>();
+
   public groupsJoined: string[] = [];
 
   public options: GridsterConfig = {};
@@ -42,12 +46,29 @@ export class LiveDashboardComponent implements AfterViewChecked{
 
   public isSideBarOpen: boolean = false;
 
-  graphOptions: any[] = [
-    { label: 'line', image: 'assets/images/line_chart_icon.png' },
-    { label: 'bar', image: 'assets/images/bar_chart_icon.png' },
-    { label: 'pie', image: 'assets/images/pie_chart_icon.png' },
-    { label: 'gauge', image: 'assets/images/gauge_chart_icon.png' },
-    { label: 'area', image: 'assets/images/area_chart_icon.png' },
+  graphOptions = [
+    { 
+      label: ChartType.Gauge,
+      image: 'assets/images/gauge_chart_icon.png',
+      subOptions: [
+        { label: gaugeChartTypes.regular, image: 'assets/images/gauge_regular.png' },
+        { label: gaugeChartTypes.pointer, image: 'assets/images/gauge_pointer.png' }
+      ]
+    },
+    {
+      label: ChartType.Graph,
+      image: 'assets/images/line_chart_icon.png',
+      subOptions: [
+        { label: graphChartTypes.regular, image: 'assets/images/line_regular.png' }
+      ]
+    },
+    {
+      label: ChartType.Pie,
+      image: 'assets/images/pie_chart_icon.png',
+      subOptions: [
+        { label: pieChartTypes.regular, image: 'assets/images/pie_regular.png' }
+      ]
+    }
   ];
 
   public ngOnInit(): void {
@@ -63,8 +84,8 @@ export class LiveDashboardComponent implements AfterViewChecked{
 
       this.liveTelemetryData.receiveMessage().subscribe((message) => {
         console.log("Received message:", message);
-        
-        const parameterMap = message.message; 
+
+        const parameterMap = message.message;
         const uavName = message.uavName;
         this.updateChartData(parameterMap,uavName);
       });
@@ -75,39 +96,50 @@ export class LiveDashboardComponent implements AfterViewChecked{
     console.log('Chart data was updated');
   }
 
-   private updateChartData(parameterMap: { [key: string]: string }, incomingFullUavName: string): void {
-    this.dashboard.forEach((item) => {
+  // public isParameterExists(): boolean {
 
-      const datasetForThisUAV = item.datasets.find(ds => `${ds.uavNumber}${item.communication}` === incomingFullUavName);
+  // }
 
+  private updateChartData(parameters: Array<{ parameterName: string, parameterValue: string }>, incomingFullUavName: string): void {
+    parameters.forEach((param) => {
+
+      const parameterName = param.parameterName;
+      const parameterValue = param.parameterValue;
+      
+      const item = this.dashboard.find(item =>
+        item.parameter === parameterName && 
+        item.uavNames.includes(incomingFullUavName)
+      );
+      if (!item) return;
+  
+      const datasetForThisUAV = item.datasets.find(ds => 
+        `${ds.uavNumber}${item.communication}` === incomingFullUavName
+      );
       if (!datasetForThisUAV) return;
   
-      if (parameterMap[item.parameter] !== undefined) {
-        const newValue = parseFloat(parameterMap[item.parameter]);
-        const newLabel = new Date().toLocaleTimeString();
-
-        datasetForThisUAV.data.push(newValue);
-        item.chartLabels.push(newLabel);
-        
-        if (datasetForThisUAV.data.length >= 10)
-          datasetForThisUAV.data.shift();
-        if (item.chartLabels.length >= 10)
-          item.chartLabels.shift();
-
-       const blockComponent = this.gridsterBlocks.find(block => block.item === item);
-        if (blockComponent) {
-          blockComponent.handleNewData();
-        } else {
-          console.warn('GridsterBlockComponent not found for item:', item);
-        }
-
+      const newValue = parseFloat(parameterValue);
+      const newLabel = new Date().toLocaleTimeString();
+  
+      datasetForThisUAV.data.push(newValue);
+      item.chartLabels.push(newLabel);
+  
+      if (datasetForThisUAV.data.length >= 10) 
+        datasetForThisUAV.data.shift();
+      if (item.chartLabels.length >= 10) 
+        item.chartLabels.shift();
+  
+      const blockComponent = this.gridsterBlocks.find(block => block.item === item);
+      if (blockComponent) {
+        blockComponent.handleNewData(datasetForThisUAV.uavNumber, item.communication, parameterName);
+      } else {
+        console.warn('GridsterBlockComponent not found for item:', item);
       }
     });
   }
 
-  // private updateAllCharts() {
-  //   gridsterBlockComponent.handleNewData();  
-  // }
+  private updateAllCharts() {
+    // gridsterBlockComponent.handleNewData();  
+  }
 
   private initGridsterOptions(): void {
     this.options = {
@@ -147,11 +179,14 @@ export class LiveDashboardComponent implements AfterViewChecked{
       );
 
       if (!uavExists) {
+        existingEntry.uavNames.push(parameter.uavNumber+parameter.communication);
+
         const newDataset = { 
           uavNumber: parameter.uavNumber, 
           data: [], 
           label: `UAV ${parameter.uavNumber}`, 
-          color: this.getRandomColor() 
+          color: this.getRandomColor(),
+          marker: { enabled: false },
         };
         existingEntry.datasets.push(newDataset);
         
@@ -173,6 +208,7 @@ export class LiveDashboardComponent implements AfterViewChecked{
        cols: 1,
        chartType: ChartType.Graph,
        chartLabels: [],
+       uavNames:[parameter.uavNumber+parameter.communication],
        communication: parameter.communication,
        parameter: parameter.parameterName,
        datasets: uavData,
@@ -191,40 +227,48 @@ export class LiveDashboardComponent implements AfterViewChecked{
   private updateChartForGraph(item: ChartGridsterItem) {
     item.chartLabels = [...item.chartLabels];
     item.datasets = [...item.datasets];
+    item.uavNames = [...item.uavNames];
     
     const blockComponent = this.gridsterBlocks.find(block => block.item === item);
     if (blockComponent) {
-      blockComponent.handleNewData();
+      // blockComponent.handleNewData(item.uavn, item.communication, item.parameter); // Update with new datasets and communication
     }
   }
+  // blockComponent.handleNewData(datasetForThisUAV.uavNumber, item.communication, parameterName);
+
   
   protected trackByFn(index: number, item: any): any {
     return item.communication+item.parameter ;
   }
 
-  public onRemoveParameter(parameter: IcdParameter): void {
-    const existingEntry = this.dashboard.find(item => 
-      item.communication === parameter.communication && 
-      item.parameter === parameter.parameterName
-    );
-  
-    if (existingEntry) {
-      existingEntry.datasets = existingEntry.datasets.filter(
-        ds => ds.uavNumber !== parameter.uavNumber
-      );
-  
-      if (existingEntry.datasets.length === 0) {
-        this.dashboard = this.dashboard.filter(item => 
-          item !== existingEntry
-        );
-      }
-      
-      this.liveTelemetryData.removeParameter(parameter);
-      this.updateChartForGraph(existingEntry);
-    }
-  
+public onRemoveParameter(parameter: IcdParameter): void {
+  const existingEntry = this.dashboard.find(item => 
+    item.communication === parameter.communication && 
+    item.parameter === parameter.parameterName
+  );
 
+  if (!existingEntry) return;
+
+  const fullUavName = `${parameter.uavNumber}${parameter.communication}`;
+  
+  existingEntry.uavNames = existingEntry.uavNames.filter(name => name !== fullUavName);
+  
+  const removedDataset = existingEntry.datasets.find(ds => ds.uavNumber === parameter.uavNumber);
+  existingEntry.datasets = existingEntry.datasets.filter(ds => ds.uavNumber !== parameter.uavNumber);
+
+  const blockComponent = this.gridsterBlocks.find(block => block.item === existingEntry);
+  if (blockComponent && removedDataset) {
+    blockComponent.removeSpecificSeries(removedDataset.uavNumber);
   }
+
+  if (existingEntry.datasets.length === 0) {
+    this.dashboard = this.dashboard.filter(item => item !== existingEntry);
+    this.liveTelemetryData.leaveGroup(fullUavName).subscribe();
+  }
+
+  this.liveTelemetryData.removeParameter(parameter);
+}
+
   
   public joinGroup(parameter:IcdParameter): void {
 
@@ -288,16 +332,13 @@ export class LiveDashboardComponent implements AfterViewChecked{
     }
   }
 
-  public changeChartType(item: ChartGridsterItem, newType: any): void {
-    // item.chartType = newType.label;
-    // console.log(newType.label)
-    // const chart = this.charts.toArray()[this.dashboard.indexOf(item)];
-    // if (chart) {
-    //   // chart.updateChartType(newType.label);
-    // } else {
-    //   console.warn('Chart instance not found for item:', item);
-    // }
+public changeChartType(item: ChartGridsterItem, newType: ChartType): void {
+  item.chartType = newType;
+  const blockComponent = this.gridsterBlocks.find(block => block.item === item);
+  if (blockComponent) {
+    blockComponent.recreateChart();
   }
+}
 
   // public changeChartType(item: ChartGridsterItem, newType: any): void {
   //   item.chartType = newType.label;

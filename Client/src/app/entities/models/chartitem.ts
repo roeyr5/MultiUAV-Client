@@ -16,6 +16,7 @@ export interface ChartGridsterItem extends GridsterItem {
   cols: number;
   chartType: ChartType; 
   chartLabels: string[];
+  uavNames:string[];
   communication: string;
   parameter: string;
   datasets: Dataset[];
