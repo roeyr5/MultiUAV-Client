@@ -32,8 +32,8 @@ export class LiveDashboardComponent implements AfterViewChecked{
   // @ViewChildren(ChartComponent) charts!: QueryList<ChartComponent>;
 
   protected uavsList: number[] = [];
-  protected parametersMap: Map<string, string[]> = new Map<string, string[]>();
-  protected selectedParametersMap: Map<number, Map<string, string[]>> = new Map<number,Map<string, string[]>>();
+  protected parametersMap: Map<string, { Identifier: string; Units: string }[]> = new Map<string, { Identifier: string; Units: string }[]>();
+  protected selectedParametersMap: Map<number, Map<string, { Identifier: string; Units: string }[]>> = new Map<number,Map<string, { Identifier: string; Units: string }[]>>();
 
   public parametersChartEntityMap: Map<string,IChartEntity> = new Map<string,IChartEntity>();
 
@@ -46,31 +46,7 @@ export class LiveDashboardComponent implements AfterViewChecked{
 
   public isSideBarOpen: boolean = false;
 
-  graphOptions = [
-    { 
-      label: ChartType.Gauge,
-      image: 'assets/images/gauge_chart_icon.png',
-      subOptions: [
-        { label: gaugeChartTypes.regular, image: 'assets/images/gauge_regular.png' },
-        { label: gaugeChartTypes.pointer, image: 'assets/images/gauge_pointer.png' }
-      ]
-    },
-    {
-      label: ChartType.Graph,
-      image: 'assets/images/line_chart_icon.png',
-      subOptions: [
-        { label: graphChartTypes.regular, image: 'assets/images/line_regular.png' }
-      ]
-    },
-    {
-      label: ChartType.Pie,
-      image: 'assets/images/pie_chart_icon.png',
-      subOptions: [
-        { label: pieChartTypes.regular, image: 'assets/images/pie_regular.png' }
-      ]
-    }
-  ];
-
+  
   public ngOnInit(): void {
     this.getUavs();
     this.getParameters();
@@ -102,6 +78,7 @@ export class LiveDashboardComponent implements AfterViewChecked{
 
   private updateChartData(parameters: Array<{ parameterName: string, parameterValue: string }>, incomingFullUavName: string): void {
     parameters.forEach((param) => {
+      const newLabel = new Date().toLocaleTimeString();
 
       const parameterName = param.parameterName;
       const parameterValue = param.parameterValue;
@@ -117,21 +94,28 @@ export class LiveDashboardComponent implements AfterViewChecked{
       );
       if (!datasetForThisUAV) return;
   
-      const newValue = parseFloat(parameterValue);
-      const newLabel = new Date().toLocaleTimeString();
-  
-      datasetForThisUAV.data.push(newValue);
-      item.chartLabels.push(newLabel);
-  
-      if (datasetForThisUAV.data.length >= 10) 
-        datasetForThisUAV.data.shift();
-      if (item.chartLabels.length >= 10) 
-        item.chartLabels.shift();
-  
+
+      if (item.units === 'Value') {
+        datasetForThisUAV.data = [parameterValue];
+      } 
+      else {
+        const numValue = parseFloat(parameterValue);
+        datasetForThisUAV.data.push(numValue);
+        item.chartLabels.push(newLabel);
+
+        if (datasetForThisUAV.data.length >= 10) {
+          datasetForThisUAV.data.shift();
+        }
+        if (item.chartLabels.length >= 10) {
+          item.chartLabels.shift();
+        }
+      }
+
       const blockComponent = this.gridsterBlocks.find(block => block.item === item);
       if (blockComponent) {
         blockComponent.handleNewData(datasetForThisUAV.uavNumber, item.communication, parameterName);
-      } else {
+      } 
+      else {
         console.warn('GridsterBlockComponent not found for item:', item);
       }
     });
@@ -214,6 +198,7 @@ export class LiveDashboardComponent implements AfterViewChecked{
        datasets: uavData,
        showOptions: false,
        dataevent: new EventEmitter<boolean>(),
+       units : parameter.units
     };  
 
     this.dashboard.push(newChart);
@@ -229,10 +214,10 @@ export class LiveDashboardComponent implements AfterViewChecked{
     item.datasets = [...item.datasets];
     item.uavNames = [...item.uavNames];
     
-    const blockComponent = this.gridsterBlocks.find(block => block.item === item);
-    if (blockComponent) {
-      // blockComponent.handleNewData(item.uavn, item.communication, item.parameter); // Update with new datasets and communication
-    }
+    // const blockComponent = this.gridsterBlocks.find(block => block.item === item);
+    // if (blockComponent) {
+    //   // blockComponent.handleNewData(item.uavn, item.communication, item.parameter); // Update with new datasets and communication
+    // }
   }
   // blockComponent.handleNewData(datasetForThisUAV.uavNumber, item.communication, parameterName);
 
@@ -242,26 +227,33 @@ export class LiveDashboardComponent implements AfterViewChecked{
   }
 
 public onRemoveParameter(parameter: IcdParameter): void {
+
   const existingEntry = this.dashboard.find(item => 
     item.communication === parameter.communication && 
     item.parameter === parameter.parameterName
   );
-
   if (!existingEntry) return;
 
   const fullUavName = `${parameter.uavNumber}${parameter.communication}`;
-  
+
   existingEntry.uavNames = existingEntry.uavNames.filter(name => name !== fullUavName);
-  
+
   const removedDataset = existingEntry.datasets.find(ds => ds.uavNumber === parameter.uavNumber);
   existingEntry.datasets = existingEntry.datasets.filter(ds => ds.uavNumber !== parameter.uavNumber);
 
+ 
   const blockComponent = this.gridsterBlocks.find(block => block.item === existingEntry);
+
   if (blockComponent && removedDataset) {
     blockComponent.removeSpecificSeries(removedDataset.uavNumber);
   }
 
-  if (existingEntry.datasets.length === 0) {
+  // const isParameterStillUsed = this.dashboard.some(item =>
+  //   item.communication === parameter.communication &&
+  //   item.uavNames.some(uav => uav === fullUavName)  
+  // );
+
+  if (existingEntry.uavNames.length === 0) {
     this.dashboard = this.dashboard.filter(item => item !== existingEntry);
     this.liveTelemetryData.leaveGroup(fullUavName).subscribe();
   }
@@ -269,7 +261,9 @@ public onRemoveParameter(parameter: IcdParameter): void {
   this.liveTelemetryData.removeParameter(parameter);
 }
 
-  
+public shouldShowChart(item: ChartGridsterItem): boolean {
+  return item.units !== 'Value';
+}
   public joinGroup(parameter:IcdParameter): void {
 
     const groupName = `${parameter.uavNumber}${parameter.communication}`;
@@ -307,7 +301,7 @@ public onRemoveParameter(parameter: IcdParameter): void {
           this.parametersMap.set(communication, parameters);
           this.uavsList.forEach((uav) => {
             if (!this.selectedParametersMap.has(uav)) {
-              this.selectedParametersMap.set(uav, new Map<string, string[]>());
+              this.selectedParametersMap.set(uav, new Map<string, { Identifier: string; Units: string }[]>());
             }
             this.selectedParametersMap.get(uav)?.set(communication, []);
           });

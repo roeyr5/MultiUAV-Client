@@ -13,28 +13,12 @@
     <gridster class="gridster" [options]="options">
       <gridster-item *ngFor="let item of dashboard; trackBy: trackByFn" [item]="item">
         <div class="widget-content">
-
-          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Settings" >
-            <mat-icon>settings</mat-icon>
-          </button>
-
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item *ngFor="let graph of graphOptions" (click)="changeChartType(item, graph.label)" >
-              <img [src]="graph.image" style="width: 18px; height: 18px" />
-              <span>{{ graph.label }}</span>
-            </button>
-          </mat-menu>
-
-          <ng-container *ngIf="item.datasets.length > 0 && item.datasets; else emptyChart">
-            
-            <app-gridster-block
-              [item]="item"
-            ></app-gridster-block>
+         
+          <ng-container *ngIf="shouldShowChart(item); else showStringData">
+            <app-gridster-block [item]="item"></app-gridster-block>
           </ng-container>
-          
-
-          <ng-template #emptyChart>
-            <p>No data available. Waiting for updates...</p>
+          <ng-template #showStringData>
+            <app-string-data [item]="item"></app-string-data>
           </ng-template>
           
         </div>
@@ -42,6 +26,7 @@
     </gridster>
   </div>
 </div>
+
 <app-side-bar-parameters
 (onCloseSideBar)="onCloseSideBar()"
 (onAddParameter)="onAddParameter($event)"
@@ -51,4 +36,3 @@
 [selectedParametersMap]="selectedParametersMap"
 *ngIf="isSideBarOpen"
 ></app-side-bar-parameters>
-

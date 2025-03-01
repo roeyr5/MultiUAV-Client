@@ -1,4 +1,16 @@
 <div class="gridster-item">
+  
+  <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Settings" >
+    <mat-icon>settings</mat-icon>
+  </button>
+
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item *ngFor="let graph of graphOptions" (click)="changeChartType(graph.label)" >
+      <img [src]="graph.image" style="width: 18px; height: 18px" />
+      <span>{{ graph.label }}</span>
+    </button>
+  </mat-menu>
+
   <h3>{{ item.parameter }}</h3>
   <p>Communication: {{ item.communication }}</p>
   <div class="chart-container">
