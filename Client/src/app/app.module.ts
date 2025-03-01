@@ -41,6 +41,7 @@ import { GraphChartComponent } from './components/generic-components/chart-entit
 import { PieChartComponent } from './components/generic-components/chart-entity/charts-types/pie-chart/pie-chart.component';
 import {MatMenuModule} from '@angular/material/menu';
 import { GridsterBlockComponent } from './components/generic-components/chart-entity/charts-types/gridster-block/gridster-block.component';
+import { StringDataComponent } from './components/generic-components/chart-entity/charts-types/string-data/string-data.component';
 
 
 
@@ -63,6 +64,7 @@ import { GridsterBlockComponent } from './components/generic-components/chart-en
     GraphChartComponent,
     PieChartComponent,
     GridsterBlockComponent,
+    StringDataComponent,
   ],
   imports: [
     GridsterModule,

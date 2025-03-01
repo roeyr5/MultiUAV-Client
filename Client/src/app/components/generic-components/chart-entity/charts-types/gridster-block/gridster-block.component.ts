@@ -2,14 +2,41 @@ import { Component, Input, OnInit, SimpleChanges, Output, EventEmitter, NgZone, 
 import { ChartGridsterItem, Dataset } from '../../../../../entities/models/chartitem';
 import * as Highcharts from 'highcharts';
 import 'highcharts/modules/accessibility';
+import { ChartType, gaugeChartTypes, graphChartTypes, pieChartTypes } from 'src/app/entities/enums/chartType.enum';
 
-import { ChartType } from 'src/app/entities/enums/chartType.enum';
+
 @Component({
   selector: 'app-gridster-block',
   templateUrl: './gridster-block.component.html',
   styleUrls: ['./gridster-block.component.css']
 })
 export class GridsterBlockComponent implements OnInit,AfterViewInit {
+  graphOptions = [
+    { 
+      label: ChartType.Gauge,
+      image: 'assets/images/gauge_chart_icon.png',
+      subOptions: [
+        { label: gaugeChartTypes.regular, image: 'assets/images/gauge_regular.png' },
+        { label: gaugeChartTypes.pointer, image: 'assets/images/gauge_pointer.png' }
+      ]
+    },
+    {
+      label: ChartType.Graph,
+      image: 'assets/images/line_chart_icon.png',
+      subOptions: [
+        { label: graphChartTypes.regular, image: 'assets/images/line_regular.png' }
+      ]
+    },
+    {
+      label: ChartType.Pie,
+      image: 'assets/images/pie_chart_icon.png',
+      subOptions: [
+        { label: pieChartTypes.regular, image: 'assets/images/pie_regular.png' }
+      ]
+    }
+  ];
+
+
   public chartId: string = '';
   ngZone = inject(NgZone);
 
@@ -159,5 +186,7 @@ public recreateChart(): void {
     this.chart.redraw();  
     this.updateChange.emit(true); 
   }
-  
+  public changeChartType(chartType: ChartType): void {
+    
+  }
 }

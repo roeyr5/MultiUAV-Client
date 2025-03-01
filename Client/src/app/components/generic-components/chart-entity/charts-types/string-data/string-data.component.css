@@ -1,0 +1,8 @@
+.string-container{
+  border: 2px solid hsl(0, 0%, 100%);
+
+  .value-display{
+    font-size: 24px;
+    color: #666;
+  }
+}

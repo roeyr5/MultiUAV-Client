@@ -8,23 +8,43 @@ import { IcdParameter } from '../entities/IcdParameter';
 })
 export class SignalRService {
   private hubConnection: signalR.HubConnection;
+  private retryTimeout = 2000;
+  private timeoutPromise = (ms: number) => new Promise((_, reject) => setTimeout(() => reject('Timeout'), ms));
+
+
   constructor() {
     this.hubConnection = new signalR.HubConnectionBuilder().withUrl('http://localhost:2000/ltshub').build();
   }
 
-  public startConnection(): Observable<void> {
-    return new Observable<void>((observer) => {
-      this.hubConnection
-        .start()
-        .then(() => {
-          console.log('Connection established with SignalR hub');
-          observer.next();
-          observer.complete();
-        })
-        .catch((error) => {
-          console.error('Error connecting to SignalR hub:', error);
-          observer.error(error);
-        });
+  startConnection(): Observable<void> {
+    return new Observable((observer) => {
+      this.hubConnection = new signalR.HubConnectionBuilder()
+        .withUrl('http://localhost:2000/ltshub')
+        .build();
+
+      const startFn = () => {
+        Promise.race([
+          this.hubConnection.start(),
+          this.timeoutPromise(this.retryTimeout)
+        ])
+          .then(() => {
+            observer.next();
+            observer.complete();
+          })
+          .catch((err) => {
+            observer.error(err);
+            setTimeout(startFn, this.retryTimeout);
+          });
+      };
+
+      startFn();
+
+      this.hubConnection.onclose((error) => {
+        if (error) {
+          console.error('Connection closed with error:', error);
+        }
+        setTimeout(() => startFn(), this.retryTimeout);
+      });
     });
   }
 

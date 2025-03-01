@@ -15,13 +15,10 @@ import { Communication } from 'src/app/entities/enums/communication.enum';
 export class SideBarParametersComponent implements OnInit {
   @Input() public uavsList: number[] = [];
 
-  @Input() public parametersMap: Map<string, string[]> = new Map<
-    string,
-    string[]
-  >();
+  @Input() public parametersMap: Map<string, { Identifier: string; Units: string }[]> = new Map<string,{ Identifier: string; Units: string }[]>();
 
-  @Input() public selectedParametersMap: Map<number, Map<string, string[]>> =
-    new Map<number, Map<string, string[]>>();
+  @Input() public selectedParametersMap: Map<number, Map<string, { Identifier: string; Units: string }[]>> = 
+  new Map<number, Map<string, { Identifier: string; Units: string }[]>>();
 
   @Output() public onCloseSideBar: EventEmitter<void> =
     new EventEmitter<void>();
@@ -35,8 +32,8 @@ export class SideBarParametersComponent implements OnInit {
   public selectedUAV: number = 0;
   protected selectedCommunication: string = '';
 
-  protected selectedParameters: string[] = [];
-  protected parametersarray: string[] = [];
+  protected selectedParameters: { Identifier: string; Units: string }[] = [];
+  protected parametersarray: { Identifier: string; Units: string }[] = [];
 
   public filteredParameters: string[] = [];
 
@@ -71,7 +68,7 @@ export class SideBarParametersComponent implements OnInit {
   }
 
   public getCurrentParameters(): void {
-    this.filteredParameters = this.parametersMap.get(this.selectedCommunication) || [];
+    this.filteredParameters = (this.parametersMap.get(this.selectedCommunication) || []).map(param => param.Identifier);
   }
 
   private updateParametersArray() {
@@ -81,12 +78,12 @@ export class SideBarParametersComponent implements OnInit {
     }
   }
 
-  public isParameterSelected(parameter: string): boolean {
+  public isParameterSelected(parameterIdentifier: string): boolean {
     const uavMap = this.selectedParametersMap.get(this.selectedUAV);
     if (!uavMap) return false;
 
     const selectedParams = uavMap.get(this.selectedCommunication) || [];
-    return selectedParams.includes(parameter);
+    return selectedParams.some(param => param.Identifier === parameterIdentifier);
   }
 
   protected toggleParameterSelection(parameterName: string): void {
@@ -99,9 +96,12 @@ export class SideBarParametersComponent implements OnInit {
       return;
     }
 
+    const parameter = this.parametersarray.find(p => p.Identifier === parameterName);
+    if (!parameter) return;
+
     let uavMap = this.selectedParametersMap.get(this.selectedUAV);
     if (!uavMap) {
-      uavMap = new Map<string, string[]>();
+      uavMap = new Map<string, { Identifier: string; Units: string }[]>();
       this.selectedParametersMap.set(this.selectedUAV, uavMap);
     }
 
@@ -111,11 +111,11 @@ export class SideBarParametersComponent implements OnInit {
       uavMap.set(this.selectedCommunication, selectedParams);
     }
 
-    const paramIndex = selectedParams.indexOf(parameterName);
+    const paramIndex = selectedParams.findIndex(p=> p.Identifier === parameterName);
 
-    const paramterICd = new IcdParameter(parameterName,this.selectedCommunication, this.selectedUAV)
+    const paramterICd = new IcdParameter(parameterName,this.selectedCommunication, this.selectedUAV,parameter.Units);
     if (paramIndex === -1) {
-      selectedParams.push(parameterName);
+      selectedParams.push(parameter);
       this.onAddParameter.emit(paramterICd);
     } else {
       

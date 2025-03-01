@@ -4,7 +4,7 @@ import { ChartType } from "../enums/chartType.enum";
 
 export interface Dataset {
   uavNumber: number;
-  data: number[];
+  data: (number|string)[];
   label: string;
   color: string;
 }
@@ -21,6 +21,7 @@ export interface ChartGridsterItem extends GridsterItem {
   parameter: string;
   datasets: Dataset[];
   showOptions: boolean;
+  units?: string; 
 }
 
 //using ICHartEntity
