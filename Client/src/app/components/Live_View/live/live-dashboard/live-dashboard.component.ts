@@ -78,13 +78,11 @@ export class LiveDashboardComponent implements AfterViewChecked{
 
   private updateChartData(parameters: Array<{ parameterName: string, parameterValue: string }>, incomingFullUavName: string): void {
     parameters.forEach((param) => {
-      const newLabel = new Date().toLocaleTimeString();
 
-      const parameterName = param.parameterName;
-      const parameterValue = param.parameterValue;
+      const newLabel = new Date().toLocaleTimeString();
       
       const item = this.dashboard.find(item =>
-        item.parameter === parameterName && 
+        item.parameter === param.parameterName && 
         item.uavNames.includes(incomingFullUavName)
       );
       if (!item) return;
@@ -96,10 +94,11 @@ export class LiveDashboardComponent implements AfterViewChecked{
   
 
       if (item.units === 'Value') {
-        datasetForThisUAV.data = [parameterValue];
+        datasetForThisUAV.data = [param.parameterValue];
       } 
-      else {
-        const numValue = parseFloat(parameterValue);
+      else 
+      {
+        const numValue = parseFloat(param.parameterValue);
         datasetForThisUAV.data.push(numValue);
         item.chartLabels.push(newLabel);
 
@@ -113,7 +112,7 @@ export class LiveDashboardComponent implements AfterViewChecked{
 
       const blockComponent = this.gridsterBlocks.find(block => block.item === item);
       if (blockComponent) {
-        blockComponent.handleNewData(datasetForThisUAV.uavNumber, item.communication, parameterName);
+        blockComponent.handleNewData(datasetForThisUAV.uavNumber, item.communication, param.parameterName);
       } 
       else {
         console.warn('GridsterBlockComponent not found for item:', item);
@@ -129,18 +128,22 @@ export class LiveDashboardComponent implements AfterViewChecked{
     this.options = {
       gridType: GridType.Fit,
       compactType: 'none',
-      margin: 10,
+      margin: 5,
       outerMargin: true,
       mobileBreakpoint: 640,
-      minCols: 1,
-      maxCols: 10,
-      minRows: 1,
-      maxRows: 10,
-      draggable: { enabled: false },
-      resizable: { enabled: false },
+      minCols: 2,
+      maxCols: 12,
+      minRows: 2,
+      maxRows: 12,
+      draggable: { enabled: true },
+      resizable: { enabled: true },
       displayGrid: DisplayGrid.Always,
+      pushItems: true,
+      swap: true,
+      scrollToNewItems: true,
     };
   }
+  
 
   public onCloseSideBar(): void {
     this.isSideBarOpen = false;

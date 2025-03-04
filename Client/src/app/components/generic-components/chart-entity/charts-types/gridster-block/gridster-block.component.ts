@@ -167,14 +167,14 @@ public recreateChart(): void {
     }
   }
   
-   if (this.item.datasets[0].uavNumber === uavNumber) {
-      if (this.chart.xAxis && this.item.chartLabels.length > 0) {
-        console.log('Updating X-Axis Categories for the first UAV:', this.item.chartLabels);
-        this.chart.xAxis[0].update({
-          categories: this.item.chartLabels,
-        }, false);  // Update without redrawing the entire chart
-      }
-    }
+  //  if (this.item.datasets[0].uavNumber === uavNumber) {
+  //     if (this.chart.xAxis && this.item.chartLabels.length > 0) {
+  //       console.log('Updating X-Axis Categories for the first UAV:', this.item.chartLabels);
+  //       this.chart.xAxis[0].update({
+  //         categories: this.item.chartLabels,
+  //       }, false);  // Update without redrawing the entire chart
+  //     }
+  //   }
 
     // if (this.chart.xAxis && this.item.chartLabels.length > 0) {
     //   console.log('Updating X-Axis Categories:', this.item.chartLabels);
@@ -187,6 +187,7 @@ public recreateChart(): void {
     this.updateChange.emit(true); 
   }
   public changeChartType(chartType: ChartType): void {
-    
+    this.item.chartType = chartType;
+    this.recreateChart();
   }
 }
