@@ -50,7 +50,7 @@ export class SignalRService {
 
   public joinGroup(fulluavName: string ): Observable<void> {
     return new Observable<void>((observer) => {
-      console.log(fulluavName)
+      // console.log(fulluavName)
       this.hubConnection.invoke('JoinGroup', fulluavName)
         .then(() => {
           observer.next();
@@ -78,9 +78,9 @@ export class SignalRService {
     });
   }
 
-  public receiveMessage(): Observable<{ message: Array<{ parameterName: string, parameterValue: string }>; uavName: string }> {
+  public receiveMessage(): Observable<{ message: { [key: string]: string }, uavName: string }> {
     return new Observable((observer) => {
-      this.hubConnection.on('ReceiveMessage', (message: Array<{ parameterName: string, parameterValue: string }>, uavName: string) => {
+      this.hubConnection.on('ReceiveMessage', (message:{ [key: string]: string }, uavName: string) => {
         observer.next({ message, uavName });
       });
     });

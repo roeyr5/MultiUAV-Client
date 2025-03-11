@@ -5,7 +5,6 @@ import { UserService } from 'src/app/services/user.service';
 import { DisplayGrid, GridsterComponent, GridsterConfig, GridsterItem,GridType }  from 'angular-gridster2';
 import {ChartGridsterItem} from 'src/app/entities/models/chartitem'
 import Swal from 'sweetalert2';
-import { ChartType } from 'angular-google-charts';
 import { ChartComponent } from '../chart/chart.component';
 import { SimulatorService } from 'src/app/services/simulator.service';
 
@@ -22,7 +21,6 @@ export class LiveComponent implements OnInit , AfterViewInit {
   @ViewChildren(ChartComponent) charts!: QueryList<ChartComponent>;
   // @ViewChildren(UIChart) charts!: QueryList<UIChart>;
 
-  ChartType = ChartType; 
 
   graphOptions: any[] = [
     { label: 'line', image: 'assets/images/line_chart_icon.png' },
@@ -111,7 +109,7 @@ export class LiveComponent implements OnInit , AfterViewInit {
 
   protected sendMessage(message: string): void {
     this.signalRService.sendMessage(message);
-    console.log(message);
+    // console.log(message);
 
   }
 

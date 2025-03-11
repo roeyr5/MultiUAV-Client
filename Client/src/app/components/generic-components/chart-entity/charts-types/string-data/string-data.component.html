@@ -2,6 +2,8 @@
   <h4>{{item.parameter}}</h4>
   <p>Communication : {{item.communication}}</p>
   <div class="value-display">
-    Latest Value : {{latestValue || 'Waiting for updates...'}} 
+    <div *ngFor="let entry of getLatestValues()" class="uav-value">
+      UAV {{entry.uav}}: {{entry.value || 'Waiting for updates...'}}
+    </div>
   </div>
 </div>

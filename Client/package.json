@@ -21,7 +21,7 @@
     "@angular/platform-browser-dynamic": "^16.2.0",
     "@angular/router": "^16.2.0",
     "@microsoft/signalr": "^8.0.7",
-    "@swimlane/ngx-charts": "^20.1.0",
+    "@swimlane/ngx-charts": "^20.5.0",
     "angular-gridster": "^0.13.14",
     "angular-gridster2": "^16.0.0",
     "angular-highcharts": "^16.0.0",

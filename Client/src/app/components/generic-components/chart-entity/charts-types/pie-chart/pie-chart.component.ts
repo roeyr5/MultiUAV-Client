@@ -1,22 +1,41 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import * as Highcharts from 'highcharts';
-import { ChartType } from 'src/app/entities/enums/chartType.enum';
+import { ChartGridsterItem } from 'src/app/entities/models/chartitem';
 
 @Component({
   selector: 'app-pie-chart',
-  templateUrl: './pie-chart.component.html',
-  styleUrls: ['./pie-chart.component.css']
+  template: `<div #chartContainer></div>`
 })
-export class PieChartComponent implements OnInit {
-  @Input() datasets: any[] = [];
+export class PieChartComponent {
+  @ViewChild('chartContainer') chartContainer!: ElementRef;
+  @Input() item!: ChartGridsterItem;
+  private chart!: Highcharts.Chart;
 
-  type: ChartType  = ChartType.Pie;
-  
-  ngOnInit(): void {
-    this.initializeChart();
-  }
+  // initialize() {
+  //   this.chart = Highcharts.chart(this.chartContainer.nativeElement, {
+  //     chart: { type: 'pie' },
+  //     title: { text: this.item.parameter },
+  //     series: [{
+  //       type: 'pie',
+  //       name: 'Values',
+  //       data: this.item.datasets.map(d => ({
+  //         name: `UAV ${d.uavNumber}`,
+  //         y: parseFloat(d.data.slice(-1)[0]),
+  //         color: d.color
+  //       }))
+  //     }]
+  //   });
+  // }
 
-  initializeChart(): void {
-  }
+  // updateData(uavNumber: number, value: string) {
+  //   const point = this.chart.series[0].data.find(p => p.name === `UAV ${uavNumber}`);
+  //   if (point) {
+  //     point.update(parseFloat(value));
+  //   }
+  // }
 
+  // recreateChart() {
+  //   this.chart.destroy();
+  //   this.initialize();
+  // }
 }

@@ -11,16 +11,16 @@
   </div>
   <div class="body">
     <gridster class="gridster" [options]="options">
-      <gridster-item *ngFor="let item of dashboard; trackBy: trackByFn" [item]="item">
+      <gridster-item
+        *ngFor="let item of telemetryGridsterDashboard; trackBy: trackByFn"
+        [item]="item"
+      >
         <div class="widget-content">
-         
-          <ng-container *ngIf="shouldShowChart(item); else showStringData">
-            <app-gridster-block [item]="item"></app-gridster-block>
-          </ng-container>
-          <ng-template #showStringData>
+          <app-gridster-block [item]="item"></app-gridster-block>
+
+          <!-- <ng-template #showStringData>
             <app-string-data [item]="item"></app-string-data>
-          </ng-template>
-          
+          </ng-template> -->
         </div>
       </gridster-item>
     </gridster>
@@ -28,11 +28,11 @@
 </div>
 
 <app-side-bar-parameters
-(onCloseSideBar)="onCloseSideBar()"
-(onAddParameter)="onAddParameter($event)"
-(onRemoveParameter)="onRemoveParameter($event)"
-[uavsList]="uavsList"
-[parametersMap]="parametersMap"
-[selectedParametersMap]="selectedParametersMap"
-*ngIf="isSideBarOpen"
+  (onCloseSideBar)="onCloseSideBar()"
+  (onAddParameter)="onAddParameter($event)"
+  (onRemoveParameter)="onRemoveParameter($event)"
+  [uavsList]="uavsList"
+  [parametersMap]="parametersMap"
+  [selectedParametersMap]="selectedParametersMap"
+  *ngIf="isSideBarOpen"
 ></app-side-bar-parameters>

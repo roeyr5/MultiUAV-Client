@@ -1,19 +1,45 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import * as Highcharts from 'highcharts';
-import { ChartType } from 'src/app/entities/enums/chartType.enum';
+import { ChartGridsterItem } from 'src/app/entities/models/chartitem';''
 @Component({
-  selector: 'app-gauge-chart',
-  templateUrl: './graph-chart.component.html',
-  styleUrls: ['./graph-chart.component.css']
+  selector: 'app-graph-chart',
+  template: `<div #chartContainer></div>`
 })
-export class GraphChartComponent implements OnInit {
+export class GraphChartComponent {
+  @ViewChild('chartContainer') chartContainer!: ElementRef;
+  @Input() item!: ChartGridsterItem;
+  private chart!: Highcharts.Chart;
 
-  type: ChartType  = ChartType.Graph;
+  // initialize() {
+  //   this.chart = Highcharts.chart(this.chartContainer.nativeElement, {
+  //     chart: { type: 'line' },
+  //     title: { text: this.item.parameter },
+  //     series: this.item.datasets.map(d => ({
+  //       type: 'line',
+  //       name: `UAV ${d.uavNumber}`,
+  //       data: d.data,
+  //       color: d.color
+  //     }))
+  //   });
+  // }
 
-  ngOnInit(): void {
-    this.initializeChart();
-  }
+  // updateData(uavNumber: number, value: string) {
+  //   const series = this.chart.series.find(s => s.name === `UAV ${uavNumber}`);
+  //   if (series) {
+  //     const numValue = parseFloat(value);
+  //     series.addPoint(numValue, true, series.data.length >= 10);
+  //   }
+  // }
 
-  initializeChart(): void {   
-  }
+  // removeSeries(uavNumber: number) {
+  //   const series = this.chart.series.find(s => s.name === `UAV ${uavNumber}`);
+  //   if (series) {
+  //     series.remove();
+  //   }
+  // }
+
+  // recreateChart() {
+  //   this.chart.destroy();
+  //   this.initialize();
+  // }
 }

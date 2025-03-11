@@ -1,4 +1,34 @@
-.gridster-item {
+.chart-container {
+  text-align: center;
+  width: 100%;
+  flex: 1 1 auto;
+  display: flex;
+  height: 100% !important;
+}
+
+.gauge-case {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  align-self: center;
+  justify-content: center;
+  height: 100% !important;
+}
+
+app-gauge-chart {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex;
+  align-items: center;
+}
+
+app-gauge-chart {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex;
+  align-items: center;
+}
+/* .gridster-item {
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
@@ -25,4 +55,4 @@
   display: block;
   margin: 0;
   padding: 0;
-}
+} */

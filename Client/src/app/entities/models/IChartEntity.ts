@@ -1,16 +1,25 @@
 import { EventEmitter } from '@angular/core';
-import { ChartType } from '../enums/chartType.enum';
+import { ChartType, SingleChart } from '../enums/chartType.enum';
 import { IcdParameter } from '../IcdParameter';
+
+export interface IGridsterParameter {
+  parameterName: string;
+  parameterComm: string;
+  chartEntitys: IChartEntity[];
+}
 
 export class IChartEntity {
   parameter: IcdParameter;
-  chartType: ChartType;
-  Dataevent: EventEmitter<any>;
+  chartType: SingleChart;
+  dataEvent: EventEmitter<any>;
 
-  constructor(chart:IChartEntity){
-    this.parameter = chart.parameter;
-    this.chartType = chart.chartType;
-    this.Dataevent = new EventEmitter<any>();
-
+  constructor(
+    parameter: IcdParameter,
+    chartType: SingleChart,
+    dataEvent: EventEmitter<any>
+  ) {
+    this.parameter = parameter;
+    this.chartType = chartType;
+    this.dataEvent = dataEvent;
   }
 }
