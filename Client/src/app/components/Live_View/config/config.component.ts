@@ -199,13 +199,14 @@ export class ConfigComponent implements OnInit {
                             text: 'Failed to start Simulate.',
                         });
                     }
-                    if (error.status === 409) {
+                    else if (error.status === 409) {
                         Swal.fire({
                             icon: 'info',
                             title: 'Error open simulator',
                             text: error.error.message,
                         });
                     }
+                   
                 }
             );
         }
@@ -512,6 +513,13 @@ export class ConfigComponent implements OnInit {
                   title: 'Error open simulator',
                   text: error.error.message,
                 });
+              }
+              else if (error) {
+                Swal.fire({
+                  icon: 'info',
+                  title: 'Server down',
+                });
+              
               }
             }
           );

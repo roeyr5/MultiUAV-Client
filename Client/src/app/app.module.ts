@@ -44,7 +44,6 @@ import { GridsterBlockComponent } from './components/generic-components/chart-en
 import { StringDataComponent } from './components/generic-components/chart-entity/charts-types/string-data/string-data.component';
 
 
-
 @NgModule({
   declarations: [
     AppComponent,

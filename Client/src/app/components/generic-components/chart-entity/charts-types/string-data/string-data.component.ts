@@ -9,9 +9,11 @@ export class StringDataComponent {
 
   @Input() item!: ChartGridsterItem;
 
-  public get latestValue(): string {
-    const lastValue = this.item.datasets[0]?.data[this.item.datasets[0].data.length - 1];
-    return lastValue !== undefined ? lastValue.toString() : ''; 
+  public getLatestValues(): { uav: number, value: string }[] {
+    return this.item.datasets.map(dataset => ({
+      uav: dataset.uavNumber,
+      value: dataset.data[dataset.data.length - 1]?.toString() || 'N/A'
+    }));
   }
 }
 

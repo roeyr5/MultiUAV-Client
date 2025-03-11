@@ -1,1 +1,17 @@
-<div #container ></div>
+<ngx-gauge
+  [min]="item.InterfaceLimitMin"
+  [max]="item.InterfaceLimitMax"
+  [unit]="item.units"
+  [duration]="gaugeConfig().duration"
+  [type]="gaugeConfig().type"
+  [foregroundColor]="gaugeConfig().foregroundColor"
+  [backgroundColor]="gaugeConfig().backgroundColor"
+  [cap]="gaugeConfig().cap"
+  [thresholds]="item.thresholds"
+  [value]="item.value"
+  [size]="size"
+  ></ngx-gauge>
+  
+  <!-- [label]="item.parameter" -->
+<!-- [smallSegments]="5" -->
+<!-- [bigSegments]="10" -->

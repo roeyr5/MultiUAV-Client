@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { ParameterDataDto } from '../entities/models/parameterDataDto';
 // import { MessageIF } from '../models/message.model';
 
 @Injectable({
@@ -27,7 +28,10 @@ export class UserService {
   public uavsNumberslist() :Observable<string[]>{
     return this.http.get<string[]>(`${this.ROOT_URL}/parameters/uavslist`);
   }
-  public getAllParameters(): Observable<{[key: string]:{ Identifier: string; Units: string }[] }> {
-    return this.http.get<{ [key: string]:{ Identifier: string; Units: string }[]  }>(`${this.ROOT_URL}/parameters/all`);
+  public getAllParameters(): Observable<{ [key: string]: ParameterDataDto[] }> {
+    return this.http.get<{ [key: string]: ParameterDataDto[] }>(
+      `${this.ROOT_URL}/parameters/all`
+    );
   }
+  
 }

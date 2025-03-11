@@ -1,6 +1,7 @@
 import { GridsterItem } from "angular-gridster2";
-import { IChartEntity } from "./IChartEntity";
-import { ChartType } from "../enums/chartType.enum";
+import { IGridsterParameter } from "./IChartEntity";
+import { ChartType, SingleChart } from "../enums/chartType.enum";
+import { EventEmitter } from "@angular/core";
 
 export interface Dataset {
   uavNumber: number;
@@ -14,7 +15,7 @@ export interface ChartGridsterItem extends GridsterItem {
   y: number;
   rows: number;
   cols: number;
-  chartType: ChartType; 
+  chartType: SingleChart; 
   chartLabels: string[];
   uavNames:string[];
   communication: string;
@@ -22,6 +23,12 @@ export interface ChartGridsterItem extends GridsterItem {
   datasets: Dataset[];
   showOptions: boolean;
   units?: string; 
+  InterfaceLimitMin: number;  
+  InterfaceLimitMax: number; 
+}
+
+export interface TelemetryGridsterItem extends GridsterItem, IGridsterParameter{
+  // datasets: Dataset[];
 }
 
 //using ICHartEntity

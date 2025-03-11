@@ -21,12 +21,12 @@ export class MonitorComponent implements OnInit {
   private StartConnection()
   {
    this.monitorservice.startConnection().subscribe((response)=>{
-    console.log("worked signalR");
+    // console.log("worked signalR");
 
     this.monitorservice.MonitorActiveMessage().subscribe((data)=>{
-      console.log("Received Dictionary:", data);
+      // console.log("Received Dictionary:", data);
       for (let uav in data) {
-        console.log(`Uav Number: ${uav}, partitions count data :`, data[uav]);
+        // console.log(`Uav Number: ${uav}, partitions count data :`, data[uav]);
         this.activeUavs[uav] = data[uav];
       }     
       //  this.activeUavs.set(message.partition,message.status);

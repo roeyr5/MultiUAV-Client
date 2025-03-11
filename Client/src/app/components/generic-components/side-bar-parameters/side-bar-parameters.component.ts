@@ -3,9 +3,10 @@ import { SimulatorService } from 'src/app/services/simulator.service';
 import { UserService } from 'src/app/services/user.service';
 import Swal from 'sweetalert2';
 import { ChartEntityComponent } from '../chart-entity/chart-entity.component';
-import { DashboardComponent } from 'angular-google-charts';
 import { IcdParameter } from 'src/app/entities/IcdParameter';
 import { Communication } from 'src/app/entities/enums/communication.enum';
+import { ParameterDataDto } from 'src/app/entities/models/parameterDataDto';
+
 
 @Component({
   selector: 'app-side-bar-parameters',
@@ -15,10 +16,10 @@ import { Communication } from 'src/app/entities/enums/communication.enum';
 export class SideBarParametersComponent implements OnInit {
   @Input() public uavsList: number[] = [];
 
-  @Input() public parametersMap: Map<string, { Identifier: string; Units: string }[]> = new Map<string,{ Identifier: string; Units: string }[]>();
+  @Input() public parametersMap: Map<string, ParameterDataDto[]> = new Map<string,ParameterDataDto[]>();
 
-  @Input() public selectedParametersMap: Map<number, Map<string, { Identifier: string; Units: string }[]>> = 
-  new Map<number, Map<string, { Identifier: string; Units: string }[]>>();
+  @Input() public selectedParametersMap: Map<number, Map<string, ParameterDataDto[]>> = 
+  new Map<number, Map<string, ParameterDataDto[]>>();
 
   @Output() public onCloseSideBar: EventEmitter<void> =
     new EventEmitter<void>();
@@ -32,8 +33,8 @@ export class SideBarParametersComponent implements OnInit {
   public selectedUAV: number = 0;
   protected selectedCommunication: string = '';
 
-  protected selectedParameters: { Identifier: string; Units: string }[] = [];
-  protected parametersarray: { Identifier: string; Units: string }[] = [];
+  protected selectedParameters: ParameterDataDto[] = [];
+  protected parametersarray: ParameterDataDto[] = [];
 
   public filteredParameters: string[] = [];
 
@@ -101,7 +102,7 @@ export class SideBarParametersComponent implements OnInit {
 
     let uavMap = this.selectedParametersMap.get(this.selectedUAV);
     if (!uavMap) {
-      uavMap = new Map<string, { Identifier: string; Units: string }[]>();
+      uavMap = new Map<string, ParameterDataDto[]>();
       this.selectedParametersMap.set(this.selectedUAV, uavMap);
     }
 
@@ -113,7 +114,8 @@ export class SideBarParametersComponent implements OnInit {
 
     const paramIndex = selectedParams.findIndex(p=> p.Identifier === parameterName);
 
-    const paramterICd = new IcdParameter(parameterName,this.selectedCommunication, this.selectedUAV,parameter.Units);
+    const paramterICd = new IcdParameter(parameterName,this.selectedCommunication, this.selectedUAV,
+      parameter.Units,parameter.InterfaceLimitMin,parameter.InterfaceLimitMax);
     if (paramIndex === -1) {
       selectedParams.push(parameter);
       this.onAddParameter.emit(paramterICd);
