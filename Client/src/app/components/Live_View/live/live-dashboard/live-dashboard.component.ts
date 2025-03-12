@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { DisplayGrid, GridsterConfig, GridType } from 'angular-gridster2';
 import { GridsterBlockComponent } from 'src/app/components/generic-components/chart-entity/charts-types/gridster-block/gridster-block.component';
-import { ChartType, SingleChart } from 'src/app/entities/enums/chartType.enum';
+import { ChartType, SingleChart,ChangeChart } from 'src/app/entities/enums/chartType.enum';
 import { IcdParameter } from 'src/app/entities/IcdParameter';
 import {
   gaugeChartTypes,
@@ -28,6 +28,7 @@ import { SimulatorService } from 'src/app/services/simulator.service';
 import { UserService } from 'src/app/services/user.service';
 import { ParameterDataDto } from 'src/app/entities/models/parameterDataDto';
 import { v4 as uuidv4 } from 'uuid';
+import { chart } from 'highcharts';
 
 @Component({
   selector: 'app-live-dashboard',
@@ -130,6 +131,10 @@ export class LiveDashboardComponent implements AfterViewChecked {
 
   public onCloseSideBar(): void {
     this.isSideBarOpen = false;
+  }
+  public onChangeChart(chartChanges : ChangeChart):void{
+    chartChanges.chartEntity.chartType = chartChanges.chartType;
+
   }
 
   public toggleSideBar(): void {

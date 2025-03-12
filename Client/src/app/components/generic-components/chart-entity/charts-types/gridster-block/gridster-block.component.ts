@@ -23,21 +23,23 @@ import {
   graphChartTypes,
   pieChartTypes,
   SingleChart,
+  ChangeChart
 } from 'src/app/entities/enums/chartType.enum';
 import {
   IChartEntity,
   IGridsterParameter,
 } from 'src/app/entities/models/IChartEntity';
 
+
 @Component({
   selector: 'app-gridster-block',
   templateUrl: './gridster-block.component.html',
   styleUrls: ['./gridster-block.component.css'],
 })
-export class GridsterBlockComponent implements OnInit, AfterViewInit {
+export class GridsterBlockComponent implements OnInit {
   graphOptions = [
     {
-      label: ChartType.Gauge,
+      label: SingleChart.GAUGE,
       image: 'assets/images/gauge_chart_icon.png',
       subOptions: [
         {
@@ -51,7 +53,7 @@ export class GridsterBlockComponent implements OnInit, AfterViewInit {
       ],
     },
     {
-      label: ChartType.Graph,
+      label: SingleChart.GRAPH,
       image: 'assets/images/line_chart_icon.png',
       subOptions: [
         {
@@ -61,7 +63,7 @@ export class GridsterBlockComponent implements OnInit, AfterViewInit {
       ],
     },
     {
-      label: ChartType.Pie,
+      label: SingleChart.PIE,
       image: 'assets/images/pie_chart_icon.png',
       subOptions: [
         {
@@ -73,12 +75,14 @@ export class GridsterBlockComponent implements OnInit, AfterViewInit {
   ];
 
   public chartId: string = '';
+  public selectedChartType:any;
   ngZone = inject(NgZone);
 
   @Input() chartEntity!: IChartEntity;
   @Output() updateChange = new EventEmitter<boolean>();
-  @Output() chartDataUpdated = new EventEmitter<void>();
+  @Output() chartDataUpdated = new EventEmitter<ChangeChart>();
 
+  changes!:ChangeChart
   chart: Highcharts.Chart | undefined;
   chartOptions: Highcharts.Options = {};
 
@@ -90,10 +94,17 @@ export class GridsterBlockComponent implements OnInit, AfterViewInit {
   public getTypes() {
     return SingleChart;
   }
+  public onChartTypeChange(){
 
-  ngAfterViewInit(): void {
-    // this.createChart();
+  this.changes = {
+    chartType: this.selectedChartType,
+    chartEntity: this.chartEntity,
+  };
+
+    this.chartDataUpdated.emit(this.changes)
   }
+
+  
 
   //   createChart() {
   //     this.chartOptions = {

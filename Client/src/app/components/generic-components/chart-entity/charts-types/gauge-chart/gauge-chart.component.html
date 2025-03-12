@@ -1,4 +1,6 @@
-<ngx-gauge
+
+ <div class="gauge-container">
+  <ngx-gauge
   id="{{chartEntity.id}}"
   class="gauge-size"
   [min]="chartEntity.parameter.InterfaceLimitMin"
@@ -10,8 +12,10 @@
   [backgroundColor]="gaugeConfig().backgroundColor"
   [value]="gaugeValue"
   [size]="size"
+  [ngClass]="getGaugeValueClass(gaugeValue)"
 ></ngx-gauge>
- 
+ </div>
+
 <!-- [cap]="gaugeConfig().cap" -->
 
 <!-- [thresholds]="chartEntity.thresholds" -->

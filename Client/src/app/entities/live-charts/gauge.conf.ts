@@ -1,4 +1,7 @@
 export class IGaugeConf {
+  thresholds?: { [key: number]: { color: string } };
+  gradient?: { enabled: boolean; stops: [number, string][] };
+  animate?: { enabled: boolean; duration: number };
   duration: number;
   type: GaugeType;
   cap: GaugeCap;
@@ -15,8 +18,14 @@ export class IGaugeConf {
     this.thick = GaugeThickness.MEDIUM;
     this.label = '';
     this.isThreshold = 'false';
-    this.foregroundColor = '#000000';
-    this.backgroundColor = '#ffffff';
+    this.foregroundColor = '#00ff00';
+    this.backgroundColor = 'rgba(255, 255, 255, 0.1)';
+    this.thresholds = {
+      0: { color: '#ff0000' },
+      50: { color: '#ffd700' },
+      75: { color: '#00ff00' }
+    };
+    this.animate = { enabled: true, duration: 1000 };
   }
 }
 

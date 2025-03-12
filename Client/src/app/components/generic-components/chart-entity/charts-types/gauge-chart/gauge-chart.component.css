@@ -1,3 +1,18 @@
-.gauge-size {
-  width: 100% !important;
+
+.gauge-container{
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: #1e1e1e;
+
+  .gauge-size {
+    background: #1e1e1e;
+    width: 100% !important;
+  }
+  .gauge-value{
+    color: #00ff88;
+  }
 }

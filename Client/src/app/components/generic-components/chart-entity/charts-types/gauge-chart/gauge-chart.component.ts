@@ -63,4 +63,14 @@ export class GaugeChartComponent implements OnInit {
       console.log('this.size', this.size);
     }
   }
+  public getGaugeValueClass(value: number): string {
+    return 'gauge-value'
+  //   if (value < 30) {
+  //     return 'low-value';
+  //   } else if (value < 70) {
+  //     return 'medium-value';
+  //   } else {
+  //     return 'high-value';
+  //   }
+  }
 }

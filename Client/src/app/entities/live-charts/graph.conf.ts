@@ -12,7 +12,7 @@ export class IGraphConf {
     name: 'myScheme',
     selectable: true,
     group: ScaleType.Ordinal,
-    domain: ['#f00', '#0f0', '#0ff'],
+    domain: ['#00ff88', '#ffd700', '#00ffff'],
   };
   constructor() {}
 }

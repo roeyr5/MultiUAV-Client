@@ -20,7 +20,8 @@
           [style.width]="calculateBlockWidth(item)"
           *ngFor="let chartEntity of item.chartEntitys"
         >
-          <app-gridster-block [chartEntity]="chartEntity"></app-gridster-block>
+          <app-gridster-block (chartDataUpdated)="onChangeChart($event)"
+          [chartEntity]="chartEntity"></app-gridster-block>
         </div>
       </gridster-item>
     </gridster>
