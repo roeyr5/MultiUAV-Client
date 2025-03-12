@@ -15,12 +15,13 @@
         *ngFor="let item of telemetryGridsterDashboard; trackBy: trackByFn"
         [item]="item"
       >
-        <div class="widget-content">
-          <app-gridster-block [item]="item"></app-gridster-block>
-
-          <!-- <ng-template #showStringData>
-            <app-string-data [item]="item"></app-string-data>
-          </ng-template> -->
+        <div
+          class="widget-content"
+          [style.width]="calculateBlockWidth(item)"
+          *ngFor="let chartEntity of item.chartEntitys"
+        >
+          <app-gridster-block (chartDataUpdated)="onChangeChart($event)"
+          [chartEntity]="chartEntity"></app-gridster-block>
         </div>
       </gridster-item>
     </gridster>

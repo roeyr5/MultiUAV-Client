@@ -56,18 +56,6 @@ app-gridster-block {
   overflow: hidden;
 }
 
-/* Ensure Highcharts container fills its parent */
-.highcharts-container {
-  width: 100%!important;
-  height: 100%!important;
-}
-
-/* Gauge specific adjustments */
-.highcharts-gauge-series .highcharts-data-labels {
-  font-size: 1.2em!important;
-}
-
-.highcharts-pane {
-  stroke: #CCC;
-  stroke-width: 1px;
+:host ::ng-deep gridster-item {
+  display: flex !important;
 }

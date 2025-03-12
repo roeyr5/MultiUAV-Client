@@ -1,41 +1,82 @@
-import { Component, Input, ViewChild, ElementRef } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
 import * as Highcharts from 'highcharts';
-import { ChartGridsterItem } from 'src/app/entities/models/chartitem';
+import { IChartEntity } from 'src/app/entities/models/IChartEntity';
 
 @Component({
   selector: 'app-pie-chart',
-  template: `<div #chartContainer></div>`
+  templateUrl: './pie-chart.component.html',
+  styleUrls: ['./pie-chart.component.css']
 })
-export class PieChartComponent {
+export class PieChartComponent implements OnInit, OnDestroy {
   @ViewChild('chartContainer') chartContainer!: ElementRef;
-  @Input() item!: ChartGridsterItem;
+  @Input() chartEntity!: IChartEntity;
   private chart!: Highcharts.Chart;
+  private resizeObserver!: ResizeObserver;
 
-  // initialize() {
-  //   this.chart = Highcharts.chart(this.chartContainer.nativeElement, {
-  //     chart: { type: 'pie' },
-  //     title: { text: this.item.parameter },
-  //     series: [{
-  //       type: 'pie',
-  //       name: 'Values',
-  //       data: this.item.datasets.map(d => ({
-  //         name: `UAV ${d.uavNumber}`,
-  //         y: parseFloat(d.data.slice(-1)[0]),
-  //         color: d.color
-  //       }))
-  //     }]
-  //   });
-  // }
+  ngOnInit() {
+    this.initializeChart();
+    this.setupResizeObserver();
+    
+    this.chartEntity.dataEvent.subscribe((value: string) => {
+      this.updateChart(Number(value));
+    });
+  }
 
-  // updateData(uavNumber: number, value: string) {
-  //   const point = this.chart.series[0].data.find(p => p.name === `UAV ${uavNumber}`);
-  //   if (point) {
-  //     point.update(parseFloat(value));
-  //   }
-  // }
+  ngOnDestroy() {
+    this.resizeObserver?.disconnect();
+    if (this.chart) this.chart.destroy();
+  }
 
-  // recreateChart() {
-  //   this.chart.destroy();
-  //   this.initialize();
-  // }
+  private initializeChart() {
+    this.chart = Highcharts.chart(this.chartContainer.nativeElement, {
+      chart: {
+        type: 'pie',
+        backgroundColor: 'transparent',
+        height: '100%'
+      },
+      title: {
+        text: this.chartEntity.parameter.parameterName,
+        style: { color: 'white' }
+      },
+      plotOptions: {
+        pie: {
+          dataLabels: {
+            style: { color: 'white' }
+          }
+        }
+      },
+      series: [{
+        type: 'pie',
+        name: 'Values',
+        data: [{
+          name: `UAV ${this.chartEntity.parameter.uavNumber}`,
+          y: 0,
+          color: this.getColor()
+        }]
+      }]
+    });
+  }
+
+  private updateChart(value: number) {
+    this.chart.series[0].update({
+      type: 'pie', 
+      data: [{
+        name: `UAV ${this.chartEntity.parameter.uavNumber}`,
+        y: value,
+        color: this.getColor()
+      }]
+    }, true);
+  }
+
+  private getColor(): string {
+    // Implement your color logic here
+    return '#' + Math.floor(Math.random()*16777215).toString(16);
+  }
+
+  private setupResizeObserver() {
+    this.resizeObserver = new ResizeObserver(() => {
+      this.chart?.reflow();
+    });
+    this.resizeObserver.observe(this.chartContainer.nativeElement);
+  }
 }

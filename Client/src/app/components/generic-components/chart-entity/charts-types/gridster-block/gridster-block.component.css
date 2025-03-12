@@ -5,6 +5,11 @@
   display: flex;
   height: 100% !important;
 }
+.chart-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
 
 .gauge-case {
   width: 100%;
@@ -27,6 +32,22 @@ app-gauge-chart {
   height: 100% !important;
   display: flex;
   align-items: center;
+}
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.chart-case {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.pie-case {
+  padding: 10px;
 }
 /* .gridster-item {
   background-color: #fff;

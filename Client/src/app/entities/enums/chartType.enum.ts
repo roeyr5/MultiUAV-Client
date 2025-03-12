@@ -1,3 +1,5 @@
+import { IChartEntity } from "../models/IChartEntity";
+
 export enum ChartType {
   Gauge = 'solidgauge',
   Graph = 'spline',
@@ -9,6 +11,11 @@ export enum SingleChart {
   PIE = 2,
   LABEL = 3,
 }
+export interface ChangeChart{
+  chartType: SingleChart;
+  chartEntity: IChartEntity;
+}
+
 export enum gaugeChartTypes {
   regular = 'regular-guage',
   pointer = 'pointer-gauge',

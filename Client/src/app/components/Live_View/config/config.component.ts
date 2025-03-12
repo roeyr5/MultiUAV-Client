@@ -41,7 +41,6 @@ export class ConfigComponent implements OnInit {
     })
 
     this.simulatorservice.telemetryUavs().subscribe((response) => {
-      console.log(response);
       this.uavsTelemetry = response;
     });
 
@@ -49,7 +48,6 @@ export class ConfigComponent implements OnInit {
   }
 
   public SwitchCommunication(selectedUav: number) {
-    console.log(selectedUav);
     this.simulatorservice.changePrimary(selectedUav).subscribe(
       (response) => {
         console.log('Primary UAV changed successfully:', response);
