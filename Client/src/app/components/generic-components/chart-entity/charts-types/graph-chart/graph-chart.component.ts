@@ -1,14 +1,133 @@
-import { Component, Input, ViewChild, ElementRef } from '@angular/core';
-import * as Highcharts from 'highcharts';
-import { ChartGridsterItem } from 'src/app/entities/models/chartitem';''
+import {
+  Component,
+  Input,
+  ViewChild,
+  ElementRef,
+  OnInit,
+  ChangeDetectorRef,
+  NgZone,
+} from '@angular/core';
+import { BaseChartComponent } from '@swimlane/ngx-charts';
+import {
+  GraphRecordsList,
+  GraphValue,
+  IGraphConf,
+} from 'src/app/entities/live-charts/graph.conf';
+import { ChartGridsterItem } from 'src/app/entities/models/chartitem';
+import {
+  graphEntity,
+  IChartEntity,
+  IGridsterParameter,
+} from 'src/app/entities/models/IChartEntity';
+('');
+
 @Component({
   selector: 'app-graph-chart',
-  template: `<div #chartContainer></div>`
+  templateUrl: './graph-chart.component.html',
+  styleUrls: ['./graph-chart.component.css'],
 })
-export class GraphChartComponent {
-  @ViewChild('chartContainer') chartContainer!: ElementRef;
-  @Input() item!: ChartGridsterItem;
-  private chart!: Highcharts.Chart;
+export class GraphChartComponent implements OnInit {
+  @Input() chartEntity!: IChartEntity;
+  public view: [number, number] = [0, 0];
+  public graphValues: GraphRecordsList[] = [];
+  public isGraphCleared: boolean = false;
+  // public readonly MAX_MS_WITHOUT_UPDATE = 5000;
+  private lastRecord: Number = 0;
+
+  constructor(private cdr: ChangeDetectorRef, private ngZone: NgZone) {}
+
+  public graphConf: IGraphConf = new IGraphConf();
+  public graphValue: number = 0;
+  // public size: number = 120;
+
+  @ViewChild('graph', { static: false }) graph!: BaseChartComponent;
+
+  ngOnInit(): void {
+    this.graphValues = [
+      {
+        name: this.chartEntity.parameter.parameterName,
+        series: [],
+      },
+    ];
+    // this.initGraph;
+
+    setTimeout(() => {
+      // @ts-ignore Cannot find name 'ResizeObserver'
+      const resizeObserver = new ResizeObserver((entries) => {
+        this.ngZone.run(() => {
+          this.resizeGraph();
+          this.cdr.markForCheck();
+        });
+      });
+      resizeObserver.observe(
+        document.getElementById(this.chartEntity.id.toString())!
+      );
+    }, 20);
+
+    this.chartEntity.dataEvent.subscribe((data: any) => {
+      this.ngZone.run(() => {
+        if (!this.isGraphCleared) {
+          this.clearGraph();
+          this.isGraphCleared = true;
+        }
+        this.addData(data);
+        this.cdr.markForCheck();
+      });
+    });
+  }
+
+  // public initGraph(): void {
+  //   setTimeout(() => {
+  //     this.chartEntity.graphElement = this.graph;
+  //   }, 1000);
+  // }
+
+  public graphConfig(): IGraphConf {
+    return this.graphConf;
+  }
+
+  public resizeGraph(): void {
+    let parent = document.getElementById(this.chartEntity.id);
+    console.log("parent", parent);
+    
+    if (parent) {
+      console.log("asdasdasd");
+      
+      this.view = [0, 0];
+      this.view.push(parent.offsetWidth, parent.offsetHeight);
+    }
+  }
+
+  public addData(dataValue: any): void {
+    if (!dataValue) return;
+
+    // const value = dataValue.toString();
+    const data: GraphValue = {
+      name: new Date(Date.now()),
+      value: dataValue,
+    };
+    this.graphValues[0].series.push(data);
+
+    if (!this.lastRecord || dataValue != this.lastRecord) {
+      this.lastRecord = dataValue;
+      this.updateGraph();
+    }
+
+    if (
+      this.graphValues[0].series.length >= this.graphConf.defaultRecordsCount
+    ) {
+      this.graphValues[0].series.splice(0, 1);
+    }
+  }
+
+  public clearGraph(): void {
+    this.graphValues[0].series.splice(0);
+    this.updateGraph();
+  }
+
+  public updateGraph() {
+    this.graphValues = [...this.graphValues];
+  }
 
   // initialize() {
   //   this.chart = Highcharts.chart(this.chartContainer.nativeElement, {

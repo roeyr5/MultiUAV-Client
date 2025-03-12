@@ -1,17 +1,20 @@
 <ngx-gauge
-  [min]="item.InterfaceLimitMin"
-  [max]="item.InterfaceLimitMax"
-  [unit]="item.units"
+  id="{{chartEntity.id}}"
+  class="gauge-size"
+  [min]="chartEntity.parameter.InterfaceLimitMin"
+  [max]="chartEntity.parameter.InterfaceLimitMax"
+  [unit]="chartEntity.parameter.units"
   [duration]="gaugeConfig().duration"
   [type]="gaugeConfig().type"
   [foregroundColor]="gaugeConfig().foregroundColor"
   [backgroundColor]="gaugeConfig().backgroundColor"
-  [cap]="gaugeConfig().cap"
-  [thresholds]="item.thresholds"
-  [value]="item.value"
+  [value]="gaugeValue"
   [size]="size"
-  ></ngx-gauge>
-  
-  <!-- [label]="item.parameter" -->
+></ngx-gauge>
+ 
+<!-- [cap]="gaugeConfig().cap" -->
+
+<!-- [thresholds]="chartEntity.thresholds" -->
+<!-- [label]="chartEntity.parameter" -->
 <!-- [smallSegments]="5" -->
 <!-- [bigSegments]="10" -->

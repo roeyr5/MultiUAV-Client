@@ -37,8 +37,6 @@ export class ChartComponent implements OnInit, OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['datasets'] || changes['chartLabels']) {
-      console.log('Datasets:', this.datasets);
-      console.log('Chart Labels:', this.chartLabels);
       this.updateChart();
     }
   }

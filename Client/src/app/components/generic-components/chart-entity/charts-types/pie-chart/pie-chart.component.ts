@@ -1,6 +1,7 @@
 import { Component, Input, ViewChild, ElementRef } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import { ChartGridsterItem } from 'src/app/entities/models/chartitem';
+import { IChartEntity, IGridsterParameter } from 'src/app/entities/models/IChartEntity';
 
 @Component({
   selector: 'app-pie-chart',
@@ -8,7 +9,7 @@ import { ChartGridsterItem } from 'src/app/entities/models/chartitem';
 })
 export class PieChartComponent {
   @ViewChild('chartContainer') chartContainer!: ElementRef;
-  @Input() item!: ChartGridsterItem;
+  @Input() chartEntity!: IChartEntity;
   private chart!: Highcharts.Chart;
 
   // initialize() {

@@ -42,6 +42,7 @@ import { PieChartComponent } from './components/generic-components/chart-entity/
 import {MatMenuModule} from '@angular/material/menu';
 import { GridsterBlockComponent } from './components/generic-components/chart-entity/charts-types/gridster-block/gridster-block.component';
 import { StringDataComponent } from './components/generic-components/chart-entity/charts-types/string-data/string-data.component';
+import { NgxGaugeModule } from 'ngx-gauge';
 
 
 @NgModule({
@@ -66,6 +67,7 @@ import { StringDataComponent } from './components/generic-components/chart-entit
     StringDataComponent,
   ],
   imports: [
+    NgxGaugeModule,
     GridsterModule,
     MatSelectModule,
     MatCheckboxModule,

@@ -1,12 +1,12 @@
-<div class="chart-case chart-container" [ngSwitch]="item.chartType">
+<div class="chart-case chart-container" [ngSwitch]="chartEntity.chartType">
   <div *ngSwitchCase="getTypes().GAUGE" class="chart-container gauge-case">
-    <app-gauge-chart [item]="item"></app-gauge-chart>
+    <app-gauge-chart [chartEntity]="chartEntity"></app-gauge-chart>
   </div>
   <div *ngSwitchCase="getTypes().GRAPH" class="chart-container graph-case">
-    <app-graph-chart class="chart-container" [item]="item"></app-graph-chart>
+    <app-graph-chart class="chart-container" [chartEntity]="chartEntity"></app-graph-chart>
   </div>
   <div *ngSwitchCase="getTypes().PIE" class="chart-container pie-case">
-    <app-pie-chart class="chart-container" [item]="item"></app-pie-chart>
+    <app-pie-chart class="chart-container" [chartEntity]="chartEntity" ></app-pie-chart>
   </div>
   <!-- <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Settings" >
     <mat-icon>settings</mat-icon>
