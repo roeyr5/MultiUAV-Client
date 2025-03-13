@@ -2,7 +2,6 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { SimulatorService } from 'src/app/services/simulator.service';
 import { UserService } from 'src/app/services/user.service';
 import Swal from 'sweetalert2';
-import { ChartEntityComponent } from '../chart-entity/chart-entity.component';
 import { IcdParameter } from 'src/app/entities/IcdParameter';
 import { Communication } from 'src/app/entities/enums/communication.enum';
 import { ParameterDataDto } from 'src/app/entities/models/parameterDataDto';
@@ -15,20 +14,12 @@ import { ParameterDataDto } from 'src/app/entities/models/parameterDataDto';
 })
 export class SideBarParametersComponent implements OnInit {
   @Input() public uavsList: number[] = [];
-
   @Input() public parametersMap: Map<string, ParameterDataDto[]> = new Map<string,ParameterDataDto[]>();
+  @Input() public selectedParametersMap: Map<number, Map<string, ParameterDataDto[]>> = new Map<number, Map<string, ParameterDataDto[]>>();
 
-  @Input() public selectedParametersMap: Map<number, Map<string, ParameterDataDto[]>> = 
-  new Map<number, Map<string, ParameterDataDto[]>>();
-
-  @Output() public onCloseSideBar: EventEmitter<void> =
-    new EventEmitter<void>();
-
-  @Output() onAddParameter: EventEmitter<IcdParameter> =
-    new EventEmitter<IcdParameter>();
-
-  @Output() onRemoveParameter: EventEmitter<IcdParameter> =
-    new EventEmitter<IcdParameter>();
+  @Output() public onCloseSideBar: EventEmitter<void> = new EventEmitter<void>();
+  @Output() onAddParameter: EventEmitter<IcdParameter> = new EventEmitter<IcdParameter>();
+  @Output() onRemoveParameter: EventEmitter<IcdParameter> = new EventEmitter<IcdParameter>();
 
   public selectedUAV: number = 0;
   protected selectedCommunication: string = '';

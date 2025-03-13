@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { DisplayGrid, GridsterConfig, GridType } from 'angular-gridster2';
 import { GridsterBlockComponent } from 'src/app/components/generic-components/chart-entity/charts-types/gridster-block/gridster-block.component';
-import { ChartType, SingleChart,ChangeChart } from 'src/app/entities/enums/chartType.enum';
+import { ChartType, SingleChart,ChangeChartType } from 'src/app/entities/enums/chartType.enum';
 import { IcdParameter } from 'src/app/entities/IcdParameter';
 import {
   gaugeChartTypes,
@@ -29,6 +29,7 @@ import { UserService } from 'src/app/services/user.service';
 import { ParameterDataDto } from 'src/app/entities/models/parameterDataDto';
 import { v4 as uuidv4 } from 'uuid';
 import { chart } from 'highcharts';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-live-dashboard',
@@ -132,7 +133,7 @@ export class LiveDashboardComponent implements AfterViewChecked {
   public onCloseSideBar(): void {
     this.isSideBarOpen = false;
   }
-  public onChangeChart(chartChanges : ChangeChart):void{
+  public onChangeChart(chartChanges : ChangeChartType):void{
     chartChanges.chartEntity.chartType = chartChanges.chartType;
 
   }
@@ -292,6 +293,10 @@ export class LiveDashboardComponent implements AfterViewChecked {
     return '100%';  // Default width if no chartEntitys
   }
 
+  public concatGraphs(item: TelemetryGridsterItem):void{
+    console.log(item)
+  }
+  
   // public changeChartType(item: ChartGridsterItem, newType: ChartType): void {
   //   // item.chartType = newType;
   //   const blockComponent = this.gridsterBlocks.find(
