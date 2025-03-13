@@ -11,7 +11,7 @@ export enum SingleChart {
   PIE = 2,
   LABEL = 3,
 }
-export interface ChangeChart{
+export interface ChangeChartType{
   chartType: SingleChart;
   chartEntity: IChartEntity;
 }

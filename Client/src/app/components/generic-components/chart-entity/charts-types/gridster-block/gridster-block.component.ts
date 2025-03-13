@@ -23,7 +23,7 @@ import {
   graphChartTypes,
   pieChartTypes,
   SingleChart,
-  ChangeChart
+  ChangeChartType
 } from 'src/app/entities/enums/chartType.enum';
 import {
   IChartEntity,
@@ -80,9 +80,9 @@ export class GridsterBlockComponent implements OnInit {
 
   @Input() chartEntity!: IChartEntity;
   @Output() updateChange = new EventEmitter<boolean>();
-  @Output() chartDataUpdated = new EventEmitter<ChangeChart>();
+  @Output() chartDataUpdated = new EventEmitter<ChangeChartType>();
 
-  changes!:ChangeChart
+  changes!:ChangeChartType
   chart: Highcharts.Chart | undefined;
   chartOptions: Highcharts.Options = {};
 

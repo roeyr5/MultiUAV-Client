@@ -82,17 +82,23 @@ export class GraphChartComponent implements OnInit {
   //   }, 1000);
   // }
 
+  public addGraph():void{
+    
+    let newGraphData = {
+      name: this.chartEntity.parameter.parameterName,
+      series: [],
+    }
+    this.graphValues.push(newGraphData)
+  }
+
   public graphConfig(): IGraphConf {
     return this.graphConf;
   }
 
   public resizeGraph(): void {
     let parent = document.getElementById(this.chartEntity.id);
-    console.log("parent", parent);
     
-    if (parent) {
-      console.log("asdasdasd");
-      
+    if (parent) {      
       this.view = [0, 0];
       this.view.push(parent.offsetWidth, parent.offsetHeight);
     }

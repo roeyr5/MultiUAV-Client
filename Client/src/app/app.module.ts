@@ -35,11 +35,10 @@ import { ChartModule } from 'angular-highcharts';
 import { HighchartsService } from './components/test/highcharts.service';
 import { SideBarParametersComponent } from './components/generic-components/side-bar-parameters/side-bar-parameters.component';
 import { LiveDashboardComponent } from './components/Live_View/live/live-dashboard/live-dashboard.component';
-import { ChartEntityComponent } from './components/generic-components/chart-entity/chart-entity.component';
 import { GaugeChartComponent } from './components/generic-components/chart-entity/charts-types/gauge-chart/gauge-chart.component';
 import { GraphChartComponent } from './components/generic-components/chart-entity/charts-types/graph-chart/graph-chart.component';
 import { PieChartComponent } from './components/generic-components/chart-entity/charts-types/pie-chart/pie-chart.component';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { GridsterBlockComponent } from './components/generic-components/chart-entity/charts-types/gridster-block/gridster-block.component';
 import { StringDataComponent } from './components/generic-components/chart-entity/charts-types/string-data/string-data.component';
 import { NgxGaugeModule } from 'ngx-gauge';
@@ -60,7 +59,6 @@ import { LiveLabelComponent } from './components/generic-components/chart-entity
     TestComponent,
     SideBarParametersComponent,
     LiveDashboardComponent,
-    ChartEntityComponent,
     GaugeChartComponent,
     GraphChartComponent,
     PieChartComponent,

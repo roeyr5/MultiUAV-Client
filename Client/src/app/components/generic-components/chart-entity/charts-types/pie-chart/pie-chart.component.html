@@ -1,1 +1,11 @@
-<div #chartContainer class="chart-container"></div>
+<div class="chart-container pie-chart">
+  <mat-slide-toggle class="style-slider" (click)="onChangeSlider()"></mat-slide-toggle>
+  <ngx-charts-pie-chart [results]="pieRecords" [legend]="pieConfig().isLegend" [labels]="pieConfig().isLabels"
+   [doughnut]="isSliderCheck" [legendTitle]="formatValue()">
+    <ng-template #tooltipTemplate let-model ="model">
+      Value:{{model.Name}}
+      <br>
+      Count:{{model.value}}
+    </ng-template>
+  </ngx-charts-pie-chart>
+</div>

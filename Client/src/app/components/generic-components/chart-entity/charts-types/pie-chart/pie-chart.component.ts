@@ -1,5 +1,7 @@
-import { Component, Input, ViewChild, ElementRef, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, ViewChild, ElementRef, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
+import { pie } from 'd3';
 import * as Highcharts from 'highcharts';
+import { IPieConf,PieRecord } from 'src/app/entities/live-charts/pie.conf';
 import { IChartEntity } from 'src/app/entities/models/IChartEntity';
 
 @Component({
@@ -7,76 +9,63 @@ import { IChartEntity } from 'src/app/entities/models/IChartEntity';
   templateUrl: './pie-chart.component.html',
   styleUrls: ['./pie-chart.component.css']
 })
-export class PieChartComponent implements OnInit, OnDestroy {
-  @ViewChild('chartContainer') chartContainer!: ElementRef;
+export class PieChartComponent implements OnInit {
+
   @Input() chartEntity!: IChartEntity;
-  private chart!: Highcharts.Chart;
-  private resizeObserver!: ResizeObserver;
+  public pieRecords: PieRecord[] = [];
+  public isSliderCheck:boolean = false;
+  public liveValue :string ='';
+ 
+  public pieConf: IPieConf = new IPieConf();
+  
+  constructor(private cdr: ChangeDetectorRef, private ngZone: NgZone) {}
+  
+  ngOnInit(): void {
 
-  ngOnInit() {
-    this.initializeChart();
-    this.setupResizeObserver();
-    
-    this.chartEntity.dataEvent.subscribe((value: string) => {
-      this.updateChart(Number(value));
+    this.chartEntity.dataEvent.subscribe((data:string) => {
+      this.ngZone.run(() => {
+        this.liveValue = data;
+        this.addRecord(data);
+        this.cdr.markForCheck();
+      });
     });
   }
 
-  ngOnDestroy() {
-    this.resizeObserver?.disconnect();
-    if (this.chart) this.chart.destroy();
+
+  public addRecord(data:string):void{
+    let recordIndex = this.findRecordIndex(data);
+
+    if(recordIndex!==-1){
+      this.increaseRecordValue(recordIndex);
+    }
+    else{
+      let pieRecord :PieRecord ={name:data, value: 1};
+      this.pieRecords.push(pieRecord)
+    }
+    this.pieRecords =[...this.pieRecords];
   }
 
-  private initializeChart() {
-    this.chart = Highcharts.chart(this.chartContainer.nativeElement, {
-      chart: {
-        type: 'pie',
-        backgroundColor: 'transparent',
-        height: '100%'
-      },
-      title: {
-        text: this.chartEntity.parameter.parameterName,
-        style: { color: 'white' }
-      },
-      plotOptions: {
-        pie: {
-          dataLabels: {
-            style: { color: 'white' }
-          }
-        }
-      },
-      series: [{
-        type: 'pie',
-        name: 'Values',
-        data: [{
-          name: `UAV ${this.chartEntity.parameter.uavNumber}`,
-          y: 0,
-          color: this.getColor()
-        }]
-      }]
+  public increaseRecordValue(recordIndex:number):void{
+    let record = this.pieRecords[recordIndex];
+    let updateValue = (Number(record.value));
+    this.pieRecords[recordIndex].value =updateValue;
+  }
+
+  public findRecordIndex(recordName:string) : number{
+    return this.pieRecords.findIndex(record =>{
+      return record.name ===recordName;
     });
   }
 
-  private updateChart(value: number) {
-    this.chart.series[0].update({
-      type: 'pie', 
-      data: [{
-        name: `UAV ${this.chartEntity.parameter.uavNumber}`,
-        y: value,
-        color: this.getColor()
-      }]
-    }, true);
+  public formatValue():string{
+    return `Currnet Value: ${this.liveValue}`
   }
 
-  private getColor(): string {
-    // Implement your color logic here
-    return '#' + Math.floor(Math.random()*16777215).toString(16);
-  }
+  public pieConfig(): IPieConf{
+    return this.pieConf;
+  } 
 
-  private setupResizeObserver() {
-    this.resizeObserver = new ResizeObserver(() => {
-      this.chart?.reflow();
-    });
-    this.resizeObserver.observe(this.chartContainer.nativeElement);
+  public onChangeSlider(){
+    this.isSliderCheck = !this.isSliderCheck;
   }
-}
+ }
