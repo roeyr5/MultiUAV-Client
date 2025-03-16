@@ -94,15 +94,24 @@ export class GridsterBlockComponent implements OnInit {
   public getTypes() {
     return SingleChart;
   }
-  public onChartTypeChange(){
 
-  this.changes = {
-    chartType: this.selectedChartType,
-    chartEntity: this.chartEntity,
-  };
-
-    this.chartDataUpdated.emit(this.changes)
+  public changeChartType(newChartType: SingleChart): void {
+    this.changes = {
+      chartType: newChartType,
+      chartEntity: this.chartEntity,
+    };
+    this.chartDataUpdated.emit(this.changes);
   }
+
+  // public onChartTypeChange(){
+
+  // this.changes = {
+  //   chartType: this.selectedChartType,
+  //   chartEntity: this.chartEntity,
+  // };
+
+  //   this.chartDataUpdated.emit(this.changes)
+  // }
 
   
 

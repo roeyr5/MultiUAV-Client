@@ -52,7 +52,6 @@ export class GaugeChartComponent implements OnInit {
   }
 
   public resizeGauge(): void {
-    console.log('asdasdasdasd');
 
     let parent = document.getElementById(this.chartEntity.id);
     if (parent) {
@@ -60,7 +59,6 @@ export class GaugeChartComponent implements OnInit {
       let parentHeight: number = +parent.offsetHeight;
       this.size =
         parentHeight < parentWidth ? parentHeight : 0.95 * parentWidth;
-      console.log('this.size', this.size);
     }
   }
   public getGaugeValueClass(value: number): string {

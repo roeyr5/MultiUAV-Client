@@ -43,6 +43,8 @@ import { GridsterBlockComponent } from './components/generic-components/chart-en
 import { StringDataComponent } from './components/generic-components/chart-entity/charts-types/string-data/string-data.component';
 import { NgxGaugeModule } from 'ngx-gauge';
 import { LiveLabelComponent } from './components/generic-components/chart-entity/charts-types/live-label/live-label.component';
+import { ConcatGraphComponent } from './components/generic-components/chart-entity/charts-types/concat-graph/concat-graph.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -65,9 +67,11 @@ import { LiveLabelComponent } from './components/generic-components/chart-entity
     GridsterBlockComponent,
     StringDataComponent,
     LiveLabelComponent,
+    ConcatGraphComponent,
   ],
   imports: [
     NgxGaugeModule,
+    MatTooltipModule,
     GridsterModule,
     MatSelectModule,
     MatCheckboxModule,
