@@ -1,14 +1,17 @@
 <div class="chart-case chart-container" [ngSwitch]="chartEntity.chartType">
-  
-  <mat-form-field appearance="fill">
-    <mat-label>Chart Type</mat-label>
-    <mat-select [(value)]="selectedChartType" (selectionChange)="onChartTypeChange()">
-      <mat-option *ngFor="let option of graphOptions" [value]="option.label">
-        <img [src]="option.image" alt="{{option.label}}" class="chart-icon" />
-        {{ option.label }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>  
+
+  <div class="settings-container">
+    <button mat-icon-button [matMenuTriggerFor]="chartMenu" class="settings-button">
+      <mat-icon>settings</mat-icon>
+    </button>
+    
+    <mat-menu #chartMenu="matMenu">
+      <button mat-menu-item *ngFor="let option of graphOptions" (click)="changeChartType(option.label)">
+        <img [src]="option.image" class="chart-icon" alt="{{option.label}}">
+        <span>{{ option.label }}</span>
+      </button>
+    </mat-menu>
+  </div>
   
   <div *ngSwitchCase="getTypes().GAUGE" class="chart-container gauge-case">
     <app-gauge-chart [chartEntity]="chartEntity"></app-gauge-chart>

@@ -98,8 +98,7 @@ export class LiveDashboardComponent implements AfterViewChecked {
   }
 
 
-  private updateChartData(
-    parameters: { [key: string]: string },
+  private updateChartData( parameters: { [key: string]: string },
     incomingFullUavName: string
   ): void {
     Object.entries(parameters).forEach(([parameterName, parameterValue]) => {
@@ -113,7 +112,7 @@ export class LiveDashboardComponent implements AfterViewChecked {
   private initGridsterOptions(): void {
     this.options = {
       gridType: GridType.Fit,
-      compactType: 'none',
+      compactType: 'compactUp',
       margin: 5,
       outerMargin: true,
       mobileBreakpoint: 640,
@@ -178,6 +177,7 @@ export class LiveDashboardComponent implements AfterViewChecked {
         parameterComm: parameter.communication,
         parameterName: parameter.parameterName,
         chartEntitys: [itemToAdd],
+        isConcatenated:false,
       });
     }
 
@@ -288,13 +288,13 @@ export class LiveDashboardComponent implements AfterViewChecked {
   public calculateBlockWidth(item: any): string {
     const numberOfItems = item.chartEntitys.length;
     if (numberOfItems > 0) {
-      return `${100 / numberOfItems}%`;  // Divide the width by the number of chartEntitys and return in percentage
+      return `${100 / numberOfItems}%`;
     }
-    return '100%';  // Default width if no chartEntitys
+    return '100%';
   }
 
-  public concatGraphs(item: TelemetryGridsterItem):void{
-    console.log(item)
+  public concatGraphs(item: TelemetryGridsterItem): void {
+    item.isConcatenated = !item.isConcatenated;
   }
   
   // public changeChartType(item: ChartGridsterItem, newType: ChartType): void {

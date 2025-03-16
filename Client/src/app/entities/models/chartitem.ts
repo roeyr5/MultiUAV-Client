@@ -28,7 +28,8 @@ export interface ChartGridsterItem extends GridsterItem {
 }
 
 export interface TelemetryGridsterItem extends GridsterItem, IGridsterParameter{
-  // datasets: Dataset[];
+  // chartEntitys: IChartEntity[];
+  isConcatenated: boolean;
 }
 
 //using ICHartEntity
