@@ -21,21 +21,17 @@ export class MonitorComponent implements OnInit {
   private StartConnection()
   {
    this.monitorservice.startConnection().subscribe((response)=>{
-    // console.log("worked signalR");
 
     this.monitorservice.MonitorActiveMessage().subscribe((data)=>{
-      // console.log("Received Dictionary:", data);
       for (let uav in data) {
-        // console.log(`Uav Number: ${uav}, partitions count data :`, data[uav]);
         this.activeUavs[uav] = data[uav];
       }     
-      //  this.activeUavs.set(message.partition,message.status);
     });
   });
   }
 
   protected getUavs(): void {
-    console.log(1)
+    // console.log(1)
     this.simulatorService.telemetryUavs().subscribe(
       (res) => {
         console.log(res)

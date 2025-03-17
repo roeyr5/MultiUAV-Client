@@ -6,6 +6,7 @@ import {
   OnInit,
   ChangeDetectorRef,
   NgZone,
+  AfterViewInit,
 } from '@angular/core';
 import { BaseChartComponent } from '@swimlane/ngx-charts';
 import {
@@ -26,7 +27,7 @@ import {
   templateUrl: './graph-chart.component.html',
   styleUrls: ['./graph-chart.component.css'],
 })
-export class GraphChartComponent implements OnInit {
+export class GraphChartComponent implements OnInit, AfterViewInit {
   @Input() chartEntity!: IChartEntity;
   public view: [number, number] = [0, 0];
   public graphValues: GraphRecordsList[] = [];
@@ -36,11 +37,15 @@ export class GraphChartComponent implements OnInit {
 
   constructor(private cdr: ChangeDetectorRef, private ngZone: NgZone) {}
 
+  ngAfterViewInit(): void {
+    this.updateGraphSize();
+  }
+
   public graphConf: IGraphConf = new IGraphConf();
   public graphValue: number = 0;
   // public size: number = 120;
 
-  @ViewChild('graph', { static: false }) graph!: BaseChartComponent;
+  @ViewChild('graph', { static: false }) graph!: ElementRef;
 
   ngOnInit(): void {
     this.graphValues = [
@@ -51,11 +56,12 @@ export class GraphChartComponent implements OnInit {
     ];
     // this.initGraph;
 
+    setTimeout(() => this.cdr.detectChanges(), 0);
     setTimeout(() => {
       // @ts-ignore Cannot find name 'ResizeObserver'
       const resizeObserver = new ResizeObserver((entries) => {
         this.ngZone.run(() => {
-          this.resizeGraph();
+          this.updateGraphSize();
           this.cdr.markForCheck();
         });
       });
@@ -74,6 +80,22 @@ export class GraphChartComponent implements OnInit {
         this.cdr.markForCheck();
       });
     });
+  }
+
+  updateGraphSize() {
+    const element = document.getElementById(this.chartEntity.id.toString());
+    if (element) {
+      const width = element.offsetWidth;
+      const height = element.offsetHeight;
+
+      // Only update the view size if it's changed
+      if (this.view[0] !== width || this.view[1] !== height) {
+        this.view = [width, height];
+        this.cdr.detectChanges(); // Manually trigger change detection
+      }
+    } else {
+      console.log('Element not found');
+    }
   }
 
   // public initGraph(): void {

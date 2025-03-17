@@ -7,26 +7,45 @@ import { Observable, Observer, partition } from 'rxjs';
 })
 export class MonitorRService {
   private connection : signalR.HubConnection;
+  private retryTimeout = 2000;
+  private timeoutPromise = (ms: number) => new Promise((_, reject) => setTimeout(() => reject('Timeout'), ms));
+
   constructor() {
-    this.connection = new signalR.HubConnectionBuilder()
-      .withUrl('http://localhost:9000/monitorhub').build();
+    this.connection = new signalR.HubConnectionBuilder().withUrl('http://localhost:9000/monitorhub').build();
   }
 
-  public startConnection(): Observable<void> {
-    return new Observable<void>((observer) => {
-      this.connection
-        .start()
-        .then(() => {
-          console.log('Connection established with SignalR hub');
-          observer.next();
-          observer.complete();
-        })
-        .catch((error) => {
-          console.error('Error connecting to SignalR hub:', error);
-          observer.error(error);
+  
+  startConnection(): Observable<void> {
+      return new Observable((observer) => {
+        this.connection = new signalR.HubConnectionBuilder()
+          .withUrl('http://localhost:9000/monitorhub')
+          .build();
+  
+        const startFn = () => {
+          Promise.race([
+            this.connection.start(),
+            this.timeoutPromise(this.retryTimeout)
+          ])
+            .then(() => {
+              observer.next();
+              observer.complete();
+            })
+            .catch((err) => {
+              observer.error(err);
+              setTimeout(startFn, this.retryTimeout);
+            });
+        };
+  
+        startFn();
+  
+        this.connection.onclose((error) => {
+          if (error) {
+            console.error('Connection closed with error:', error);
+          }
+          setTimeout(() => startFn(), this.retryTimeout);
         });
-    });
-  }
+      });
+    }
 
   public MonitorActiveMessage(): Observable<{ [uavNumber: number]: { [partition: number]: number } }> {
     return new Observable<{ [uavNumber: number]: { [partition: number]: number } }>((observer) => {
