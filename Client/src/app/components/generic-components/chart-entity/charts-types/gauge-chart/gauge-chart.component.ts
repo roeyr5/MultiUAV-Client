@@ -1,6 +1,8 @@
 import {
   Component,
   Input,
+  Output,
+  EventEmitter,
   ViewChild,
   ElementRef,
   OnInit,
@@ -13,6 +15,10 @@ import {
   IChartEntity,
   IGridsterParameter,
 } from 'src/app/entities/models/IChartEntity';
+import { SingleChart } from 'src/app/entities/enums/chartType.enum';
+import { graphChartTypes } from 'src/app/entities/enums/chartType.enum';
+import { pieChartTypes } from 'src/app/entities/enums/chartType.enum';
+import { ChangeChartType } from 'src/app/entities/enums/chartType.enum';
 
 @Component({
   selector: 'app-gauge-chart',
@@ -20,11 +26,36 @@ import {
   styleUrls: ['./gauge-chart.component.css'],
 })
 export class GaugeChartComponent implements OnInit {
+  graphOptions = [
+      {
+        label: SingleChart.GRAPH,
+        image: 'assets/images/line_chart_icon.png',
+        subOptions: [
+          {
+            label: graphChartTypes.regular,
+            image: 'assets/images/line_regular.png',
+          },
+        ],
+      },
+      {
+        label: SingleChart.PIE,
+        image: 'assets/images/pie_chart_icon.png',
+        subOptions: [
+          {
+            label: pieChartTypes.regular,
+            image: 'assets/images/pie_regular.png',
+          },
+        ],
+      },
+    ];
+    
+  @Output() newChartType = new EventEmitter<ChangeChartType>();
   @Input() chartEntity!: IChartEntity;
   public gaugeConf: IGaugeConf = new IGaugeConf();
 
   public gaugeValue: number = 0;
   public size: number = 120;
+  changes!:ChangeChartType
 
   constructor(private cdr: ChangeDetectorRef, private ngZone: NgZone) {}
 
@@ -70,5 +101,13 @@ export class GaugeChartComponent implements OnInit {
   //   } else {
   //     return 'high-value';
   //   }
+  }
+  
+  public changeChartType(newChartType: SingleChart): void {
+    this.changes = {
+      chartType: newChartType,
+      chartEntity: this.chartEntity,
+    };
+    this.newChartType.emit(this.changes);
   }
 }

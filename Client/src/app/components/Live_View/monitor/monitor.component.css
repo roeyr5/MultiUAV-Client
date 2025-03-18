@@ -6,7 +6,7 @@
   box-sizing: border-box;
 
   .table {
-  background-color: #131417;
+  background-color: #261e35;
   width: 100%;
   padding: 20px;
   text-align: center;
@@ -26,7 +26,7 @@
 
 
 .device-list li {
-  background-color: #1f1d1d;
+  background-color: #382c4e;
   color: white;
   padding: 15px;
   margin: 10px 0;
@@ -38,7 +38,7 @@
 }
 
 .device-list li:hover {
-  background-color: #292828;
+  background-color: #4b3c68;
 }
 
 .uav-item {
@@ -159,5 +159,5 @@
   width: 100%;
   display: flex;
   justify-content: center;
-  margin: 20px 0;
+  /* margin: 20px 0; */
 }

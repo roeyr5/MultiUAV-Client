@@ -1,5 +1,21 @@
 
+
  <div class="gauge-container">
+  <div class="uav-name-container">
+    <div class="settings-container">
+      <button mat-icon-button [matMenuTriggerFor]="chartMenu" class="settings-button">
+        <mat-icon class="icon-button">bar_chart</mat-icon>
+      </button>
+      
+      <mat-menu #chartMenu="matMenu">
+        <button mat-menu-item *ngFor="let option of graphOptions" (click)="changeChartType(option.label)">
+          <img [src]="option.image" class="chart-icon" alt="{{option.label}}">
+          <span>{{ option.label }}</span>
+        </button>
+      </mat-menu>
+    </div>
+    <!-- <span class="uav-name">Uav Number {{chartEntity.parameter.uavNumber}}</span> -->
+  </div>
   <ngx-gauge
   id="{{chartEntity.id}}"
   class="gauge-size"

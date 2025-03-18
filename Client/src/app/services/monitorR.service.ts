@@ -47,7 +47,7 @@ export class MonitorRService {
       });
     }
 
-  public MonitorActiveMessage(): Observable<{ [uavNumber: number]: { [partition: number]: number } }> {
+  public monitorActiveMessage(): Observable<{ [uavNumber: number]: { [partition: number]: number } }> {
     return new Observable<{ [uavNumber: number]: { [partition: number]: number } }>((observer) => {
       this.connection.on('UpdateMessageCounts', (data: { [uavNumber: number]: { [partition: number]: number } }) => {
           observer.next(data);

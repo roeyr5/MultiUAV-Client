@@ -1,8 +1,12 @@
-import { Component, Input, ViewChild, ElementRef, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
+import { Component, Input,Output,EventEmitter, ViewChild, ElementRef, OnInit, OnDestroy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { pie } from 'd3';
 import * as Highcharts from 'highcharts';
 import { IPieConf,PieRecord } from 'src/app/entities/live-charts/pie.conf';
 import { IChartEntity } from 'src/app/entities/models/IChartEntity';
+import { ChangeChartType } from 'src/app/entities/enums/chartType.enum';
+import { SingleChart } from 'src/app/entities/enums/chartType.enum';
+import { gaugeChartTypes } from 'src/app/entities/enums/chartType.enum';
+import { graphChartTypes } from 'src/app/entities/enums/chartType.enum';
 
 @Component({
   selector: 'app-pie-chart',
@@ -11,6 +15,35 @@ import { IChartEntity } from 'src/app/entities/models/IChartEntity';
 })
 export class PieChartComponent implements OnInit {
 
+   graphOptions = [
+          {
+            label: SingleChart.GAUGE,
+            image: 'assets/images/gauge_chart_icon.png',
+            subOptions: [
+              {
+                label: gaugeChartTypes.regular,
+                image: 'assets/images/gauge_regular.png',
+              },
+              {
+                label: gaugeChartTypes.pointer,
+                image: 'assets/images/gauge_pointer.png',
+              },
+            ],
+          },
+          {
+            label: SingleChart.GRAPH,
+            image: 'assets/images/line_chart_icon.png',
+            subOptions: [
+              {
+                label: graphChartTypes.regular,
+                image: 'assets/images/line_regular.png',
+              },
+            ],
+          },
+        ];
+  
+  changes!:ChangeChartType
+  @Output() newChartType = new EventEmitter<ChangeChartType>();
   @Input() chartEntity!: IChartEntity;
   public pieRecords: PieRecord[] = [];
   public isSliderCheck:boolean = false;
@@ -68,4 +101,12 @@ export class PieChartComponent implements OnInit {
   public onChangeSlider(){
     this.isSliderCheck = !this.isSliderCheck;
   }
- }
+
+  public changeChartType(newChartType: SingleChart): void {
+    this.changes = {
+      chartType: newChartType,
+      chartEntity: this.chartEntity,
+    };
+    this.newChartType.emit(this.changes);
+  }
+}

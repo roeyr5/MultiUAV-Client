@@ -36,7 +36,9 @@ export class SideBarParametersComponent implements OnInit {
 
   public ngOnInit(): void {}
 
+  
   public closeSideBar(): void {
+    
     this.onCloseSideBar.emit();
   }
 

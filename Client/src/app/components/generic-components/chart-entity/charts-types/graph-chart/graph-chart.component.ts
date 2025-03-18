@@ -1,6 +1,6 @@
 import {
   Component,
-  Input,
+  Input,Output,EventEmitter,
   ViewChild,
   ElementRef,
   OnInit,
@@ -21,6 +21,10 @@ import {
   IGridsterParameter,
 } from 'src/app/entities/models/IChartEntity';
 ('');
+import { ChangeChartType } from 'src/app/entities/enums/chartType.enum';
+import { SingleChart } from 'src/app/entities/enums/chartType.enum';
+import { gaugeChartTypes } from 'src/app/entities/enums/chartType.enum';
+import { pieChartTypes } from 'src/app/entities/enums/chartType.enum';
 
 @Component({
   selector: 'app-graph-chart',
@@ -28,6 +32,35 @@ import {
   styleUrls: ['./graph-chart.component.css'],
 })
 export class GraphChartComponent implements OnInit, AfterViewInit {
+  graphOptions = [
+        {
+          label: SingleChart.GAUGE,
+          image: 'assets/images/gauge_chart_icon.png',
+          subOptions: [
+            {
+              label: gaugeChartTypes.regular,
+              image: 'assets/images/gauge_regular.png',
+            },
+            {
+              label: gaugeChartTypes.pointer,
+              image: 'assets/images/gauge_pointer.png',
+            },
+          ],
+        },
+        {
+          label: SingleChart.PIE,
+          image: 'assets/images/pie_chart_icon.png',
+          subOptions: [
+            {
+              label: pieChartTypes.regular,
+              image: 'assets/images/pie_regular.png',
+            },
+          ],
+        },
+      ];
+
+  changes!:ChangeChartType
+  @Output() newChartType = new EventEmitter<ChangeChartType>();
   @Input() chartEntity!: IChartEntity;
   public view: [number, number] = [0, 0];
   public graphValues: GraphRecordsList[] = [];
@@ -155,6 +188,14 @@ export class GraphChartComponent implements OnInit, AfterViewInit {
 
   public updateGraph() {
     this.graphValues = [...this.graphValues];
+  }
+
+  public changeChartType(newChartType: SingleChart): void {
+    this.changes = {
+      chartType: newChartType,
+      chartEntity: this.chartEntity,
+    };
+    this.newChartType.emit(this.changes);
   }
 
   // initialize() {

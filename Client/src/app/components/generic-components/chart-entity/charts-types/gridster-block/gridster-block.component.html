@@ -1,26 +1,27 @@
 <div class="chart-case chart-container" [ngSwitch]="chartEntity.chartType">
-
-  <div class="settings-container">
-    <button mat-icon-button [matMenuTriggerFor]="chartMenu" class="settings-button">
-      <mat-icon>settings</mat-icon>
-    </button>
-    
-    <mat-menu #chartMenu="matMenu">
-      <button mat-menu-item *ngFor="let option of graphOptions" (click)="changeChartType(option.label)">
-        <img [src]="option.image" class="chart-icon" alt="{{option.label}}">
-        <span>{{ option.label }}</span>
-      </button>
-    </mat-menu>
-  </div>
   
+  <div class="chart-header">
+    <span class="uav-number-span">UAV Number:</span> 
+    <span class="entity-uav-number-span">{{chartEntity.parameter.uavNumber}}</span>
+  </div>
+
   <div *ngSwitchCase="getTypes().GAUGE" class="chart-container gauge-case">
-    <app-gauge-chart [chartEntity]="chartEntity"></app-gauge-chart>
+    <app-gauge-chart 
+      (newChartType)="onChangeChart($event)" 
+      [chartEntity]="chartEntity">
+    </app-gauge-chart>
   </div>
   <div *ngSwitchCase="getTypes().GRAPH" class="chart-container graph-case">
-    <app-graph-chart class="chart-container" [chartEntity]="chartEntity"></app-graph-chart>
+    <app-graph-chart class="chart-container"
+      (newChartType)="onChangeChart($event)" 
+      [chartEntity]="chartEntity">
+   </app-graph-chart>
   </div>
   <div *ngSwitchCase="getTypes().PIE" class="chart-container pie-case">
-    <app-pie-chart class="chart-container" [chartEntity]="chartEntity" ></app-pie-chart>
+    <app-pie-chart class="chart-container"
+     (newChartType)="onChangeChart($event)" 
+     [chartEntity]="chartEntity" >
+    </app-pie-chart>
   </div>
   <div *ngSwitchCase="getTypes().LABEL" class="chart-container label-case">
     <app-live-label class="chart-container" [chartEntity]="chartEntity" ></app-live-label>

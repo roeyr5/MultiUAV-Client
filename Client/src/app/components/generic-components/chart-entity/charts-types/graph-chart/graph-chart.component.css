@@ -12,6 +12,7 @@
 }
 
 .chart-container {
+  background: #4a435c;
   text-align: center;
   width: 100%;
   height: 100%;
@@ -20,8 +21,21 @@
   position: relative;
   flex-wrap: wrap;
 }
-
+.uav-name, .settings-button{
+  color: white;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
 ngx-charts-line-chart {
   width: 100%;
   height: 100%;
+}
+.chart-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+.uav-name{
+  color: white;
 }

@@ -1,18 +1,17 @@
 .layout {
     display: flex;
-    height: 100vh; 
+    width: 100vw; 
   }
   
   app-sidebar {
-    width: 200px;
     flex-shrink: 0;
-    background-color: #000000;
+    background-color: #2f293e;
   }
   
   .content {
     flex-grow: 1;
     overflow: auto;
-    background-color: #000000;
+    background-color: #2f293e;
     overflow: hidden;
   }
   

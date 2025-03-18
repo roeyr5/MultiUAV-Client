@@ -45,7 +45,9 @@ import { NgxGaugeModule } from 'ngx-gauge';
 import { LiveLabelComponent } from './components/generic-components/chart-entity/charts-types/live-label/live-label.component';
 import { ConcatGraphComponent } from './components/generic-components/chart-entity/charts-types/concat-graph/concat-graph.component';
 import { MatTooltipModule } from '@angular/material/tooltip';
-
+import { PresetParametersComponent } from './components/generic-components/preset-parameters/preset-parameters.component';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -68,8 +70,11 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     StringDataComponent,
     LiveLabelComponent,
     ConcatGraphComponent,
+    PresetParametersComponent,
   ],
   imports: [
+    MatDatepickerModule,
+    MatFormFieldModule,
     NgxGaugeModule,
     MatTooltipModule,
     GridsterModule,

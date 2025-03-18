@@ -85,7 +85,6 @@ export class LiveDashboardComponent implements AfterViewChecked {
 
   private startConnection(): void {
     this.liveTelemetryData.startConnection().subscribe((response) => {
-      console.log('worked signalR');
 
       this.liveTelemetryData.receiveMessage().subscribe((message) => {
         // console.log("Received message:", message);
@@ -98,9 +97,7 @@ export class LiveDashboardComponent implements AfterViewChecked {
   }
 
 
-  private updateChartData( parameters: { [key: string]: string },
-    incomingFullUavName: string
-  ): void {
+  private updateChartData( parameters: { [key: string]: string }, incomingFullUavName: string ): void {
     Object.entries(parameters).forEach(([parameterName, parameterValue]) => {
       let parameterKey = `${parameterName}_${incomingFullUavName}`;
       const chartEntity = this.parametersChartEntityMap.get(parameterKey);
@@ -122,7 +119,7 @@ export class LiveDashboardComponent implements AfterViewChecked {
       maxRows: 6,
       draggable: { enabled: true },
       resizable: { enabled: true },
-      displayGrid: DisplayGrid.Always,
+      displayGrid: DisplayGrid.OnDragAndResize,
       pushItems: true,
       swap: true,
       scrollToNewItems: true,
@@ -142,16 +139,10 @@ export class LiveDashboardComponent implements AfterViewChecked {
   }
 
   public onAddParameter(parameter: IcdParameter): void {
-    const chartType: SingleChart =
-      parameter.units === 'Value' ? SingleChart.LABEL : SingleChart.GAUGE;
+    const chartType: SingleChart = parameter.units === 'Value' ? SingleChart.LABEL : SingleChart.GAUGE;
     const id = uuidv4();
 
-    let itemToAdd: IChartEntity = new IChartEntity(
-      id,
-      parameter,
-      chartType,
-      new EventEmitter<any>()
-    );
+    let itemToAdd: IChartEntity = new IChartEntity(id,parameter,chartType,new EventEmitter<any>());
 
     const existingItem = this.telemetryGridsterDashboard.find(
       (item) =>
@@ -182,10 +173,7 @@ export class LiveDashboardComponent implements AfterViewChecked {
     }
 
 
-    this.parametersChartEntityMap.set(
-      `${parameter.parameterName}_${parameter.uavNumber}${parameter.communication}`,
-      itemToAdd
-    );
+    this.parametersChartEntityMap.set(`${parameter.parameterName}_${parameter.uavNumber}${parameter.communication}`,itemToAdd);
     this.liveTelemetryData.addParameter(parameter);
     this.joinGroup(parameter);
   }
