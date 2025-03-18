@@ -1,6 +1,45 @@
 <div class="chart-container">
+  <div class="uav-name-container">
+    <div class="settings-container">
+      <button mat-icon-button [matMenuTriggerFor]="chartMenu" class="settings-button">
+        <mat-icon class="icon-button">bar_chart</mat-icon>
+      </button>
+      
+      <mat-menu #chartMenu="matMenu">
+        <button mat-menu-item *ngFor="let option of graphOptions" (click)="changeChartType(option.label)">
+          <img [src]="option.image" class="chart-icon" alt="{{option.label}}">
+          <span>{{ option.label }}</span>
+        </button>
+      </mat-menu>
+    </div>
+    <!-- <span class="uav-name">Uav Number {{chartEntity.parameter.uavNumber}}</span> -->
+  </div>
+    <ngx-charts-line-chart
+      #graph
+      id="{{ chartEntity.id }}"
+      [results]="graphValues"
+      [scheme]="graphConfig().colorScheme"
+      [gradient]="graphConfig().gradient"
+      [xAxis]="graphConfig().showXAxis"
+      [yAxis]="graphConfig().showYAxis"
+      [legend]="graphConfig().showLegend"
+      [showXAxisLabel]="graphConfig().showXAxisLabel"
+      [showYAxisLabel]="graphConfig().showYAxisLabel"
+      [autoScale]="false"
+      [animations]="true"
+      [view]="view"
+    >
+      <ng-container *ngFor="let series of graphValues"></ng-container>
+    </ngx-charts-line-chart>
+</div>
+
+
+
+
+<!-- <div class="chart-container">
   <ngx-charts-line-chart
     #graph
+    id="{{chartEntity.id}}"
     [results]="graphValues"
     [scheme]="graphConfig().colorScheme"
     [gradient]="graphConfig().gradient"
@@ -9,18 +48,22 @@
     [legend]="graphConfig().showLegend"
     [showXAxisLabel]="graphConfig().showXAxisLabel"
     [showYAxisLabel]="graphConfig().showYAxisLabel"
-    [autoScale]="true"
+    [autoScale]="false"
     [animations]="true"
     [view]="view"
   >
     <ng-container *ngFor="let series of graphValues"></ng-container>
-    <!-- <ng-template #tooltopTemplate let-model="model">
-      Name:{{ model.series }}
-      <br />
-      Value:{{ model.value }}
-    </ng-template> -->
   </ngx-charts-line-chart>
-</div>
+</div> -->
+
+
+
+
+<!-- <ng-template #tooltopTemplate let-model="model">
+  Name:{{ model.series }}
+  <br />
+  Value:{{ model.value }}
+</ng-template> -->
 
 <!-- id="{{ chartEntity.id }}"
   class="gauge-size"

@@ -21,20 +21,20 @@
       }
     }
   }
-
-  .chart-container{
+  .chart-container {
     width: 100%;
-    height: 100%;
-    padding: 10px;
+    height: 90%;
+    /* padding: 10px; */
     box-sizing: border-box;
 
-    .single-charts{
+    .single-charts {
       display: grid;
-      grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+      /* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
+      grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
       gap: 10px;
       height: 100%;
     }
-    .concat-chart{
+    .concat-chart {
       height: calc(100%-40px);
       width: 100%;
     }
@@ -44,35 +44,70 @@
     width: 100%;
 
     .gridster {
-      background: #131417;
+      background: #261e35;
+
+      .concat-button {
+        color: rgb(255, 255, 255);
+        height: 0;
+        background-color: #261e35;
+        z-index: 10;
+      }
     }
   }
 }
 
 app-side-bar-parameters {
+  background-color: #40394e;
   z-index: 1;
   right: 0;
   top: 0;
   position: fixed;
 }
 
-.widget-content{
+.widget-content {
   position: relative;
   height: 100%;
   overflow: hidden;
 }
 app-gridster-block {
-  height: 100%;  
-  width: 100%;   
+  height: 100%;
+  width: 100%;
   overflow: hidden;
 }
+
 .gridster-item {
-  position: relative; 
+  /* position: relative; 
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow: hidden; */
+  border-radius: 2rem;
+  background: #40394e;
+  border: solid 1px #817d8b;
+  padding: 0.5rem 1rem 1rem 1rem;
+
+  .gridster-item-header {
+    height: 10%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .paramter-name {
+      color: #cdb2f2;
+      font-size: large;
+    }
+
+    .merge-split-buttton {
+      padding: 5px 10px;
+      background-color: #b97cf3;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  }
 }
 
 :host ::ng-deep gridster-item {
   display: flex !important;
+  flex-direction: column;
 }

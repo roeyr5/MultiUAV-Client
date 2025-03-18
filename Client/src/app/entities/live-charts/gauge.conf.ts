@@ -18,7 +18,7 @@ export class IGaugeConf {
     this.thick = GaugeThickness.MEDIUM;
     this.label = '';
     this.isThreshold = 'false';
-    this.foregroundColor = '#00ff00';
+    this.foregroundColor = '#66e6e1';
     this.backgroundColor = 'rgba(255, 255, 255, 0.1)';
     this.thresholds = {
       0: { color: '#ff0000' },

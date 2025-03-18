@@ -1,7 +1,7 @@
 .connect-button {
   margin-top: 20px;
   padding: 10px 15px;
-  background-color: #fbc02d; 
+  background-color: #b97cf3; 
   color: white;
   text-decoration: none;
   border: none;
@@ -17,7 +17,7 @@
 
 .file-upload {
   margin-top: 10px;
-  background-color: #fbc02d; /* Gold */
+  background-color: #fbc02d;
   padding: 10px;
   border-radius: 5px;
   text-align: center;
@@ -64,7 +64,7 @@
 
   .table {
     
-    background-color: #000000; 
+    background-color: #2f293e; 
     border-radius: 15px;
     width: 100vw;
     padding: 20px;
@@ -79,7 +79,7 @@
     }
     
     .device-list li {
-      background-color: #000000;
+      background-color: #2f293e;
       color: white;
       padding: 10px;
       margin: 5px 0;

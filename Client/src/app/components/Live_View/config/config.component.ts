@@ -1,5 +1,5 @@
 import { HttpClient, HttpStatusCode } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { SimulatorService } from 'src/app/services/simulator.service';
@@ -10,7 +10,7 @@ import { channeldto } from 'src/app/entities/models/channeldto';
   templateUrl: './config.component.html',
   styleUrls: ['./config.component.css'],
 })
-export class ConfigComponent implements OnInit {
+export class ConfigComponent implements OnInit,OnDestroy {
   dataSource: channeldto[] = [];
   Object = Object;
 
@@ -529,5 +529,16 @@ export class ConfigComponent implements OnInit {
     });
 }
 
-  
+private saveToLocalStorage ():void{
+  localStorage.setItem("uavsSettings", JSON.stringify(this.uavsCommunications))
+}  
+
+private loadUavsComm():void{
+  const storedSet = localStorage.getItem("uavsSettings")
+  if(storedSet)
+    this.uavsCommunications = JSON.parse(storedSet);
+}
+ngOnDestroy(): void {
+    this.saveToLocalStorage();
+}
 }

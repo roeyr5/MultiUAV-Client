@@ -4,6 +4,7 @@
   flex: 1 1 auto;
   display: flex;
   height: 100% !important;
+  background-color: #40394e;
 }
 .chart-icon {
   width: 20px;
@@ -16,14 +17,14 @@
   top: 8px;
   right: 8px;
   z-index: 1000;
-  
+
   button {
     background: rgba(255, 255, 255, 0.9);
     border-radius: 4px;
     padding: 4px;
     transition: all 0.2s ease;
-    
-    menu-icon{
+
+    menu-icon {
       width: 20px;
       height: 20px;
       margin-right: 10px;
@@ -32,7 +33,9 @@
     }
   }
 }
-
+.icon-button {
+  color: white;
+}
 
 .gauge-case {
   width: 100%;
@@ -64,14 +67,31 @@ app-gauge-chart {
 }
 
 .chart-case {
+  display: flex;
+  flex-direction: column;
+  background-color: #4a435c;
+  border-radius: 10px;
   position: relative;
   height: 100%;
   width: 100%;
+
+  .chart-header {
+    display: flex;
+    margin: 0.5rem 0rem 0rem 0.5rem;
+
+    .uav-number-span {
+      color: white;
+      font-size: medium;
+    }
+
+    .entity-uav-number-span {
+      margin-left: 0.5rem;
+      color: #66e6e1;
+      font-size: medium;
+    }
+  }
 }
 
-.pie-case {
-  padding: 10px;
-}
 /* .gridster-item {
   background-color: #fff;
   border: 1px solid #ddd;

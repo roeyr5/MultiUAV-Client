@@ -6,13 +6,27 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background: #1e1e1e;
-
+  background: #4a435c;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+  
   .gauge-size {
-    background: #1e1e1e;
+    background: #4a435c;
     width: 100% !important;
   }
-  .gauge-value{
-    color: #00ff88;
+    .gauge-value{
+    color: #66e6e1;
   }
+}
+
+.uav-name, .settings-button{
+  color: white;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.chart-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
 }

@@ -12,7 +12,7 @@
             <div> 
               <span>Simulate Time :</span>
               <input  class="input-simulate" #simulateTimeInput type="number" [(ngModel)]="uavsTimeSimulate[uav.key]" readonly/>
-              <button (click)="toggleEditable(simulateTimeInput, uav.key)" class="edit-button" [title]="simulateTimeInput.readOnly ?     'Edit' : 'Save'" >
+              <button (click)="toggleEditable(simulateTimeInput, uav.key)" class="edit-button" [title]="simulateTimeInput.readOnly ? 'Edit' : 'Save'" >
                 <span *ngIf="simulateTimeInput.readOnly">✏️</span>
                 <span *ngIf="!simulateTimeInput.readOnly">✅</span>
               </button>

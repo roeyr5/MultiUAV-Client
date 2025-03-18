@@ -4,18 +4,23 @@
       <button mat-button class="button" (click)="toggleSideBar()">
         Add Parameter
       </button>
-      <button mat-button class="button" (click)="MoveParameters()">
-        Enable drag and move
-      </button>
+      
     </div>
   </div>
   <div class="body">
     <gridster class="gridster" [options]="options">
-      <gridster-item *ngFor="let item of telemetryGridsterDashboard; trackBy: trackByFn" [item]="item">
+      <gridster-item class="gridster-item" *ngFor="let item of telemetryGridsterDashboard; trackBy: trackByFn" [item]="item">
       
-        <button mat-icon-button ="button" (click)="concatGraphs(item)" >{{item.isConcatenated ? 'Separate' : 'Concat'}}</button>
-        <mat-icon>link</mat-icon>
+        <!-- <button class="concat-button" *ngIf="item.chartEntitys[0].parameter.units!== 'Value'" (click)="concatGraphs(item)" >{{item.isConcatenated ? 'Separate' : 'Concat'}}  </button> -->
 
+        <!-- <button mat-icon-button class="merge-bottom">
+          <mat-icon class="icon-button">menu</mat-icon>
+        </button> -->
+
+        <div class="gridster-item-header">
+          <span class="paramter-name">{{item.parameterName}}</span>
+          <button class="merge-split-buttton" (click)="concatGraphs(item)" *ngIf="item.chartEntitys[0].parameter.units!=='Value'" >{{item.isConcatenated ? 'Split' : 'Merge'}}</button>
+        </div>
         <div class="chart-container">
           <div *ngIf="!item.isConcatenated" class="single-charts">
             <div class="widget-content" *ngFor="let chartEntity of item.chartEntitys">

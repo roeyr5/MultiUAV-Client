@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MonitorRService } from 'src/app/services/monitorR.service';
 import { SimulatorService } from 'src/app/services/simulator.service';
 
@@ -7,7 +7,7 @@ import { SimulatorService } from 'src/app/services/simulator.service';
   templateUrl: './monitor.component.html',
   styleUrls: ['./monitor.component.css']
 })
-export class MonitorComponent implements OnInit {
+export class MonitorComponent implements OnInit,OnDestroy {
 
   public activeUavs: { [uavNumber: number]: {  [partition: number]: number } } = {};
 
@@ -15,27 +15,24 @@ export class MonitorComponent implements OnInit {
   
   public ngOnInit(): void 
   {
-    this.StartConnection();
+    this.loadUavsFromLocalStorage();
+    this.startConnection();
   }
 
-  private StartConnection()
+  private startConnection()
   {
    this.monitorservice.startConnection().subscribe((response)=>{
-    // console.log("worked signalR");
 
-    this.monitorservice.MonitorActiveMessage().subscribe((data)=>{
-      // console.log("Received Dictionary:", data);
+    this.monitorservice.monitorActiveMessage().subscribe((data)=>{
       for (let uav in data) {
-        // console.log(`Uav Number: ${uav}, partitions count data :`, data[uav]);
         this.activeUavs[uav] = data[uav];
       }     
-      //  this.activeUavs.set(message.partition,message.status);
     });
   });
   }
 
   protected getUavs(): void {
-    console.log(1)
+    // console.log(1)
     this.simulatorService.telemetryUavs().subscribe(
       (res) => {
         console.log(res)
@@ -52,6 +49,21 @@ export class MonitorComponent implements OnInit {
   
   protected getStatus(value: number): string {
     return value > 0 ? 'green' : 'red';
+  }
+
+  private loadUavsFromLocalStorage(): void {
+    const storedUavs = localStorage.getItem('activeUavs');
+    if (storedUavs) {
+      this.activeUavs = JSON.parse(storedUavs);
+    }
+  }
+
+  private saveUavsToLocalStorage(): void {
+    localStorage.setItem('activeUavs', JSON.stringify(this.activeUavs));
+  }
+
+  ngOnDestroy(): void {
+    this.saveUavsToLocalStorage(); 
   }
 }
 
