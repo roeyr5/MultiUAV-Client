@@ -28,8 +28,8 @@ import { SimulatorService } from 'src/app/services/simulator.service';
 import { UserService } from 'src/app/services/user.service';
 import { ParameterDataDto } from 'src/app/entities/models/parameterDataDto';
 import { v4 as uuidv4 } from 'uuid';
-import { chart } from 'highcharts';
 import Swal from 'sweetalert2';
+import { createPresetDto } from 'src/app/entities/models/presetItem';
 
 @Component({
   selector: 'app-live-dashboard',
@@ -52,19 +52,10 @@ export class LiveDashboardComponent implements AfterViewChecked {
   // @ViewChildren(ChartComponent) charts!: QueryList<ChartComponent>;
 
   protected uavsList: number[] = [];
-  protected parametersMap: Map<string, ParameterDataDto[]> = new Map<
-    string,
-    ParameterDataDto[]
-  >();
-  protected selectedParametersMap: Map<
-    number,
-    Map<string, ParameterDataDto[]>
-  > = new Map<number, Map<string, ParameterDataDto[]>>();
+  protected parametersMap: Map<string, ParameterDataDto[]> = new Map<string,ParameterDataDto[]>();
+  protected selectedParametersMap: Map<number,Map<string, ParameterDataDto[]>> = new Map<number, Map<string, ParameterDataDto[]>>();
 
-  public parametersChartEntityMap: Map<string, IChartEntity> = new Map<
-    string,
-    IChartEntity
-  >();
+  public parametersChartEntityMap: Map<string, IChartEntity> = new Map<string,IChartEntity>();
 
   public groupsJoined: string[] = [];
 
@@ -111,11 +102,11 @@ export class LiveDashboardComponent implements AfterViewChecked {
       gridType: GridType.Fit,
       compactType: 'compactUp',
       margin: 5,
-      outerMargin: true,
+      outerMargin: false,
       mobileBreakpoint: 640,
-      minCols: 2,
+      minCols: 1,
       maxCols: 6,
-      minRows: 2,
+      minRows: 1,
       maxRows: 6,
       draggable: { enabled: true },
       resizable: { enabled: true },
@@ -134,6 +125,39 @@ export class LiveDashboardComponent implements AfterViewChecked {
 
   }
 
+  public async savePreset() : Promise<void> {
+         
+    const email = localStorage.getItem('email');
+    if (email !== null) {
+
+      const { value: presetName } = await Swal.fire({
+        title: "Input preset name",
+        input: "text",
+        inputLabel: "Your preset name for this mission",
+        inputPlaceholder: "Enter your preset name "
+      }); 
+
+
+      console.log(this.telemetryGridsterDashboard)
+      const presetUpdate: createPresetDto = {
+        email: email,
+        presetItem: {
+          presetName: presetName,
+          parameters: this.telemetryGridsterDashboard,
+        },
+      };
+
+      this.userservice.createOrSavePreset(presetUpdate).subscribe((res)=>{
+        console.log("Preset saved successfully",res);
+        Swal.fire({
+          icon: "success",
+          title: res.message,
+          text: res.message,
+        })
+      })
+      //send the preset
+    }
+  }
   public toggleSideBar(): void {
     this.isSideBarOpen = !this.isSideBarOpen;
   }

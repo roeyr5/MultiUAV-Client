@@ -21,7 +21,12 @@
       }
     }
   }
+ 
   .chart-container {
+    overflow: hidden !important;
+    display: flex;
+    flex-direction: column;
+    
     width: 100%;
     height: 90%;
     /* padding: 10px; */
@@ -29,10 +34,21 @@
 
     .single-charts {
       display: grid;
-      /* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
-      grid-template-columns: repeat(auto-fit, minmax(20rem, 1fr));
-      gap: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(clamp(4rem, 6vw, 4rem), 1fr));
+      grid-auto-rows: minmax(8rem, auto);
+      gap: 5px;
       height: 100%;
+    
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+
+   
+    }
+    
+    .single-charts > * {
+      min-width: 0;
+      min-height: 0;
     }
     .concat-chart {
       height: calc(100%-40px);
@@ -44,6 +60,7 @@
     width: 100%;
 
     .gridster {
+      height: 100% !important;
       background: #261e35;
 
       .concat-button {
@@ -76,10 +93,13 @@ app-gridster-block {
 }
 
 .gridster-item {
-  /* position: relative; 
+  contain: size layout style;
+  overflow: hidden !important; 
+  /* position: relative;  */
+  height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden; */
+  /* overflow: hidden; */
   border-radius: 2rem;
   background: #40394e;
   border: solid 1px #817d8b;
@@ -110,4 +130,5 @@ app-gridster-block {
 :host ::ng-deep gridster-item {
   display: flex !important;
   flex-direction: column;
+  
 }

@@ -3,6 +3,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ParameterDataDto } from '../entities/models/parameterDataDto';
 // import { MessageIF } from '../models/message.model';
+import { createPresetDto,PresetItem } from '../entities/models/presetItem';
 
 @Injectable({
   providedIn: 'root'
@@ -33,5 +34,14 @@ export class UserService {
       `${this.ROOT_URL}/parameters/all`
     );
   }
+
+
+  public getUserPresets(email : string): Observable<PresetItem[]> {
+    return this.http.get<PresetItem[]>(`${this.ROOT_URL}/presets/all`,{params : {email}});
+  }
+  public createOrSavePreset(presetItem : createPresetDto): Observable<any> {
+    return this.http.post<createPresetDto>(`${this.ROOT_URL}/presets/createpreset`,presetItem);
+  }
   
+
 }

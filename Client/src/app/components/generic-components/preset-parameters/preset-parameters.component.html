@@ -1,0 +1,14 @@
+<div class="preset-container">
+
+  <div class="create-preset">
+    <button class="create-button" (click)="createNewPreset()">
+      Create Preset
+    </button>
+  </div>
+
+  <div class="all-presets" *ngFor="let preset of this.allPresets">
+    <span class="preset-name">{{preset.presetName}}</span>
+    <button (click)="navigateToPreset(preset)">click for data</button>
+  </div>
+
+</div>

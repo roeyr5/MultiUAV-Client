@@ -47,6 +47,7 @@ export class LiveComponent implements OnInit , AfterViewInit {
   protected parametersMap: Map<string,string[]> = new Map<string,string[]>();
   protected selectedParametersMap: Map<string, Map<string, string[]>> = new Map<string, Map<string, string[]>>();
   
+  selectedPreset :boolean = true;
   constructor(private simulatorservice: SimulatorService, private signalRService : SignalRService , private userservice:UserService , private cdr : ChangeDetectorRef){}
   
   public ngAfterViewInit() {

@@ -49,16 +49,16 @@
 app-gauge-chart {
   width: 100% !important;
   height: 100% !important;
-  display: flex;
+  display: block;
   align-items: center;
 }
 
-app-gauge-chart {
+/* app-gauge-chart {
   width: 100% !important;
   height: 100% !important;
-  display: flex;
+  display: block;
   align-items: center;
-}
+} */
 :host {
   display: block;
   height: 100%;

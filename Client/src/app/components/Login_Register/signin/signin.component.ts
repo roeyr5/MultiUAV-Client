@@ -14,14 +14,15 @@ export class SigninComponent {
 
   constructor(private userservice: UserService , private route : Router) {}
 
-  public TrySignIn(){
+  public trySignIn(){
     
     this.userservice.login(this.email,this.password).subscribe(
       (res) =>{
         Swal.fire({
-                  title: 'logging in',
-                  icon:'success'
-                });
+         title: 'logging in',
+         icon:'success'
+      });
+        localStorage.setItem('email', this.email);
         this.route.navigate(['/main']);
       },
       (error) => {
