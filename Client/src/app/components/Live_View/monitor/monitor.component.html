@@ -1,6 +1,6 @@
 <div class="table-container">
   <div class="table">
-    <h2>Monitor Status</h2>
+    <h1 class="title">Monitor Status</h1>
 
     <ul class="device-list">
       <li *ngFor="let uav of activeUavs | keyvalue">
@@ -8,20 +8,20 @@
           <span class="uav-name">UAV: {{uav.key}}</span>
           <div class="communications">
             <div class="communication">
-              <span>FiberBoxDown</span>
               <span class="status-point" [ngClass]="getStatus(uav.value[0])"></span>
+              <span>FiberBoxDown</span>
             </div>
             <div class="communication">
-              <span>FiberBoxUp</span>
               <span class="status-point" [ngClass]="getStatus(uav.value[1])"></span>
+              <span>FiberBoxUp</span>
             </div>
             <div class="communication">
-              <span>MissionDown</span>
               <span class="status-point" [ngClass]="getStatus(uav.value[2])"></span>
+              <span>MissionDown</span>
             </div>
             <div class="communication">
-              <span>MissionUp</span>
               <span class="status-point" [ngClass]="getStatus(uav.value[3])"></span>
+              <span>MissionUp</span>
             </div>
           </div>
         </div>

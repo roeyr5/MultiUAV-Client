@@ -28,6 +28,7 @@
     "bcrypt": "^5.1.1",
     "chart.js": "^3.9.1",
     "class-validator": "^0.14.1",
+    "flatted": "^3.3.3",
     "highcharts": "^12.1.2",
     "highcharts-angular": "^4.0.1",
     "httpclient": "^0.1.0",

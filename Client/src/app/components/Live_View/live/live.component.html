@@ -85,10 +85,10 @@
 </div> -->
 <div class="main">
 
-  <!-- <app-preset-parameters *ngIf="selectedPreset"; else dashboard></app-preset-parameters> -->
-  <!-- <ng-template #dashboard> -->
-    <app-live-dashboard></app-live-dashboard> 
-  <!-- </ng-template> -->
+  <app-preset-parameters (onPresetSelect)="onChoosePreset($event)" *ngIf="!isPresetChoosed"></app-preset-parameters>
+  <app-live-dashboard
+    [presetDashboard]="presetDashboard"  
+    *ngIf="isPresetChoosed">
+  </app-live-dashboard> 
  
-  <!--move to dashboard with the specific preset -->
 </div>

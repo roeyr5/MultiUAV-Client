@@ -36,8 +36,8 @@ export class UserService {
   }
 
 
-  public getUserPresets(email : string): Observable<PresetItem[]> {
-    return this.http.get<PresetItem[]>(`${this.ROOT_URL}/presets/all`,{params : {email}});
+  public getUserPresets(email : string): Observable<createPresetDto[]> {
+    return this.http.get<createPresetDto[]>(`${this.ROOT_URL}/presets/all`,{params : {email}});
   }
   public createOrSavePreset(presetItem : createPresetDto): Observable<any> {
     return this.http.post<createPresetDto>(`${this.ROOT_URL}/presets/createpreset`,presetItem);

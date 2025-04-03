@@ -3,13 +3,14 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  Input,
   NgZone,
   Output,
   QueryList,
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { DisplayGrid, GridsterConfig, GridType } from 'angular-gridster2';
+import { DisplayGrid, GridsterConfig, GridsterItem, GridType } from 'angular-gridster2';
 import { GridsterBlockComponent } from 'src/app/components/generic-components/chart-entity/charts-types/gridster-block/gridster-block.component';
 import { ChartType, SingleChart,ChangeChartType } from 'src/app/entities/enums/chartType.enum';
 import { IcdParameter } from 'src/app/entities/IcdParameter';
@@ -19,7 +20,6 @@ import {
   pieChartTypes,
 } from 'src/app/entities/enums/chartType.enum';
 import {
-  ChartGridsterItem,
   TelemetryGridsterItem,
 } from 'src/app/entities/models/chartitem';
 import { IChartEntity } from 'src/app/entities/models/IChartEntity';
@@ -29,7 +29,10 @@ import { UserService } from 'src/app/services/user.service';
 import { ParameterDataDto } from 'src/app/entities/models/parameterDataDto';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
-import { createPresetDto } from 'src/app/entities/models/presetItem';
+import { createPresetDto, PresetItem } from 'src/app/entities/models/presetItem';
+import { stringify , parse } from 'flatted';
+import { GridsterItems } from 'src/app/entities/models/presetItem';
+import { InsideParameterDTO } from 'src/app/entities/models/addParameter';
 
 @Component({
   selector: 'app-live-dashboard',
@@ -51,11 +54,12 @@ export class LiveDashboardComponent implements AfterViewChecked {
 
   // @ViewChildren(ChartComponent) charts!: QueryList<ChartComponent>;
 
+  @Input() public presetDashboard : PresetItem[] = [];
   protected uavsList: number[] = [];
   protected parametersMap: Map<string, ParameterDataDto[]> = new Map<string,ParameterDataDto[]>();
   protected selectedParametersMap: Map<number,Map<string, ParameterDataDto[]>> = new Map<number, Map<string, ParameterDataDto[]>>();
 
-  public parametersChartEntityMap: Map<string, IChartEntity> = new Map<string,IChartEntity>();
+  @Input() public parametersChartEntityMap: Map<string, IChartEntity> = new Map<string,IChartEntity>();
 
   public groupsJoined: string[] = [];
 
@@ -67,24 +71,30 @@ export class LiveDashboardComponent implements AfterViewChecked {
 
   public isSideBarOpen: boolean = false;
 
-  public ngOnInit(): void {
+  public async ngOnInit(): Promise<void> {
+    await this.startConnection();
     this.getUavs();
     this.getParameters();
     this.initGridsterOptions();
-    this.startConnection();
+    this.presetBuild();
   }
 
-  private startConnection(): void {
-    this.liveTelemetryData.startConnection().subscribe((response) => {
+  private presetBuild():void{
+    this.buildPresetDahboard(this.presetDashboard);
+  }
 
-      this.liveTelemetryData.receiveMessage().subscribe((message) => {
-        // console.log("Received message:", message);
-
-        const parameterMap = message.message;
-        const uavName = message.uavName;
-        this.updateChartData(parameterMap, uavName);
+  private startConnection(): Promise<void> {
+    return new Promise((resolve)=>{
+      this.liveTelemetryData.startConnection().subscribe(() => {
+        this.liveTelemetryData.receiveMessage().subscribe((message) => {
+          const parameterMap = message.message;
+          const uavName = message.uavName;
+          this.updateChartData(parameterMap, uavName);
+        });
+        resolve();
       });
-    });
+    })
+    
   }
 
 
@@ -137,16 +147,13 @@ export class LiveDashboardComponent implements AfterViewChecked {
         inputPlaceholder: "Enter your preset name "
       }); 
 
-
-      console.log(this.telemetryGridsterDashboard)
       const presetUpdate: createPresetDto = {
         email: email,
-        presetItem: {
-          presetName: presetName,
-          parameters: this.telemetryGridsterDashboard,
-        },
+        presetName:presetName,
+        presetItem: this.buildDashboardItemsDto()
       };
-
+      console.log(presetUpdate);
+      
       this.userservice.createOrSavePreset(presetUpdate).subscribe((res)=>{
         console.log("Preset saved successfully",res);
         Swal.fire({
@@ -155,41 +162,72 @@ export class LiveDashboardComponent implements AfterViewChecked {
           text: res.message,
         })
       })
-      //send the preset
     }
   }
+
+  public buildDashboardItemsDto():  PresetItem[] {
+    let dashboardItemsDto: PresetItem[] = [];
+    for (const item of this.telemetryGridsterDashboard) {
+      let dashboardItem: PresetItem = {
+        cols: item.cols,
+        rows: item.rows,
+        y: item.y,
+        x: item.x,
+        communication: item.parameterComm,
+        isConcat: item.isConcatenated,
+        parameterName: item.parameterName,
+        telemetryItems: this.buildDashboardItemsChart(item.chartEntitys)
+      }
+      dashboardItemsDto.push(dashboardItem)
+    }
+    return dashboardItemsDto;
+  }
+
+  public buildDashboardItemsChart(chartEntitys: IChartEntity[]): GridsterItems[] {
+    let gridsterChartItems: GridsterItems[] = [];
+    for (const chartEntity of chartEntitys) {
+      let girdsterChartItem: GridsterItems = {
+        chartType: chartEntity.chartType,
+        parameter: chartEntity.parameter
+      }
+      gridsterChartItems.push(girdsterChartItem);
+    }
+    return gridsterChartItems;
+  }
+  
   public toggleSideBar(): void {
     this.isSideBarOpen = !this.isSideBarOpen;
   }
 
-  public onAddParameter(parameter: IcdParameter): void {
-    const chartType: SingleChart = parameter.units === 'Value' ? SingleChart.LABEL : SingleChart.GAUGE;
+  public onAddParameter(parameter: InsideParameterDTO): void {
+    
     const id = uuidv4();
 
-    let itemToAdd: IChartEntity = new IChartEntity(id,parameter,chartType,new EventEmitter<any>());
+    let itemToAdd: IChartEntity = new IChartEntity(id,parameter.parameter,parameter.chartType,new EventEmitter<any>());
 
     const existingItem = this.telemetryGridsterDashboard.find(
       (item) =>
-        item.parameterComm === parameter.communication &&
+        item.parameterComm === parameter.parameterComm &&
         item.parameterName === parameter.parameterName
     );
 
     if (existingItem) {
       const uavExists = existingItem.chartEntitys.some(
-        (chartEntity) => chartEntity.parameter.uavNumber === parameter.uavNumber
+        (chartEntity) => chartEntity.parameter.uavNumber === parameter.parameter.uavNumber
       );
 
       if (!uavExists) {
         existingItem.chartEntitys.push(itemToAdd);
       }
 
-    } else {
+    }
+    else {
       this.telemetryGridsterDashboard.push({
-        cols: 1,
-        rows: 1,
-        x: 0,
-        y: 0,
-        parameterComm: parameter.communication,
+        cols: parameter.cols,
+        rows: parameter.rows,
+        x: parameter.x,
+        y: parameter.x,
+        parameterComm: parameter.parameterComm,
         parameterName: parameter.parameterName,
         chartEntitys: [itemToAdd],
         isConcatenated:false,
@@ -197,9 +235,9 @@ export class LiveDashboardComponent implements AfterViewChecked {
     }
 
 
-    this.parametersChartEntityMap.set(`${parameter.parameterName}_${parameter.uavNumber}${parameter.communication}`,itemToAdd);
-    this.liveTelemetryData.addParameter(parameter);
-    this.joinGroup(parameter);
+    this.parametersChartEntityMap.set(`${parameter.parameterName}_${parameter.parameter.uavNumber}${parameter.parameter.communication}`,itemToAdd);
+    this.liveTelemetryData.addParameter(parameter.parameter);
+    this.joinGroup(parameter.parameter);
   }
 
   protected trackByFn(index: number, item: any): any {
@@ -232,12 +270,34 @@ export class LiveDashboardComponent implements AfterViewChecked {
     this.liveTelemetryData.removeParameter(parameter);
   }
 
-  public shouldShowChart(item: ChartGridsterItem): boolean {
-    return item.units !== 'Value';
+  private buildPresetDahboard(presetItems :PresetItem[]){
+
+    presetItems.forEach((item)=>{
+      item.telemetryItems.forEach((element)=>{
+        let InsideParameter : InsideParameterDTO = {
+          parameter: element.parameter,
+          chartType: element.chartType,
+          parameterName: item.parameterName,
+          parameterComm: item.communication,
+          isConcat: item.isConcat,
+          rows:item.rows,
+          cols:item.cols,
+          x:item.x,
+          y:item.y
+        }
+
+      this.onAddParameter(InsideParameter)
+      })
+    })
+    console.log(this.parametersChartEntityMap);
+    
   }
+
+  // public shouldShowChart(item: ChartGridsterItem): boolean {
+  //   return item.units !== 'Value';
+  // }
   public joinGroup(parameter: IcdParameter): void {
     const groupName = `${parameter.uavNumber}${parameter.communication}`;
-    console.log(groupName);
 
     if (this.groupsJoined.includes(groupName)) return;
 

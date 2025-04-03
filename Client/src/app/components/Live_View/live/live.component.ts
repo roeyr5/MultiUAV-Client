@@ -1,12 +1,13 @@
 
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component , OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component , Input, OnInit, QueryList, ViewChild, ViewChildren } from '@angular/core';
 import { SignalRService } from 'src/app/services/signalr.service';
 import { UserService } from 'src/app/services/user.service';
 import { DisplayGrid, GridsterComponent, GridsterConfig, GridsterItem,GridType }  from 'angular-gridster2';
-import {ChartGridsterItem} from 'src/app/entities/models/chartitem'
+// import {ChartGridsterItem} from 'src/app/entities/models/chartitem'
 import Swal from 'sweetalert2';
 import { ChartComponent } from '../chart/chart.component';
 import { SimulatorService } from 'src/app/services/simulator.service';
+import { PresetItem } from 'src/app/entities/models/presetItem';
 
 
 @Component({
@@ -32,9 +33,11 @@ export class LiveComponent implements OnInit , AfterViewInit {
   ];
   selectedGraph: any; 
   
-  temp : string[] = [];
+  public presetDashboard : PresetItem[] = []
+
+  // temp : string[] = [];
   protected options: GridsterConfig ={};
-  protected dashboard: ChartGridsterItem[] = [];
+  // protected dashboard: ChartGridsterItem[] = [];
 
   protected uavsList:string[]=[];
   protected selectedUAV : string = '';
@@ -44,10 +47,12 @@ export class LiveComponent implements OnInit , AfterViewInit {
   protected selectedParameters: string[] = [];
   protected parametersarray: string[] = [];
   
+  protected isPresetChoosed: boolean = false;
   protected parametersMap: Map<string,string[]> = new Map<string,string[]>();
   protected selectedParametersMap: Map<string, Map<string, string[]>> = new Map<string, Map<string, string[]>>();
   
   selectedPreset :boolean = true;
+
   constructor(private simulatorservice: SimulatorService, private signalRService : SignalRService , private userservice:UserService , private cdr : ChangeDetectorRef){}
   
   public ngAfterViewInit() {
@@ -112,6 +117,13 @@ export class LiveComponent implements OnInit , AfterViewInit {
     this.signalRService.sendMessage(message);
     // console.log(message);
 
+  }
+  protected onChoosePreset(presetItem:PresetItem[]):void{
+    this.presetDashboard = presetItem;
+    console.log(this.presetDashboard);
+    
+    this.isPresetChoosed = !this.isPresetChoosed;
+    
   }
 
   // private updateChartData(parameterMap: { [key: string]: string }, incomingFullUavName: string): void {
@@ -339,18 +351,18 @@ export class LiveComponent implements OnInit , AfterViewInit {
 //     // this.toggleUAVParameterSelection(this.selectedUAV, this.selectedCommunication, parameter);
 // }
   
-  protected getChartData(item: ChartGridsterItem) {
-    const chartData = {
-      labels: item.chartLabels, 
-      datasets: item.datasets.map((ds) => ({
-        label: ds.label,
-        data: ds.data, 
-        borderColor: ds.color,
-        fill: false,
-      })),
-    };
-    return chartData;
-  }
+  // protected getChartData(item: ChartGridsterItem) {
+  //   const chartData = {
+  //     labels: item.chartLabels, 
+  //     datasets: item.datasets.map((ds) => ({
+  //       label: ds.label,
+  //       data: ds.data, 
+  //       borderColor: ds.color,
+  //       fill: false,
+  //     })),
+  //   };
+  //   return chartData;
+  // }
 
   public joinGroup(): void {
     const groupName = `${this.selectedUAV}${this.selectedCommunication}`;
@@ -380,16 +392,16 @@ export class LiveComponent implements OnInit , AfterViewInit {
   // }
 
 
-  public changeChartType(item: ChartGridsterItem, newType: any): void {
-    item.chartType = newType.label; 
-    console.log(newType.label)
-    const chart = this.charts.toArray()[this.dashboard.indexOf(item)];
-    if (chart) {
-      // chart.updateChartType(newType.label);  
-    } else {
-      console.warn('Chart instance not found for item:', item);
-    }
-  }
+  // public changeChartType(item: ChartGridsterItem, newType: any): void {
+  //   item.chartType = newType.label; 
+  //   console.log(newType.label)
+  //   const chart = this.charts.toArray()[this.dashboard.indexOf(item)];
+  //   if (chart) {
+  //     // chart.updateChartType(newType.label);  
+  //   } else {
+  //     console.warn('Chart instance not found for item:', item);
+  //   }
+  // }
 
    
 } 

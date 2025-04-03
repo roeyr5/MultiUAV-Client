@@ -10,7 +10,7 @@ import {
   ChangeDetectorRef,
 } from '@angular/core';
 import { IGaugeConf } from 'src/app/entities/live-charts/gauge.conf';
-import { ChartGridsterItem } from 'src/app/entities/models/chartitem';
+// import { ChartGridsterItem } from 'src/app/entities/models/chartitem';
 import {
   IChartEntity,
   IGridsterParameter,

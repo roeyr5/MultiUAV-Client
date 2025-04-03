@@ -81,6 +81,14 @@ export class ConfigComponent implements OnInit,OnDestroy {
     }
   }
   protected updateSimulateTime(key: number, newTime: number): void {
+    if(newTime<0){
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: 'Time cannot be less than 0',
+      });   
+      return; 
+    }
     this.simulatorservice.updateSimulating(key, newTime).subscribe(
       (response) => {
         Swal.fire({
