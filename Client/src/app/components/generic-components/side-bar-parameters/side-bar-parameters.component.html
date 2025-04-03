@@ -1,7 +1,7 @@
 <div class="sidebar-container">
   <mat-icon class="close-sidebar" (click)="closeSideBar()">close</mat-icon>
   <h4 class="headline">Parameters</h4>
-  <mat-form-field>
+  <mat-form-field class="mat-form-class">
     <mat-label>Select Uav</mat-label>
     <mat-select (selectionChange)="onSelectUAV($event)">
       <mat-option *ngFor="let uav of uavsList" [value]="uav">
@@ -21,9 +21,8 @@
   </mat-form-field>
 
   <div class="parameters-selection">
-    <h4 *ngIf="selectedCommunication" class="headline">Parameters for {{ selectedCommunication }}</h4>
-    <div
-      *ngFor="let parameter of filteredParameters" class="parameter-item" (click)="toggleParameterSelection(parameter)">
+    <!-- <h4 *ngIf="selectedCommunication" class="headline">Parameters for {{ selectedCommunication }}</h4> -->
+    <div class="parameters-class" *ngFor="let parameter of filteredParameters" class="parameter-item" (click)="toggleParameterSelection(parameter)">
       <span [ngClass]="isParameterSelected(parameter)? 'parameter-selected' : 'parameter-unSelected'"> {{ parameter}} </span>
       <!-- <mat-checkbox
         [checked]="isParameterSelected(parameter)"

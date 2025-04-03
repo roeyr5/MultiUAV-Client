@@ -14,7 +14,7 @@ import {
   GraphValue,
   IGraphConf,
 } from 'src/app/entities/live-charts/graph.conf';
-import { ChartGridsterItem } from 'src/app/entities/models/chartitem';
+// import { ChartGridsterItem } from 'src/app/entities/models/chartitem';
 import {
   graphEntity,
   IChartEntity,

@@ -1,14 +1,17 @@
-<div class="preset-container">
+<div class="preset-container" *ngIf="!isClicked">
 
+  <h1 class="preset-title">Preset Manager</h1>
   <div class="create-preset">
     <button class="create-button" (click)="createNewPreset()">
-      Create Preset
+      Create New Preset
     </button>
   </div>
 
   <div class="all-presets" *ngFor="let preset of this.allPresets">
-    <span class="preset-name">{{preset.presetName}}</span>
-    <button (click)="navigateToPreset(preset)">click for data</button>
+    <span class="preset-name">{{preset.presetName }}</span>
+    <button class="preset-button" (click)="navigateToPreset(preset.presetItem)">click for this preset view</button>
   </div>
 
 </div>
+
+<!-- <app-live-dashboard *ngIf="isClicked"></app-live-dashboard>  -->

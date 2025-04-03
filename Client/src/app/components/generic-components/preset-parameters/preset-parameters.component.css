@@ -1,11 +1,44 @@
-.create-button {
+
+
+.preset-container {
+  /* height: 100%;
+  width: 100%; */
+  display: flex;
+  justify-content: center;
+  
+  .preset-title{
+    font-size: 2rem;
+    color: white;
+  }
+  .create-preset{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .create-button {
+      margin-top: 1.5rem;
+      padding: 10px 15px;
+      background-color: #b97cf3; 
+      color: white;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+  }
+  
+  .preset-button{
   margin-top: 1.5rem;
   padding: 10px 15px;
-  background-color: #b97cf3; 
+  background-color: #ac7ebc; 
   color: white;
   text-decoration: none;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  }
+  
 }
-
+.preset-name{
+  color: #b97cf3;
+}

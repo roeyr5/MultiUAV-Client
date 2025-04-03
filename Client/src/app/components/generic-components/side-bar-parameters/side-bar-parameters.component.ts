@@ -5,7 +5,8 @@ import Swal from 'sweetalert2';
 import { IcdParameter } from 'src/app/entities/IcdParameter';
 import { Communication } from 'src/app/entities/enums/communication.enum';
 import { ParameterDataDto } from 'src/app/entities/models/parameterDataDto';
-
+import { SingleChart } from 'src/app/entities/enums/chartType.enum';
+import { InsideParameterDTO } from 'src/app/entities/models/addParameter';
 
 @Component({
   selector: 'app-side-bar-parameters',
@@ -18,7 +19,7 @@ export class SideBarParametersComponent implements OnInit {
   @Input() public selectedParametersMap: Map<number, Map<string, ParameterDataDto[]>> = new Map<number, Map<string, ParameterDataDto[]>>();
 
   @Output() public onCloseSideBar: EventEmitter<void> = new EventEmitter<void>();
-  @Output() onAddParameter: EventEmitter<IcdParameter> = new EventEmitter<IcdParameter>();
+  @Output() onAddParameter: EventEmitter<InsideParameterDTO> = new EventEmitter<InsideParameterDTO>();
   @Output() onRemoveParameter: EventEmitter<IcdParameter> = new EventEmitter<IcdParameter>();
 
   public selectedUAV: number = 0;
@@ -107,15 +108,29 @@ export class SideBarParametersComponent implements OnInit {
 
     const paramIndex = selectedParams.findIndex(p=> p.Identifier === parameterName);
 
-    const paramterICd = new IcdParameter(parameterName,this.selectedCommunication, this.selectedUAV,
+
+    const paramterICD = new IcdParameter(parameterName,this.selectedCommunication, this.selectedUAV,
       parameter.Units,parameter.InterfaceLimitMin,parameter.InterfaceLimitMax);
+    const chartType: SingleChart = paramterICD.units === 'Value' ? SingleChart.LABEL : SingleChart.GAUGE;
+
     if (paramIndex === -1) {
       selectedParams.push(parameter);
-      this.onAddParameter.emit(paramterICd);
+      let emitParameter : InsideParameterDTO = {
+        parameter: paramterICD,
+        chartType: chartType,
+        parameterName: parameterName,
+        parameterComm: this.selectedCommunication,
+        isConcat: false,
+        rows:1,
+        cols: 1,
+        x:1,
+        y:1,
+      }
+      this.onAddParameter.emit(emitParameter);
     } else {
       
       selectedParams.splice(paramIndex, 1);
-      this.onRemoveParameter.emit(paramterICd);
+      this.onRemoveParameter.emit(paramterICD);
     }
 
     uavMap.set(this.selectedCommunication, selectedParams);

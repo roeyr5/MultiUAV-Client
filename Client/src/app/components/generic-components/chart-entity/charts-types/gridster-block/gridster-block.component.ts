@@ -9,10 +9,10 @@ import {
   inject,
   AfterViewInit,
 } from '@angular/core';
-import {
-  ChartGridsterItem,
-  Dataset,
-} from '../../../../../entities/models/chartitem';
+// import {
+//   ChartGridsterItem,
+//   Dataset,
+// } from '../../../../../entities/models/chartitem';
 import * as Highcharts from 'highcharts';
 import 'highcharts/highcharts-more';
 import 'highcharts/modules/solid-gauge';

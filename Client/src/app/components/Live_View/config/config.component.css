@@ -104,7 +104,10 @@
     }
     
     .device-list li button:hover {
-      background-color: #fbc02d; 
+      background-color: #bb33fa; 
     }
   }
+}
+.title{
+  font-size: 2rem;
 }

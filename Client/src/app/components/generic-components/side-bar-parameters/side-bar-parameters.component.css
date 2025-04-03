@@ -12,6 +12,10 @@
 
   .headline {
     color: white;
+/*     
+    :host ::ng-deep .mat-form-class{
+      width: 6vw !important;
+    } */
   }
   .close-sidebar {
     margin-right: 20px;
@@ -40,4 +44,7 @@
     overflow: hidden;
     display: block;
   } 
+  .parameters-selection{
+    overflow: auto;
+  }
 }

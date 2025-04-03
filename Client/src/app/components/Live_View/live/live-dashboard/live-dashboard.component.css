@@ -93,6 +93,7 @@ app-gridster-block {
 }
 
 .gridster-item {
+  margin: 0.3rem;
   contain: size layout style;
   overflow: hidden !important; 
   /* position: relative;  */
