@@ -15,8 +15,8 @@ export class PresetParametersComponent implements OnInit {
   protected allPresets: createPresetDto[] = [];
   protected isClicked: boolean = false;
 
-  @Output() public onPresetSelect: EventEmitter<PresetItem[]> = new EventEmitter<PresetItem[]>();
-  
+  @Output() public onPresetSelect: EventEmitter<createPresetDto> = new EventEmitter<createPresetDto>();
+  @Output() public onNewPreset: EventEmitter<void> = new EventEmitter<void>();
 
   ngOnInit(): void {
     this.initPresets();
@@ -35,11 +35,17 @@ export class PresetParametersComponent implements OnInit {
   }
 
   public createNewPreset():void{
-
+    this.onNewPreset.emit(); 
   }
 
-  public navigateToPreset(presetItem : PresetItem[]):void{
+  public navigateToPreset(presetItem : createPresetDto):void{
     this.onPresetSelect.emit(presetItem);
     //navigate to live with the specific preste 
+  }
+  public deletePreset(presetItem : createPresetDto):void{
+    this.userservice.deletePreset(presetItem).subscribe((res)=>{
+      console.log("karni : " , res);
+      this.initPresets();
+    });
   }
 }

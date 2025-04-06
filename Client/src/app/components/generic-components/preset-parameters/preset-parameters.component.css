@@ -1,19 +1,19 @@
 
 
 .preset-container {
-  /* height: 100%;
-  width: 100%; */
+
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;  
+  width: 100%;
   
+
   .preset-title{
+    margin-top: 1rem;
     font-size: 2rem;
     color: white;
   }
   .create-preset{
-    display: flex;
-    align-items: center;
-    justify-content: center;
 
     .create-button {
       margin-top: 1.5rem;
@@ -24,21 +24,66 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      margin-bottom: 1.5rem;
+    }
+    
+  }
+  
+  .preset-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    padding: 0.5rem;
+    background-color: #ac7ebc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .delete-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
+    padding: 0.5rem;
+    background-color: #ac7ebc;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  .preset-name{
+    color: #b97cf3;
+  }
+  .preset-content{
+   padding: 1rem;
+   width: 100%;
+
+
+    .second-title{
+      color: white;
+      margin-bottom: 1rem;
+      
+    }
+    .preset-cards-container{
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      width: 100%;
+
+      .preset-card{
+        border: 1px solid #ddd;
+        border-radius: 0.5rem;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 0.5rem 0 0.5rem;
+      }
     }
   }
   
-  .preset-button{
-  margin-top: 1.5rem;
-  padding: 10px 15px;
-  background-color: #ac7ebc; 
-  color: white;
-  text-decoration: none;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  }
   
-}
-.preset-name{
-  color: #b97cf3;
+
 }
