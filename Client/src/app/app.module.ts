@@ -48,6 +48,10 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { PresetParametersComponent } from './components/generic-components/preset-parameters/preset-parameters.component';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
+import {MatNativeDateModule} from '@angular/material/core';
+import { MatDatepickerInput } from '@angular/material/datepicker';
+
 
 @NgModule({
   declarations: [
@@ -56,7 +60,6 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     LiveComponent,
     MonitorComponent,
     SignupComponent,
-    ConfigComponent,
     AddNewDialogComponent,
     SidebarComponent,
     ChartComponent,
@@ -80,6 +83,9 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     GridsterModule,
     MatSelectModule,
     MatCheckboxModule,
+    MatTooltipModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
     MatInputModule,
     MatIconModule,
     MatButtonModule,
@@ -102,8 +108,10 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     DropdownModule,
     HighchartsChartModule,
     ChartModule,
+    MatExpansionModule,
+    MatExpansionModule,
+    ConfigComponent
   ],
-  providers: [HighchartsService],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
 })

@@ -17,6 +17,7 @@ export class SideBarParametersComponent implements OnInit {
   @Input() public uavsList: number[] = [];
   @Input() public parametersMap: Map<string, ParameterDataDto[]> = new Map<string,ParameterDataDto[]>();
   @Input() public selectedParametersMap: Map<number, Map<string, ParameterDataDto[]>> = new Map<number, Map<string, ParameterDataDto[]>>();
+  @Input() public presetParameters:InsideParameterDTO[] = []    
 
   @Output() public onCloseSideBar: EventEmitter<void> = new EventEmitter<void>();
   @Output() onAddParameter: EventEmitter<InsideParameterDTO> = new EventEmitter<InsideParameterDTO>();
@@ -25,7 +26,7 @@ export class SideBarParametersComponent implements OnInit {
   public selectedUAV: number = 0;
   protected selectedCommunication: string = '';
 
-  protected selectedParameters: ParameterDataDto[] = [];
+  // protected selectedParameters: ParameterDataDto[] = [];
   protected parametersarray: ParameterDataDto[] = [];
 
   public filteredParameters: string[] = [];
@@ -35,7 +36,10 @@ export class SideBarParametersComponent implements OnInit {
     private userservice: UserService
   ) {}
 
-  public ngOnInit(): void {}
+  public ngOnInit(): void {
+    console.log("tomer",this.presetParameters);
+    this.addPresetParameters();
+  }
 
   
   public closeSideBar(): void {
@@ -46,18 +50,18 @@ export class SideBarParametersComponent implements OnInit {
   public onSelectUAV(event: any): void {
     this.selectedUAV = event.value;
     this.updateParametersArray();
-    if (this.selectedCommunication) {
-      const uavMap = this.selectedParametersMap.get(this.selectedUAV);
-      this.selectedParameters = uavMap?.get(this.selectedCommunication) || [];
-    }
+    // if (this.selectedCommunication) {
+      // const uavMap = this.selectedParametersMap.get(this.selectedUAV);
+      // this.selectedParameters = uavMap?.get(this.selectedCommunication) || [];
+    // }
   }
 
   public onSelectCommunication(event: any): void {
     this.selectedCommunication = event.value;
     this.updateParametersArray();
     if (this.selectedUAV) {
-      const uavMap = this.selectedParametersMap.get(this.selectedUAV);
-      this.selectedParameters = uavMap?.get(this.selectedCommunication) || [];
+      // const uavMap = this.selectedParametersMap.get(this.selectedUAV);
+      // this.selectedParameters = uavMap?.get(this.selectedCommunication) || [];
       this.getCurrentParameters();
     }
   }
@@ -143,6 +147,32 @@ export class SideBarParametersComponent implements OnInit {
     // this.toggleUAVParameterSelection(this.selectedUAV, this.selectedCommunication, parameter);
   }
 
+  public addPresetParameters():void{
+    
+    for (const element of this.presetParameters) {
+  
+      let uavMap = this.selectedParametersMap.get(element.parameter.uavNumber);
+      if (!uavMap) {
+        uavMap = new Map<string, ParameterDataDto[]>();
+        this.selectedParametersMap.set(element.parameter.uavNumber, uavMap);
+      }
+  
+      let selectedParams = uavMap.get(element.parameter.communication);
+      if (!selectedParams) {
+        selectedParams = [];
+        uavMap.set(element.parameter.communication, selectedParams);
+      }
+  
+      const paramIndex = selectedParams.findIndex(p=> p.Identifier === element.parameter.parameterName);
+  
+      if (paramIndex === -1) {
+        selectedParams.push(new ParameterDataDto(element.parameter.parameterName,element.parameter.units,element.parameter.InterfaceLimitMin,element.parameter.InterfaceLimitMax));
+  
+        uavMap.set(element.parameter.communication, selectedParams);
+        this.selectedParametersMap.set(element.parameter.uavNumber, uavMap);
+      }
+    }
+  }
   // private addParameterToGridster(parameter: string, uavName: string, communication: string): void {
   //   let foundItem = this.dashboard.find(item => item.communication === communication && item.parameter === parameter);
 

@@ -45,10 +45,9 @@
 }
 .uav-simulator-settings{
   display: flex;
-  flex-direction: row;
   align-items: center;
-  justify-content:space-evenly;
-  width: 100%;
+  justify-content: space-between;
+  width: 99%;
 }
 
 .input-simulate {
@@ -58,12 +57,11 @@
   color: aliceblue;
 }
 
-.table-container {
   /* width: 49rem; */
-  display: flex;
 
-  .table {
-    
+.table {
+    border-collapse: collapse;
+
     background-color: #2f293e; 
     border-radius: 15px;
     width: 100vw;
@@ -72,13 +70,13 @@
     color: white;
     box-shadow: none;
 
-    .device-list {
+     
       margin: 0;
       padding: 0;
       list-style-type: none;
-    }
     
-    .device-list li {
+    
+    .li {
       background-color: #2f293e;
       color: white;
       padding: 10px;
@@ -93,7 +91,7 @@
    }
 
     
-    .device-list li button {
+    .li button {
       background-color: transparent;
       border: 1px solid white;
       color: white;
@@ -107,7 +105,121 @@
       background-color: #bb33fa; 
     }
   }
-}
+
 .title{
   font-size: 2rem;
+}
+
+.example-action-buttons {
+  padding-bottom: 20px;
+}
+
+.example-headers-align .mat-expansion-panel-header-description {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.example-headers-align .mat-mdc-form-field + .mat-mdc-form-field {
+  margin-left: 8px;
+}
+
+:host ::ng-deep .mdc-button__label{
+  color: white;
+  background: blueviolet;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  margin-top: 1rem;
+}
+
+
+.settings-container{
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  .title{
+    font-size: 2rem;
+    color: white;
+    margin-top: 1rem;
+  }
+  
+}
+th, td {
+  padding: 10px;
+  text-align: left; /* This will align text to the left within each cell */
+}
+table th, table td {
+  color: white;
+  text-align: left;
+}
+span{
+  color: white;
+}
+.table-container{
+  background-color: #2f293e;
+}
+.action-button{
+  background-color: transparent;
+  border: 1px solid white;
+  color: white;
+  padding: 5px 10px;
+  margin-left: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+:host ::ng-deep .mat-expansion-panel-header{
+  background: #2f293e;
+}
+::ng-deep .mat-expansion-panel-body{
+  background: #2f293e;
+  /* border-bottom: 4px solid #3e384c; */
+}
+::ng-deep .mat-expansion-panel:hover {
+  background-color: transparent !important;
+}
+::ng-deep .mat-expansion-panel {
+  --mat-expansion-container-background-color: transparent !important;
+}
+::ng-deep .mat-expansion-panel-header .mat-expansion-indicator {
+  color: white !important;
+}
+/* table {
+  border-collapse: separate; 
+  border-spacing: 1rem;
+} */
+
+
+.open-table-container {
+  display: block; /* Ensures the table is block-level and retains structure */
+  width: 100%;
+}
+
+.open-table-container thead, .open-table-container tbody {
+  display: block;
+}
+
+.open-table-container th, .open-table-container td {
+  display: inline-flex;  /* Treats each column as a flex item */
+  justify-content: space-between;  /* Space between content */
+  text-align: left; /* Optional, aligns text to the left */
+}
+
+.open-table-container tr {
+  display: flex;
+  justify-content: space-between;  /* Spreads columns evenly */
+}
+
+
+::ng-deep .mat-expansion-indicator::after{
+  color: white !important;
+}
+
+.accordion-container{
+  margin: 0 1rem 0 1rem;
+}
+.new-device-button{
+  display: flex;
+  justify-content: center;
 }

@@ -85,9 +85,10 @@
 </div> -->
 <div class="main">
 
-  <app-preset-parameters (onPresetSelect)="onChoosePreset($event)" *ngIf="!isPresetChoosed"></app-preset-parameters>
+  <app-preset-parameters (onNewPreset)="onNewPreset()" (onPresetSelect)="onChoosePreset($event)" *ngIf="!isPresetChoosed"></app-preset-parameters>
   <app-live-dashboard
-    [presetDashboard]="presetDashboard"  
+    [presetDashboard]="presetDashboard" 
+    [presetName]="presetName" 
     *ngIf="isPresetChoosed">
   </app-live-dashboard> 
  

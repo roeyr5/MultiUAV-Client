@@ -30,18 +30,21 @@ export class UserService {
     return this.http.get<string[]>(`${this.ROOT_URL}/parameters/uavslist`);
   }
   public getAllParameters(): Observable<{ [key: string]: ParameterDataDto[] }> {
-    return this.http.get<{ [key: string]: ParameterDataDto[] }>(
-      `${this.ROOT_URL}/parameters/all`
-    );
+    return this.http.get<{ [key: string]: ParameterDataDto[] }>(`${this.ROOT_URL}/parameters/all`);
   }
 
 
   public getUserPresets(email : string): Observable<createPresetDto[]> {
     return this.http.get<createPresetDto[]>(`${this.ROOT_URL}/presets/all`,{params : {email}});
   }
-  public createOrSavePreset(presetItem : createPresetDto): Observable<any> {
+  public createPreset(presetItem : createPresetDto): Observable<any> {
     return this.http.post<createPresetDto>(`${this.ROOT_URL}/presets/createpreset`,presetItem);
   }
-  
+  public updatePreset(presetItem : createPresetDto): Observable<any> {
+    return this.http.post<createPresetDto>(`${this.ROOT_URL}/presets/updatepreset`,presetItem);
+  }
+  public deletePreset(presetItem: createPresetDto): Observable<any> {
+    return this.http.put<createPresetDto>(`${this.ROOT_URL}/presets/deletepreset`, presetItem);
+  }
 
 }

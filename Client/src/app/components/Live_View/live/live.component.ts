@@ -7,7 +7,7 @@ import { DisplayGrid, GridsterComponent, GridsterConfig, GridsterItem,GridType }
 import Swal from 'sweetalert2';
 import { ChartComponent } from '../chart/chart.component';
 import { SimulatorService } from 'src/app/services/simulator.service';
-import { PresetItem } from 'src/app/entities/models/presetItem';
+import { createPresetDto, PresetItem } from 'src/app/entities/models/presetItem';
 
 
 @Component({
@@ -33,7 +33,8 @@ export class LiveComponent implements OnInit , AfterViewInit {
   ];
   selectedGraph: any; 
   
-  public presetDashboard : PresetItem[] = []
+  public presetDashboard : PresetItem[] = [];
+  public presetName : string = '';
 
   // temp : string[] = [];
   protected options: GridsterConfig ={};
@@ -118,8 +119,15 @@ export class LiveComponent implements OnInit , AfterViewInit {
     // console.log(message);
 
   }
-  protected onChoosePreset(presetItem:PresetItem[]):void{
-    this.presetDashboard = presetItem;
+
+  protected onNewPreset():void{
+    this.presetName = "null";
+    this.isPresetChoosed = !this.isPresetChoosed;
+  }
+
+  protected onChoosePreset(presetItem:createPresetDto):void{
+    this.presetDashboard = presetItem.presetItem;
+    this.presetName = presetItem.presetName;
     console.log(this.presetDashboard);
     
     this.isPresetChoosed = !this.isPresetChoosed;

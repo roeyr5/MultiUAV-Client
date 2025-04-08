@@ -53,8 +53,11 @@ export class LiveDashboardComponent implements AfterViewChecked {
   }
 
   // @ViewChildren(ChartComponent) charts!: QueryList<ChartComponent>;
+  public presetParameters:InsideParameterDTO[] = [];
 
   @Input() public presetDashboard : PresetItem[] = [];
+  @Input() public presetName:string = '';
+
   protected uavsList: number[] = [];
   protected parametersMap: Map<string, ParameterDataDto[]> = new Map<string,ParameterDataDto[]>();
   protected selectedParametersMap: Map<number,Map<string, ParameterDataDto[]>> = new Map<number, Map<string, ParameterDataDto[]>>();
@@ -80,6 +83,8 @@ export class LiveDashboardComponent implements AfterViewChecked {
   }
 
   private presetBuild():void{
+    console.log("presetName" , this.presetName);
+    
     this.buildPresetDahboard(this.presetDashboard);
   }
 
@@ -96,7 +101,6 @@ export class LiveDashboardComponent implements AfterViewChecked {
     })
     
   }
-
 
   private updateChartData( parameters: { [key: string]: string }, incomingFullUavName: string ): void {
     Object.entries(parameters).forEach(([parameterName, parameterValue]) => {
@@ -140,28 +144,112 @@ export class LiveDashboardComponent implements AfterViewChecked {
     const email = localStorage.getItem('email');
     if (email !== null) {
 
-      const { value: presetName } = await Swal.fire({
-        title: "Input preset name",
-        input: "text",
-        inputLabel: "Your preset name for this mission",
-        inputPlaceholder: "Enter your preset name "
-      }); 
 
-      const presetUpdate: createPresetDto = {
-        email: email,
-        presetName:presetName,
-        presetItem: this.buildDashboardItemsDto()
-      };
-      console.log(presetUpdate);
-      
-      this.userservice.createOrSavePreset(presetUpdate).subscribe((res)=>{
-        console.log("Preset saved successfully",res);
-        Swal.fire({
-          icon: "success",
-          title: res.message,
-          text: res.message,
+      if(this.presetName != 'null'){
+
+        const presetUpdate: createPresetDto = {
+          email: email,
+          presetName:this.presetName,
+          presetItem: this.buildDashboardItemsDto()
+        };
+
+        const { value: saveOption } = await Swal.fire({
+          icon: "question",
+          title: `Do you want to save it as "${this.presetName}" or save it as a new one?`,
+          showDenyButton: true,
+          showCancelButton: true,
+          confirmButtonText: `Save as ${this.presetName}`,
+          denyButtonText: "Save as new",
+          cancelButtonText: "Cancel"
+        });
+        
+        if (saveOption === true) {
+          this.userservice.updatePreset(presetUpdate).subscribe((res) => {
+            console.log("Preset updated successfully", res);
+
+            Swal.fire({
+              icon: "success",
+              title: res.message,
+              text: res.message,
+            });
+          });
+        } 
+        else if (saveOption === false) {
+
+          const { value: presetName } = await Swal.fire({
+            title: "Input preset name",
+            input: "text",
+            inputLabel: "Your preset name for this mission",
+            inputPlaceholder: "Enter your preset name "
+          }); 
+    
+          const presetCreate: createPresetDto = {
+            email: email,
+            presetName:presetName,
+            presetItem: this.buildDashboardItemsDto()
+          };
+
+          this.userservice.createPreset(presetCreate).subscribe((res) => {
+            // console.log("Preset created successfully", res);
+            if(res.statusCode == 200){
+              Swal.fire({
+                icon: "success",
+                title: res.message,
+                text: res.message,
+              });
+            }
+            if(res.statusCode == 300){
+              Swal.fire({
+                icon: "info",
+                title: res.message,
+                text: res.message,
+              });
+            }
+           
+          });
+        } else {
+          console.log("User cancelled the action.");
+        }
+        
+       
+      }
+      else{
+        const { value: presetName } = await Swal.fire({
+          title: "Input preset name",
+          input: "text",
+          inputLabel: "Your preset name for this mission",
+          inputPlaceholder: "Enter your preset name "
+        }); 
+  
+        if (!presetName) {
+          console.log("User cancelled or entered no name.");
+          return;
+        }
+
+        const presetCreate: createPresetDto = {
+          email: email,
+          presetName:presetName,
+          presetItem: this.buildDashboardItemsDto()
+        };
+        
+        this.userservice.createPreset(presetCreate).subscribe((res)=>{
+          if(res.statusCode == 200){
+            Swal.fire({
+              icon: "success",
+              title: res.message,
+              text: res.message,
+            });
+          }
+          if(res.statusCode == 300){
+            Swal.fire({
+              icon: "info",
+              title: res.message,
+              text: res.message,
+            });
+          }
         })
-      })
+      }
+      
     }
   }
 
@@ -272,6 +360,7 @@ export class LiveDashboardComponent implements AfterViewChecked {
 
   private buildPresetDahboard(presetItems :PresetItem[]){
 
+    const arr:InsideParameterDTO[] = [];
     presetItems.forEach((item)=>{
       item.telemetryItems.forEach((element)=>{
         let InsideParameter : InsideParameterDTO = {
@@ -286,11 +375,14 @@ export class LiveDashboardComponent implements AfterViewChecked {
           y:item.y
         }
 
-      this.onAddParameter(InsideParameter)
+      this.onAddParameter(InsideParameter);
+      arr.push(InsideParameter);
+
       })
     })
+
     console.log(this.parametersChartEntityMap);
-    
+    this.presetParameters = arr;
   }
 
   // public shouldShowChart(item: ChartGridsterItem): boolean {

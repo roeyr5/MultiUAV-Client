@@ -2,6 +2,11 @@ import { SingleChart } from "../enums/chartType.enum";
 import { IcdParameter } from "../IcdParameter";
 import { GridsterItem } from "angular-gridster2";
 
+// export interface presetDTO{
+//   presetName:string;
+//   presetItem:PresetItem[];
+// }
+
 
 export interface createPresetDto {
   email:string;
