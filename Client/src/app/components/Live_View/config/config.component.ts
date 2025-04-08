@@ -1,18 +1,47 @@
 import { HttpClient, HttpStatusCode } from '@angular/common/http';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Observable } from 'rxjs';
 import Swal from 'sweetalert2';
 import { SimulatorService } from 'src/app/services/simulator.service';
 import { channeldto } from 'src/app/entities/models/channeldto';
+import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatIconModule} from '@angular/material/icon';
+import {MatButtonModule} from '@angular/material/button';
+import {MatNativeDateModule} from '@angular/material/core';
+import { CommonModule } from '@angular/common';
+import { MatTooltip } from '@angular/material/tooltip';
+import { FormsModule, NgModel } from '@angular/forms';
+
 
 @Component({
   selector: 'app-config',
   templateUrl: './config.component.html',
   styleUrls: ['./config.component.css'],
+  standalone: true,
+  imports: [
+    MatButtonModule,
+    MatExpansionModule,
+    MatIconModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    CommonModule,
+    FormsModule
+  ],
 })
+
 export class ConfigComponent implements OnInit,OnDestroy {
+
+  @ViewChild(MatAccordion) accordion!: MatAccordion;
+
+  isExpanded = false;
+  // subpannel;
+  panelOpenState = false;
   dataSource: channeldto[] = [];
-  Object = Object;
 
   protected uavsTimeSimulate : {[key:number] : number} = {};
   protected uavsCommunications: { [key: string]: string } = {};
@@ -27,9 +56,15 @@ export class ConfigComponent implements OnInit,OnDestroy {
     this.initData();
   }
 
-  toggleUAVExpansion(uavNumber: number) {
-    this.expandedUAV = this.expandedUAV === uavNumber ? null : uavNumber;
+  
+toggleAccordion() {
+  if (this.isExpanded) {
+    this.accordion.closeAll();
+  } else {
+    this.accordion.openAll();
   }
+  this.isExpanded = !this.isExpanded;
+}
 
   protected initData() {
     this.simulatorservice.simulatorPrimaryUavs().subscribe((response) => {
@@ -58,7 +93,9 @@ export class ConfigComponent implements OnInit,OnDestroy {
           showConfirmButton: true,
           timer: 2000,
         });
-        this.initData();
+        this.uavsCommunications[selectedUav] = this.toggleCommunicationType(
+          this.uavsCommunications[selectedUav]
+        );
       },
       (error) => {
         console.error('Error changing primary UAV:', error);
@@ -98,7 +135,8 @@ export class ConfigComponent implements OnInit,OnDestroy {
           showConfirmButton: true,
           timer: 2000,
         });
-        this.initData();
+        this.uavsTimeSimulate[key] = newTime;
+        // this.initData();
       },
       (error) => {
         console.error('Error change the simulate UAV:', error);
@@ -111,7 +149,17 @@ export class ConfigComponent implements OnInit,OnDestroy {
     )
     }
     
-
+  protected toggleCommunicationType(value: string): string {
+    console.log(value);
+    
+      if (value == '0') {
+        return '1';
+      } else if (value == '1') {
+        return '0';
+      } else {
+        return 'Unknown'; 
+      }
+  }
   protected getCommunicationType(value: string): string {
     if (value === undefined) {
       return 'Unknown';
@@ -234,7 +282,8 @@ export class ConfigComponent implements OnInit,OnDestroy {
 }
 
 
-  protected pauseTelemetry(address: string, port: number) {
+  protected pauseTelemetry(uavValue:any,address: string, port: number) {
+
     this.simulatorservice.pauseTelemetry(port, address).subscribe(
       (response) => {
         console.log('Paused listening', response);
@@ -245,7 +294,7 @@ export class ConfigComponent implements OnInit,OnDestroy {
           showConfirmButton: true,
           timer: 2000,
         });
-        this.initData();
+        uavValue.status = uavValue.status == 'run' ? 'paused' : 'run';
       },
       (error) => {
         console.error('Error pausing UAV:', error);
@@ -258,7 +307,7 @@ export class ConfigComponent implements OnInit,OnDestroy {
     );
   }
 
-  protected continueTelemetry(address: string, port: number) {
+  protected continueTelemetry(uavValue:any,address: string, port: number) {
     this.simulatorservice.continueListening(port, address).subscribe(
       (response) => {
         console.log('Continue listening', response);
@@ -269,7 +318,8 @@ export class ConfigComponent implements OnInit,OnDestroy {
           showConfirmButton: true,
           timer: 2000,
         });
-        this.initData();
+        uavValue.status = uavValue.status == 'paused' ? 'run' : 'paused';
+
       },
       (error) => {
         console.error('Error continue listening UAV:', error);
