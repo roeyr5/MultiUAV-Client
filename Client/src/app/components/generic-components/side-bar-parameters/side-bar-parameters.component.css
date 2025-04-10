@@ -45,6 +45,9 @@
     display: block;
   } 
   .parameters-selection{
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
     overflow: auto;
   }
 }

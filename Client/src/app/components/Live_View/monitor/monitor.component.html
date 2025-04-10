@@ -3,9 +3,13 @@
     <h1 class="title">Monitor Status</h1>
 
     <ul class="device-list">
-      <li *ngFor="let uav of activeUavs | keyvalue">
+      <li class="uavs-list" *ngFor="let uav of activeUavs | keyvalue">
+
         <div class="uav-item">
-          <span class="uav-name">UAV: {{uav.key}}</span>
+          <div class="uav-header">
+            <span class="uav-name">UAV: {{uav.key}}</span>
+          </div>
+
           <div class="communications">
             <div class="communication">
               <span class="status-point" [ngClass]="getStatus(uav.value[0])"></span>

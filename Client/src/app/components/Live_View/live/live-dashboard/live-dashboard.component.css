@@ -4,7 +4,7 @@
 
   .top {
     display: flex;
-    height: 10%;
+    height: 5%;
     width: 100%;
     justify-content: flex-end;
 
@@ -12,7 +12,6 @@
       width: fit-content;
       height: 100%;
       display: flex;
-      flex-direction: column;
       justify-content: center; 
       align-items: center; 
       margin-right: 1.5rem;
@@ -61,7 +60,7 @@
     }
   }
   .body {
-    height: 90%;
+    height: 95%;
     width: 100%;
 
     .gridster {
