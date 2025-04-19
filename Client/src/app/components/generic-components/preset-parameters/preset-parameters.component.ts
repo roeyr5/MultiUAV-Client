@@ -2,6 +2,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { PresetItem } from 'src/app/entities/models/presetItem';
 import { UserService } from 'src/app/services/user.service';
 import { createPresetDto } from 'src/app/entities/models/presetItem';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-preset-parameters',
@@ -67,14 +68,31 @@ export class PresetParametersComponent implements OnInit {
     this.onPresetSelect.emit(presetItem);
     //navigate to live with the specific preste 
   }
-  public deletePreset(presetItem : createPresetDto):void{
+
+  public deletePreset(presetItem: createPresetDto): void {
     const email = localStorage.getItem('email');
-    if(email !== null){
+    if (email !== null) {
       presetItem.email = email;
     }
-    this.userservice.deletePreset(presetItem).subscribe((res)=>{
-      console.log("karni : " , res);
-      this.initPresets();
+
+    Swal.fire({
+      title: 'Are you sure you want delete the preset?',
+      text: "You won't be able to revert this action!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, cancel!',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.userservice.deletePreset(presetItem).subscribe((res) => {
+          console.log("karni : ", res);
+          this.initPresets(); 
+        });
+      } else {
+        console.log("Deletion cancelled");
+      }
     });
-  }
+}
+
 }

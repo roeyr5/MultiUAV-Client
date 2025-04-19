@@ -27,7 +27,6 @@ import { ToastModule } from 'primeng/toast';
 import { RippleModule } from 'primeng/ripple';
 import { ImageModule } from 'primeng/image';
 import { MatTableModule } from '@angular/material/table';
-import { NgApexchartsModule } from 'ng-apexcharts';
 import { DropdownModule } from 'primeng/dropdown'; 
 import { HighchartsChartModule } from 'highcharts-angular';
 import * as Highcharts from 'highcharts';
@@ -51,6 +50,11 @@ import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatAccordion, MatExpansionModule} from '@angular/material/expansion';
 import {MatNativeDateModule} from '@angular/material/core';
 import { MatDatepickerInput } from '@angular/material/datepicker';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import { ArchiveDataComponent } from './components/Other_Logic/archive-data/archive-data.component';
+import { GenericTableComponent } from './components/generic-components/generic-table/generic-table.component';
+import { MatSortModule } from '@angular/material/sort';
+import { ArchiveParametersComponent } from './components/generic-components/archive-parameters/archive-parameters.component';  // For sorting (if you need sorting functionality)
 
 
 @NgModule({
@@ -63,7 +67,6 @@ import { MatDatepickerInput } from '@angular/material/datepicker';
     AddNewDialogComponent,
     SidebarComponent,
     ChartComponent,
-    TestComponent,
     SideBarParametersComponent,
     LiveDashboardComponent,
     GaugeChartComponent,
@@ -76,7 +79,9 @@ import { MatDatepickerInput } from '@angular/material/datepicker';
     PresetParametersComponent,
   ],
   imports: [
+    MatSortModule,
     MatDatepickerModule,
+    MatPaginatorModule,
     MatFormFieldModule,
     NgxGaugeModule,
     MatTooltipModule,
@@ -104,13 +109,13 @@ import { MatDatepickerInput } from '@angular/material/datepicker';
     MatTableModule,
     MatButtonModule,
     MatIconModule,
-    NgApexchartsModule,
     DropdownModule,
     HighchartsChartModule,
     ChartModule,
     MatExpansionModule,
     MatExpansionModule,
-    ConfigComponent
+    ConfigComponent,
+    ArchiveDataComponent,
   ],
   bootstrap: [AppComponent],
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

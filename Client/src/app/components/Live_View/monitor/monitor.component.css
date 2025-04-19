@@ -6,26 +6,27 @@
   box-sizing: border-box;
 
   .table {
-  background-color: #261e35;
   width: 100%;
   padding: 20px;
   text-align: center;
   color: white;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); 
+
   
     .device-list {
      display: grid;
+     grid-template-columns: repeat(3, 1fr);
+     gap: 1.5rem;
      justify-content: space-between;
-     margin: 0;
+     margin: 1rem;
      padding: 0;
      list-style-type: none;
+
+     .uavs-list{
+      border-radius: 1rem;
+     }
     }
-  
-
   }
-
 }
-
 
 .device-list li {
   background-color: #382c4e;
@@ -39,31 +40,39 @@
   transition: background-color 0.3s ease;
 }
 
-.device-list li:hover {
-  background-color: #4b3c68;
-}
-
 .uav-item {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   width: 100%;
+}
+.uav-header{
+  border-bottom: #eeeeee solid 1px;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
 }
 
 .uav-name {
   font-weight: bold;
   margin-right: 20px;
   font-size: 1.1rem;
+  padding: 1rem;
 }
 
 .communications {
-  display: flex;
-  align-items: flex-start;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+
+
 }
 
 .communication {
   display: flex;
   align-items: center;
   margin-bottom: 10px;
+  background: #4b3c68;
+  padding: 1rem;
 }
 
 .communication span {
@@ -78,17 +87,14 @@
   transition: all 0.3s ease;
 }
 
-/* Status colors and animations */
 .green {
   background-color: green;
-  animation: pulseGreen 1.5s ease-in-out infinite;
 }
 
 .red {
   background-color: red;
-  animation: pulseRed 1.5s ease-in-out infinite;
 }
-
+/* 
 @keyframes pulseGreen {
   0% {
     transform: scale(1);
@@ -105,9 +111,9 @@
     background-color: green;
     opacity: 1;
   }
-}
+} */
 
-@keyframes pulseRed {
+/* @keyframes pulseRed {
   0% {
     transform: scale(1);
     background-color: red;
@@ -123,7 +129,7 @@
     background-color: red;
     opacity: 1;
   }
-}
+} */
 
 /* Responsive Design */
 @media (max-width: 768px) {
@@ -166,3 +172,4 @@
 .title{
   font-size: 2rem;
 }
+

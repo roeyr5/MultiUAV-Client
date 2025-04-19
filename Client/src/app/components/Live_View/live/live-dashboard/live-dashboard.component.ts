@@ -191,6 +191,8 @@ export class LiveDashboardComponent implements AfterViewChecked {
 
           this.userservice.createPreset(presetCreate).subscribe((res) => {
             // console.log("Preset created successfully", res);
+            console.log(res);
+            
             if(res.statusCode == 200){
               Swal.fire({
                 icon: "success",
@@ -198,15 +200,24 @@ export class LiveDashboardComponent implements AfterViewChecked {
                 text: res.message,
               });
             }
-            if(res.statusCode == 300){
+           
+          },(error) =>{
+            if (error.status == 300) {
               Swal.fire({
                 icon: "info",
-                title: res.message,
-                text: res.message,
+                title: error.error.message,
+                text: error.error.message,
+              });
+            } 
+            else {
+              Swal.fire({
+                icon: "error",
+                title: "An error occurred",
+                text: error.message ,
               });
             }
-           
-          });
+          }
+        );
         } else {
           console.log("User cancelled the action.");
         }
@@ -240,11 +251,22 @@ export class LiveDashboardComponent implements AfterViewChecked {
               text: res.message,
             });
           }
-          if(res.statusCode == 300){
+         
+        },
+        (error) =>{
+          if (error.status == 300) {
+            console.log(error)
             Swal.fire({
               icon: "info",
-              title: res.message,
-              text: res.message,
+              title: error.error.message,
+              text: error.error.message,
+            });
+          } 
+          else {
+            Swal.fire({
+              icon: "error",
+              title: "An error occurred",
+              text: error.message ,
             });
           }
         })

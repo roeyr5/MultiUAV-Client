@@ -54,7 +54,7 @@
     cursor: pointer;
   }
   .preset-name{
-    color: #b97cf3;
+    color: #fff;
   }
   .preset-content{
    padding: 1rem;
@@ -66,6 +66,7 @@
       margin-bottom: 1rem;
       
     }
+   
     .preset-cards-container{
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -77,13 +78,32 @@
         border-radius: 0.5rem;
         padding: 1rem;
         display: flex;
+        flex-direction: column;
         justify-content: space-between;
         align-items: center;
         margin: 0 0.5rem 0 0.5rem;
+
+        .preset-settings{
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 1rem;
+        
+        }
+        .uavs-container{
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+        }
       }
     }
   }
-  
-  
 
+}
+.uav-number-inpreset{
+  margin: 0.5rem;
+  padding: 0.2rem 2rem;
+  color: white;
+  border: 0.5rem saliceblue;
+  border: 2px solid white;
+  border-radius: 2rem;
 }
