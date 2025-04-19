@@ -89,6 +89,8 @@ export class GridsterBlockComponent implements OnInit {
   constructor() {}
 
   ngOnInit(): void {
+    console.log('chartEntity', this.chartEntity);
+    
     this.chartId = `chart-container-${Math.random().toString(36).substr(2, 9)}`;
   }
   public getTypes() {

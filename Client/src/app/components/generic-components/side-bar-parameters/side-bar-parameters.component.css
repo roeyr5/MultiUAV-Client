@@ -51,3 +51,11 @@
     overflow: auto;
   }
 }
+
+::ng-deep .date-range-picker > .mat-mdc-text-field-wrapper {
+  background-color: #7862b3 !important;
+  color: white;
+}
+::ng-deep .date-range-picker .mat-mdc-text-field-wrapper > * {
+  color: white !important;
+}

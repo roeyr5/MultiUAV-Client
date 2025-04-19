@@ -13,15 +13,15 @@
   <mat-form-field *ngIf="selectedUAV">
     <mat-label >Select Comn</mat-label>
     <mat-select (selectionChange)="onSelectCommunication($event)">
-      <mat-option value="FBDown">FBXDown</mat-option>
-      <mat-option value="FBUp">FBUp</mat-option>
+      <mat-option value="FiberBoxDown">FBXDown</mat-option>
+      <mat-option value="FiberBoxUp">FBUp</mat-option>
       <mat-option value="MissionDown">MissionDown</mat-option>
       <mat-option value="MissionUp">MissionUp</mat-option>
     </mat-select>
   </mat-form-field>
 
   <div class="parameters-selection">
-    <!-- <h4 *ngIf="selectedCommunication" class="headline">Parameters for {{ selectedCommunication }}</h4> -->
+    <div *ngIf="filteredParameters.length === 0">No parameters available.</div> <!-- Debug message -->
     <div class="parameters-class" *ngFor="let parameter of filteredParameters" class="parameter-item" (click)="toggleParameterSelection(parameter)">
       <span [ngClass]="isParameterSelected(parameter)? 'parameter-selected' : 'parameter-unSelected'"> {{ parameter}} </span>
       <!-- <mat-checkbox

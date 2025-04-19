@@ -1,0 +1,109 @@
+.example-container {
+  height: 100%;
+}
+
+.sidebar-content {
+  background-color: #40394e;
+  color: white;
+  width: 15vw;
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.sidebar-toggle-btn {
+  top: 10px;
+  left: 10px;
+  background-color: #2f293e;
+  color: white;
+  border: none;
+  font-size: 30px;
+  cursor: pointer;
+  z-index: 1;
+}
+
+.mat-sidenav {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mat-sidenav-content {
+  margin-left: auto;
+}
+
+
+.mat-mdc-paginator {
+  background-color: #40394e !important;
+  border-radius: 8px;
+  color: white !important;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper{
+  background-color: #d5c5ea !important;
+  color: white !important;
+}
+
+::ng-deep .mat-mdc-paginator-icon {
+  fill: white !important; 
+}
+
+
+.mat-mdc-paginator-icon {
+  color: white !important;
+}
+.mat-mdc-paginator-icon{
+  fill:white !important;
+}
+::ng-deep .mat-mdc-paginator-icon{
+  color:white !important;
+}
+::ng-deep .mat-mdc-select{
+  color: white !important;
+}
+::ng-deep .mat-mdc-select-arrow{
+  fill:white !important;
+}
+::ng-deep .ng-tns-c3393473648-13{
+  fill:white !important;
+  color: white !important;
+}
+::ng-deep .mat-mdc-paginator-icon{
+  color: white !important;
+}
+
+.input-group {
+  display: flex;
+  margin-bottom: 15px;
+}
+
+.time-input {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease;
+}
+.parameter-selected, .parameter-unSelected {
+  color: aliceblue;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  display: block;
+} 
+.parameters-selection{
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  overflow: auto;
+}
+.parameter-selected {
+  opacity: 0.4;
+  cursor: pointer;
+}
+
+.parameter-unSelected {
+  color: white;
+  cursor: pointer;
+}
