@@ -35,6 +35,7 @@
     "httpclient": "^0.1.0",
     "ngx-gauge": "^8.0.0",
     "ngx-mat-timepicker": "^16.0.0",
+    "ngx-material-timepicker": "^13.1.1",
     "primeng": "^16.9.1",
     "rxjs": "~7.8.0",
     "signalr": "^2.4.3",

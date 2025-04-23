@@ -3,7 +3,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { ArchiveData, ArchiveParameter } from 'src/app/entities/models/archiveDto'; 
+import { ArchiveParameterData, ArchiveParameter } from 'src/app/entities/models/archiveDto'; 
 import { MatTableModule } from '@angular/material/table'; 
 
 interface FormattedRow {
@@ -27,6 +27,7 @@ export class GenericTableComponent implements OnInit {
 
   @Input() public parameterName: string = '';
   @Input() public data: ArchiveParameter[] = [];
+
   columns: string[] = ['uavName', 'datetime', 'value'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
 
@@ -57,13 +58,13 @@ export class GenericTableComponent implements OnInit {
 
     const sortedDates = Array.from(allDates).sort();
 
-    const rows: FormattedRow[] = sortedDates.map(date => {
+     const rows: FormattedRow[] = sortedDates.map(date => {
       const row: FormattedRow = { dateTime: this.formatDate(date) };
       
       this.uavNames.forEach(uavName => {
         const uavData = this.data.find(dataa => dataa.uavName === uavName);
         const entry = uavData?.dataArchive.find(entry => entry.dateTime.toString() === date);
-        row[uavName] = entry ? entry.parameterValue : ''; 
+        row[uavName] = entry ? entry.value : ''; 
       });
       
       return row;

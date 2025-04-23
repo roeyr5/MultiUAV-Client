@@ -1,26 +1,51 @@
 .example-container {
   height: 100%;
+  
 }
 
 .sidebar-content {
   background-color: #40394e;
   color: white;
   width: 15vw;
-  overflow-x: hidden;
+  overflow:hidden;
   display: flex;
   flex-direction: column;
   align-items: center;
+  
 }
-
+.table-header-name{
+  color: white;
+}
+::ng-deep .mat-datepicker-toggle {
+  color: white !important;
+}
 .sidebar-toggle-btn {
   top: 10px;
   left: 10px;
   background-color: #2f293e;
+  background: #2f293e;
   color: white;
   border: none;
   font-size: 30px;
   cursor: pointer;
   z-index: 1;
+}
+::ng-deep .mat-form-field {
+  background-color: transparent !important;
+  border: none !important;
+}
+
+::ng-deep .mat-form-class {
+  background-color: transparent !important;
+  border: none !important;
+}
+::ng-deep .mat-select {
+  background-color: transparent !important;
+  color: white !important;
+}
+
+::ng-deep .mat-select-arrow {
+  fill: white !important;
 }
 
 .mat-sidenav {
@@ -28,11 +53,14 @@
   flex-direction: column;
   align-items: center;
 }
-
 .mat-sidenav-content {
   margin-left: auto;
 }
-
+/* display: flex
+;
+    flex-direction: column;
+    position: relative;
+    border-radius: 10px; */
 
 .mat-mdc-paginator {
   background-color: #40394e !important;
@@ -41,7 +69,8 @@
 }
 
 ::ng-deep .mat-mdc-text-field-wrapper{
-  background-color: #d5c5ea !important;
+  background-color: transparent !important;
+  border: none !important;
   color: white !important;
 }
 
@@ -50,12 +79,6 @@
 }
 
 
-.mat-mdc-paginator-icon {
-  color: white !important;
-}
-.mat-mdc-paginator-icon{
-  fill:white !important;
-}
 ::ng-deep .mat-mdc-paginator-icon{
   color:white !important;
 }
@@ -63,16 +86,31 @@
   color: white !important;
 }
 ::ng-deep .mat-mdc-select-arrow{
-  fill:white !important;
+  color:white !important;
+}
+::ng-deep .mat-mdc-option{
+  background-color: #40394e !important;
+
+}
+::ng-deep.mat-mdc-select-min-line{
+  color: white !important;
+}
+::ng-deep .mdc-list-item__primary-text{
+  color: rgb(219, 216, 216);
 }
 ::ng-deep .ng-tns-c3393473648-13{
   fill:white !important;
   color: white !important;
 }
-::ng-deep .mat-mdc-paginator-icon{
+::ng-deep .ng-trigger{
+  background-color: #40394e !important;
+}
+::ng-deep .mdc-list-item__primary-text{
   color: white !important;
 }
-
+::ng-deep .mat-datepicker-content{
+  color: white !important;
+}
 .input-group {
   display: flex;
   margin-bottom: 15px;
@@ -92,7 +130,10 @@
   overflow: hidden;
   display: block;
 } 
-.parameters-selection{
+::ng-deep .mat-pseudo-checkbox-full {
+  color:white !important;
+}
+.parameters-selection ,.parameters-class{
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
@@ -102,8 +143,368 @@
   opacity: 0.4;
   cursor: pointer;
 }
+.parameters-selection-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
 
 .parameter-unSelected {
   color: white;
   cursor: pointer;
+}
+.table-header{
+  display: flex;
+  margin: 0.5rem 0rem 0rem 0.5rem;
+  margin-left: 4rem;
+}
+.tables-container{
+  flex-wrap: wrap;
+  display: flex;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 100%;
+}
+.tables{
+  display: flex;
+  flex-direction: column
+}
+#main-container {
+  display: flex;
+  width: 100%;
+}
+::ng-deep body,
+html {
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+}
+.selector-paginator {
+  width: 90%;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0.6rem;
+}
+
+.mat-mdc-paginator {
+  background-color: #7862b3 !important;
+  border-radius: 8px;
+  margin-top: 0.4rem;
+}
+::ng-deep .mat-mdc-paginator-range-label {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+.date-range-picker {
+  display: inline-block;
+  width: 90%;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+mat-expansion-panel {
+  width: 100%;
+}
+
+app-graph {
+  width: 100%;
+  display: block;
+}
+.graph {
+  width: 32%;
+  border: #d6c8fb 1px solid !important;
+  border-radius: 8px;
+  margin: 0.3rem;
+}
+::ng-deep .date-range-picker > .mat-mdc-text-field-wrapper {
+  background-color: #7862b3 !important;
+  color: white;
+}
+::ng-deep .date-range-picker .mat-mdc-text-field-wrapper > * {
+  color: white !important;
+}
+::ng-deep .mat-mdc-paginator-page-size-label {
+  display: none !important;
+}
+.packet-type-selector-container {
+  width: 100% !important;
+}
+.packet-type-selector {
+  width: 90% !important;
+  margin-bottom: -2rem;
+}
+ ::ng-deep .parameters-selection-container{
+  color: white !important;
+ }
+::ng-deep .packet-type-selector > .mat-mdc-text-field-wrapper {
+  background-color: #7862b3 !important;
+  margin-bottom: 2rem;
+}
+
+::ng-deep .mat-calendar {
+  background-color: transparent !important;
+  color: white !important;
+}
+::ng-deep .mat-calendar-table {
+  background-color: transparent !important;
+}
+::ng-deep .mat-calendar-table td {
+  color: white !important; /* This sets the color of the dates to white */
+}
+::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: transparent !important; /* Transparent background */
+  border: none !important; /* Remove border */
+}
+
+::ng-deep .mat-datepicker-toggle {
+  color: white !important; /* Make the toggle button white */
+}
+
+::ng-deep .mat-form-field-label {
+  color: white !important; /* Change the label text color */
+}
+::ng-deep .mat-calendar-table-header th{
+  color: white !important; 
+}
+::ng-deep .mat-calendar-header {
+  background-color: transparent !important; /* Transparent header background */
+  color: white !important; /* Header text color */
+}
+::ng-deep .mat-mdc-button:not(:disabled) {
+  color: white !important;
+}
+::ng-deep .mat-calendar-arrow {
+  fill: white !important;
+}
+::ng-deep .mat-calendar-body-cell-content{
+  color: white !important;
+}
+::ng-deep .mat-calendar-table td.mat-calendar-body-selected {
+  background-color: #8A7FD1 !important; /* Highlight selected date with a background color */
+}
+::ng-deep .mat-datepicker-content .mat-calendar-previous-button, .mat-datepicker-content .mat-calendar-next-button ,.mat-datepicker-content .mat-calendar-previous-button, .mat-datepicker-content .mat-calendar-next-button {
+  color: white !important;
+}
+::ng-deep .mat-calendar-table td.mat-calendar-body-today {
+  color: #8A7FD1 !important; /* Optional: Change today's date color */
+}
+::ng-deep .mat-datepicker-content .mat-calendar-previous-button, .mat-datepicker-content .mat-calendar-next-button ,.mat-datepicker-content .mat-calendar-previous-button, .mat-datepicker-content .mat-calendar-next-button {
+  color: white !important;
+}
+::ng-deep .mat-date-range-input-inner {
+  background-color: transparent !important;
+  color: white !important;
+}
+::ng-deep .mat-mdc-date-range-input .mat-mdc-text-field-wrapper {
+  background-color: transparent !important;
+}
+::ng-deep .mat-date-range-input-separator {
+  color: rgb(242 242 242 / 87%) !important;
+}
+.param-type-selector th {
+  text-align: left;
+}
+::ng-deep .mat-datepicker-content .mat-calendar-next-button {
+  color: white !important;
+}
+::ng-deep .mat-calendar-body-comparison-identical.mat-calendar-body-selected, .mat-calendar-body-in-comparison-range>.mat-calendar-body-selected {
+  background: #8a7fd1 !important;
+}
+:ng-deep .mat-calendar-body-in-comparison-range.mat-calendar-body-in-range::after {
+  background: #8a7fd1 !important;
+}
+
+.sidenav-selector-drawer {
+  width: 15vw;
+  height: auto;
+}
+::ng-deep .side-nav-row {
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  display: flex !important;
+  flex-direction: column !important;
+}
+.side-nav-header-buttons {
+  display: flex;
+}
+table.side-nav-row {
+  width: 100%;
+  table-layout: fixed;
+}
+::ng-deep .mat-drawer-content {
+  background-color: #261e35;
+  overflow-x: hidden !important;
+}
+
+::ng-deep .mat-drawer-inner-container {
+  overflow-y: hidden !important;
+  overflow-x: hidden !important;
+}
+.mat-drawer-container {
+  overflow: visible;
+}
+.export-button-image {
+  height: 100%;
+  width: 100%;
+  object-fit: contain;
+}
+.table-data {
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1rem;
+}
+.table-scroll {
+  min-height: 0;
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 0.5rem;
+  max-height: 32vh;
+
+}
+
+.table-scroll-buttons {
+  flex-basis: 100%;
+  width: 100%;
+  text-align: center;
+}
+.outer-table-scroll {
+  min-height: 0;
+
+  margin-left: auto;
+  margin-right: auto;
+  max-height: 35vh;
+}
+
+.table-outer-header {
+  margin-right: auto;
+  margin-left: auto;
+}
+.time-input {
+  background-color: transparent !important; /* Transparent background */
+  border: 1px solid #A8A2D3 !important; /* Subtle border */
+  color: white !important; /* White text for readability */
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease; /* Smooth transition for hover/focus */
+}
+
+/* Style for the input field */
+.time-input {
+  background-color: transparent !important; /* Transparent background */
+  border: 1px solid #A8A2D3 !important; /* Subtle border */
+  color: white !important; /* White text */
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease; /* Smooth transition for hover/focus */
+}
+
+/* Focus styles: change border color and apply glow */
+.time-input:focus {
+  outline: none !important; /* Remove default focus outline */
+  border-color: #8A7FD1 !important; /* Border color change */
+  box-shadow: 0 0 5px rgba(138, 127, 209, 0.5) !important; /* Subtle glow effect */
+}
+
+/* Style the calendar picker button (for browsers with date-picker style) */
+.time-input::-webkit-calendar-picker-indicator {
+  background-color: #8A7FD1 !important; /* Purple background */
+  border-radius: 4px; /* Rounded corners */
+  padding: 4px;
+  border: none;
+}
+
+/* Remove default button styling (in case of some browsers) */
+.time-input::-webkit-calendar-picker-indicator:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+/* Style for the input on hover */
+.time-input:hover {
+  border-color: #8A7FD1; /* Change border color on hover */
+  background-color: rgba(138, 127, 209, 0.1); /* Light purple background on hover */
+}
+
+/* Fix default appearance for WebKit browsers (Chrome, Safari, etc.) */
+input[type="time"]::-webkit-input-placeholder {
+  color: white !important; /* Placeholder text color */
+}
+
+input[type="time"]::-webkit-search-cancel-button {
+  background-color: transparent !important;
+}
+/* Targeting the clock picker container */
+::ng-deep .mat-timepicker-popup {
+  background-color: transparent !important; /* Transparent background */
+  border: 1px solid #8A7FD1 !important; /* Border color */
+  color: white !important; /* Text color for numbers */
+  box-shadow: none !important; /* Remove shadow */
+}
+
+/* Targeting the time numbers */
+::ng-deep .mat-timepicker-popup .mat-timepicker-table td {
+  color: white !important; /* White text for time */
+  background-color: transparent !important; /* Transparent background for time cells */
+}
+
+/* Changing the selection highlight color */
+::ng-deep .mat-timepicker-popup .mat-timepicker-table td.mat-calendar-body-selected {
+  background-color: #8A7FD1 !important; /* Highlight selected time with a purple color */
+  color: white !important; /* Ensure the text stays white */
+}
+
+/* Optional: Change the hover effect on time numbers */
+::ng-deep .mat-timepicker-popup .mat-timepicker-table td:hover {
+  background-color: rgba(138, 127, 209, 0.3) !important; /* Light hover color */
+}
+
+/* Focus color for the time input */
+.time-input:focus {
+  outline: none !important; /* Remove default focus outline */
+  border-color: #8A7FD1 !important; /* Change border color on focus */
+  box-shadow: 0 0 5px rgba(138, 127, 209, 0.5) !important; /* Focus glow effect */
+}
+
+
+/* Style the calendar/time picker button */
+.time-input::-webkit-calendar-picker-indicator {
+  background-color: #8A7FD1; /* Purple background for the button */
+  border-radius: 4px; /* Rounded corners */
+  padding: 4px;
+  border: none;
+}
+
+/* Remove default button styling (in case of some browsers) */
+.time-input::-webkit-calendar-picker-indicator:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.time-input {
+  background-color: transparent !important; /* Transparent background */
+  border: 1px solid #A8A2D3 !important; /* Subtle border to keep the structure */
+  color: white !important; /* White text for readability */
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.3s ease; /* Smooth transition on focus */
+}
+
+.time-input:focus {
+  outline: none;
+  border-color: #8A7FD1 !important; /* Focus border color */
+  box-shadow: 0 0 5px rgba(138, 127, 209, 0.5); /* Focus glow effect */
+}
+
+::ng-deep .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-floating-label, .mdc-text-field--filled:not(.mdc-text-field--disabled) .mdc-floating-label--float-above {
+  color: white !important;
 }

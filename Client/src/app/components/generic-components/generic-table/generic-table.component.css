@@ -1,14 +1,30 @@
 /* uav-table.component.css */
 .table-container {
-  margin: 20px;
+  margin: 0rem 1rem 1rem 1rem;
   overflow: auto;
   max-height: 600px;
-}
+  border-left: 3px solid #4a435c;
+  border-right: 3px solid #4a435c;
+  border-bottom: 3px solid #4a435c;
 
+}
+.parameter-name{
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  margin-left: 10px;
+  margin-top: 10px;
+}
 .uav-table {
   width: 100%;
 }
-
+::ng-deep .mat-mdc-cell {
+  border-bottom-color:white !important;
+}
+::ng-deep .mat-mdc-header-cell {
+  border-bottom-color: white !important; 
+  border-bottom-width: 2px !important;
+}
 .mat-header-cell {
   font-weight: bold;
   font-size: 14px;
@@ -20,7 +36,9 @@
   padding: 8px;
   text-align: center;
 }
-
+::ng-deep .mat-mdc-table{
+  background: #261e35 !important;
+}
 .up-value {
   color: green;
   font-weight: bold;
@@ -35,3 +53,10 @@ h2 {
   margin: 15px;
   font-weight: 500;
 }
+::ng-deep .mat-mdc-cell{
+  color : white
+}
+::ng-deep .mat-mdc-header-cell{
+  color : white
+}
+

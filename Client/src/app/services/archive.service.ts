@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { ArchiveDataDto, ArchiveRequestDto } from '../entities/models/archiveDto';
+import { ArchiveDataDto, ArchiveManyRequestDto, ArchiveSingleRequestDto } from '../entities/models/archiveDto';
 
 @Injectable({
   providedIn: 'root'
@@ -12,13 +12,18 @@ export class ArchiveService {
 
   constructor(private http: HttpClient) {}
 
-  public getArchiveData(dto:ArchiveRequestDto): Observable<ArchiveDataDto[]> {
+  public getArchiveData(dto:ArchiveSingleRequestDto): Observable<ArchiveDataDto[]> {
     return this.http.post<ArchiveDataDto[]>(`${this.ROOT_URL}/archive/getArchiveData`,dto);
   }
+  public getMultiArchiveData(archiveRequest:ArchiveManyRequestDto) :Observable<any>{
+    return this.http.post<any>(`${this.ROOT_URL}/archive/getMultiArchiveData` ,archiveRequest);
+  }
+
 
   public getArchiveUavs(): Observable<number[]>{
     return this.http.get<number[]>(`${this.ROOT_URL}/archive/getalluavs`);
   }
+ 
 
   // public login(email: string , password: string): Observable<any> {
   //   console.log("karni : " ,password , email);
