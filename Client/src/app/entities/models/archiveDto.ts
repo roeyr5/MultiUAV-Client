@@ -35,7 +35,7 @@ export interface ArchiveDataDto{
 
 export interface ArchiveParameter {
   uavName:string;
-  paramaeterName:string;
+  parameterName:string;
   communication:string;
   dataArchive:ArchiveParameterData[];
 }

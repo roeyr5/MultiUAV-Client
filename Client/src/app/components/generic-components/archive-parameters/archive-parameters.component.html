@@ -71,11 +71,14 @@
           <span class="table-header-name">{{param.key}}</span> 
         </div>
         <div>
-          <app-generic-table [parameterName]="param.key" [data]="param.value"></app-generic-table>
-        </div>
+          <app-generic-table 
+          [parameterName]="param.key.split('-')[1]"
+          [dataEvent]="dataEvent.asObservable()">
+        </app-generic-table>        
+      </div>
      </div>
     </div>
-  
+    
   </mat-sidenav-content>
     
   </mat-sidenav-container>

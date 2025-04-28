@@ -40,7 +40,7 @@ export class ConcatGraphComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.graphValues = this.chartEntities.map(entity => ({
-      name: `${entity.parameter.parameterName} (UAV ${entity.parameter.uavNumber})`,
+      name: `${entity.parameter.uavNumber}`,
       series: [],
       color: this.generateColor(entity.parameter.uavNumber)
     }));

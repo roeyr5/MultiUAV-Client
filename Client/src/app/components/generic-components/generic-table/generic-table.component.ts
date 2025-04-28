@@ -5,6 +5,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { ArchiveParameterData, ArchiveParameter } from 'src/app/entities/models/archiveDto'; 
 import { MatTableModule } from '@angular/material/table'; 
+import { Observable, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 interface FormattedRow {
   dateTime: string;
@@ -26,7 +28,10 @@ interface FormattedRow {
 export class GenericTableComponent implements OnInit {
 
   @Input() public parameterName: string = '';
-  @Input() public data: ArchiveParameter[] = [];
+  @Input() public dataEvent!: Observable<{param: string; data: ArchiveParameter[]}>;
+
+  private dataSubscription!: Subscription;
+
 
   columns: string[] = ['uavName', 'datetime', 'value'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
@@ -36,42 +41,72 @@ export class GenericTableComponent implements OnInit {
 
 
   ngOnInit() {
-    console.log(this.data.length);
-    
-    if (this.data.length > 0) {
-      this.columns = Object.keys(this.data[0]);
-      this.dataSource = new MatTableDataSource(this.data);
-    }
-    this.formatTableData();
-
+    this.dataSubscription = this.dataEvent.pipe(
+      filter(event => event.param.endsWith(this.parameterName)) // Match parameter suffix
+    ).subscribe(event => {
+      this.formatTableData(event.data);
+    });
   }
-  formatTableData() {
-    this.uavNames = this.data.map(dataa => dataa.uavName);
-    this.displayedColumns = ['dateTime', ...this.uavNames];
 
+  private formatTableData(data: ArchiveParameter[]): void {
+    // Extract unique UAV names
+    this.uavNames = [...new Set(data.map(p => p.uavName))];
+    this.displayedColumns = ['dateTime', ...this.uavNames];
+  
+    // Collect all unique timestamps
     const allDates = new Set<string>();
-    this.data.forEach(uav => {
-      uav.dataArchive.forEach(entry => {
-        allDates.add(entry.dateTime.toString());
+    data.forEach(uavParam => {
+      uavParam.dataArchive.forEach(entry => {
+        allDates.add(entry.dateTime.toISOString());
       });
     });
-
-    const sortedDates = Array.from(allDates).sort();
-
-     const rows: FormattedRow[] = sortedDates.map(date => {
-      const row: FormattedRow = { dateTime: this.formatDate(date) };
-      
+  
+    // Create rows for each timestamp
+    const rows: FormattedRow[] = Array.from(allDates).sort().map(isoDate => {
+      const row: FormattedRow = {
+        dateTime: this.formatDate(isoDate),
+      };
+  
+      // Populate values for each UAV
       this.uavNames.forEach(uavName => {
-        const uavData = this.data.find(dataa => dataa.uavName === uavName);
-        const entry = uavData?.dataArchive.find(entry => entry.dateTime.toString() === date);
-        row[uavName] = entry ? entry.value : ''; 
+        const uavData = data.find(p => p.uavName === uavName);
+        row[uavName] = uavData?.dataArchive.find(d => 
+          d.dateTime.toISOString() === isoDate
+        )?.value || '';
       });
-      
+      console.log('Formatted rows:', rows);
+  
       return row;
     });
-
+  
     this.dataSource.data = rows;
   }
+  private updateDisplayedColumns(): void {
+    this.displayedColumns = ['dateTime', ...this.uavNames];
+  }
+
+  // private formatTableData(data: ArchiveParameter[]): void {
+  //   const allDates = new Set<string>();
+  //   data.forEach(uav => {
+  //     uav.dataArchive.forEach(entry => {
+  //       allDates.add(entry.dateTime.toString());
+  //     });
+  //   });
+
+  //   const sortedDates = Array.from(allDates).sort();
+  //   const rows: FormattedRow[] = sortedDates.map(date => {
+  //     const row: FormattedRow = { dateTime: this.formatDate(date) };
+      
+  //     data.forEach(uav => {
+  //       const entry = uav.dataArchive.find(e => e.dateTime.toString() === date);
+  //       row[uav.uavName] = entry ? entry.value : '';
+  //     });
+      
+  //     return row;
+  //   });
+
+  //   this.dataSource.data = rows;
+  // }
 
   formatDate(dateString: string): string {
     const date = new Date(dateString);

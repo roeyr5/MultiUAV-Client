@@ -220,6 +220,10 @@ app-graph {
   border-radius: 8px;
   margin: 0.3rem;
 }
+::ng-deep .mat-drawer-container{
+  color:#261e35 !important;
+  background-color: #261e35 !important;
+}
 ::ng-deep .date-range-picker > .mat-mdc-text-field-wrapper {
   background-color: #7862b3 !important;
   color: white;

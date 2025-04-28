@@ -16,6 +16,7 @@ export class ArchiveService {
     return this.http.post<ArchiveDataDto[]>(`${this.ROOT_URL}/archive/getArchiveData`,dto);
   }
   public getMultiArchiveData(archiveRequest:ArchiveManyRequestDto) :Observable<any>{
+    console.log(archiveRequest);
     return this.http.post<any>(`${this.ROOT_URL}/archive/getMultiArchiveData` ,archiveRequest);
   }
 
