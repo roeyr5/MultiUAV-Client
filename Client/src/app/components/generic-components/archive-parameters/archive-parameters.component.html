@@ -65,19 +65,10 @@
     </mat-sidenav>
   <mat-sidenav-content>
     <div class="tables-container">
-      <div class="tables" *ngFor="let param of allArchivedParameters | keyvalue">
-
-        <div class="table-header">
-          <span class="table-header-name">{{param.key}}</span> 
-        </div>
-        <div>
           <app-generic-table 
-          [parameterName]="param.key.split('-')[1]"
-          [dataEvent]="dataEvent.asObservable()">
+          [paramTables]="processedData">
         </app-generic-table>        
-      </div>
      </div>
-    </div>
     
   </mat-sidenav-content>
     

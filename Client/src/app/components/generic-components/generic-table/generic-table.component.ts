@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
@@ -12,7 +12,10 @@ interface FormattedRow {
   dateTime: string;
   [key: string]: string;
 }
-
+interface DataEntry {
+  dateTime: Date;
+  value: string;
+}
 @Component({
   selector: 'app-generic-table',
   standalone: true,
@@ -25,65 +28,53 @@ interface FormattedRow {
   templateUrl: './generic-table.component.html',
   styleUrls: ['./generic-table.component.css']
 })
-export class GenericTableComponent implements OnInit {
+export class GenericTableComponent implements OnChanges  {
 
-  @Input() public parameterName: string = '';
-  @Input() public dataEvent!: Observable<{param: string; data: ArchiveParameter[]}>;
+  @Input() paramTables: { [param: string]: { [uav: string]: DataEntry[] } } = {};
 
-  private dataSubscription!: Subscription;
-
-
-  columns: string[] = ['uavName', 'datetime', 'value'];
-  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
-
-  uavNames: string[] = [];
-  displayedColumns: string[] = ['dateTime'];
-
-
-  ngOnInit() {
-    this.dataSubscription = this.dataEvent.pipe(
-      filter(event => event.param.endsWith(this.parameterName)) // Match parameter suffix
-    ).subscribe(event => {
-      this.formatTableData(event.data);
-    });
+  // Helper functions for template
+  get parameters(): string[] {
+    return Object.keys(this.paramTables);
   }
 
-  private formatTableData(data: ArchiveParameter[]): void {
-    // Extract unique UAV names
-    this.uavNames = [...new Set(data.map(p => p.uavName))];
-    this.displayedColumns = ['dateTime', ...this.uavNames];
-  
-    // Collect all unique timestamps
-    const allDates = new Set<string>();
-    data.forEach(uavParam => {
-      uavParam.dataArchive.forEach(entry => {
-        allDates.add(entry.dateTime.toISOString());
+  getUAVs(param: string): string[] {
+    return Object.keys(this.paramTables[param] || {});
+  }
+
+  getMaxEntries(param: string): number {
+    const entries = Object.values(this.paramTables[param] || {});
+    return entries.length ? Math.max(...entries.map(e => e.length)) : 0;
+  }
+
+  getIndexArray(length: number): number[] {
+    return Array.from({length}, (_, i) => i);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['paramTables']) {
+      console.log('Child received new data:', this.paramTables);
+      this.logDataStructure();
+    }
+  }
+
+  private logDataStructure() {
+    console.log('=== Child Component Data Analysis ===');
+    this.parameters.forEach(param => {
+      const uavs = this.getUAVs(param);
+      console.log(
+        `Parameter: ${param.padEnd(10)} UAVs: ${uavs.length}`,
+        `Entries: ${this.getMaxEntries(param)}`
+      );
+      
+      uavs.forEach(uav => {
+        console.log(`  UAV ${uav}:`, 
+          `First entry: ${this.paramTables[param][uav][0]?.dateTime.toISOString()}`,
+          `Last entry: ${this.paramTables[param][uav].slice(-1)[0]?.dateTime.toISOString()}`
+        );
       });
     });
-  
-    // Create rows for each timestamp
-    const rows: FormattedRow[] = Array.from(allDates).sort().map(isoDate => {
-      const row: FormattedRow = {
-        dateTime: this.formatDate(isoDate),
-      };
-  
-      // Populate values for each UAV
-      this.uavNames.forEach(uavName => {
-        const uavData = data.find(p => p.uavName === uavName);
-        row[uavName] = uavData?.dataArchive.find(d => 
-          d.dateTime.toISOString() === isoDate
-        )?.value || '';
-      });
-      console.log('Formatted rows:', rows);
-  
-      return row;
-    });
-  
-    this.dataSource.data = rows;
   }
-  private updateDisplayedColumns(): void {
-    this.displayedColumns = ['dateTime', ...this.uavNames];
-  }
+
 
   // private formatTableData(data: ArchiveParameter[]): void {
   //   const allDates = new Set<string>();

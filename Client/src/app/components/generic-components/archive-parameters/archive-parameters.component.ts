@@ -65,7 +65,7 @@ export class ArchiveParametersComponent implements OnInit {
 
   public dataEvent = new Subject<{param: string; data: ArchiveParameter[]}>();
 
-  
+  processedData : any = {};
   public filteredParameters: string[] = [];
 
   protected parametersarray: ParameterDataDto[] = [];
@@ -299,47 +299,93 @@ export class ArchiveParametersComponent implements OnInit {
       });
     });
   }
-
   private processMultiArchiveResponse(response: any, comm: string): void {
-    const paramsMap = new Map<string, ArchiveParameter[]>();
-    console.log('Response:', response);
+    // New structure: { [parameter: string]: { [uavNumber: string]: DataEntry[] } }
+    const paramTables: { [key: string]: { [uavNumber: string]: DataEntry[] } } = {};
+  
+    interface DataEntry {
+      dateTime: Date;
+      value: string;
+    }
+  
+    // 1. Log raw input structure
+    console.log('[Processing] Raw response structure:', {
+      responseType: Array.isArray(response) ? 'array' : typeof response,
+      itemCount: response.length,
+      firstItemKeys: response[0] ? Object.keys(response[0]) : null
+    });
+  
     response.forEach((uavData: any) => {
-      uavData.archiveDataPackets.forEach((packet: any) => {
+      const uavNumber = uavData.uavNumber.toString();
+      
+      // 2. Log UAV metadata
+      console.log(`[Processing] UAV ${uavNumber} has ${uavData.archiveDataPackets.length} packets`);
+  
+      uavData.archiveDataPackets.forEach((packet: any, packetIndex: number) => {
         Object.entries(packet.parameters).forEach(([paramName, paramValue]) => {
-          const key = `${comm}-${paramName}`;
-  
-          if (!paramsMap.has(key)) {
-            paramsMap.set(key, []);
+          // 3. Initialize parameter structure
+          if (!paramTables[paramName]) {
+            paramTables[paramName] = {};
+            console.log(`[Processing] New parameter detected: ${paramName}`);
           }
   
-          let archiveParam = paramsMap.get(key)!.find(p => 
-            p.uavName === uavData.uavNumber.toString()
-          );
-  
-          if (!archiveParam) {
-            archiveParam = {
-              uavName: uavData.uavNumber.toString(),
-              communication: comm,
-              parameterName: paramName, // Corrected property name
-              dataArchive: []
-            };
-            paramsMap.get(key)!.push(archiveParam);
+          // 4. Initialize UAV entry for parameter
+          if (!paramTables[paramName][uavNumber]) {
+            paramTables[paramName][uavNumber] = [];
+            console.log(`[Processing] New UAV ${uavNumber} for parameter ${paramName}`);
           }
   
-          archiveParam.dataArchive.push({
-            uavNumber: uavData.uavNumber,
-            dateTime: new Date(packet.dateTime), // ISO format
-            value: paramValue?.toString() || ''
-          });
+          // 5. Add data entry
+          const entry: DataEntry = {
+            dateTime: new Date(packet.dateTime),
+            value: paramValue?.toString() || 'N/A'
+          };
+          paramTables[paramName][uavNumber].push(entry);
+  
+          // 6. Log first 3 entries for verification
+          if (packetIndex < 3) {
+            console.log(`[Processing] First entries sample - UAV ${uavNumber} ${paramName}:`, 
+              JSON.stringify(entry));
+          }
         });
       });
     });
   
-    console.log('Processed data map:', paramsMap);
-    paramsMap.forEach((params, key) => {
-      this.allArchivedParameters.set(key, params);
-      this.dataEvent.next({ param: key, data: params });
+    // 7. Log final parameter structure
+    console.log('[Processing] Final parameter structure overview:');
+    Object.entries(paramTables).forEach(([param, uavData]) => {
+      console.log(`Parameter: ${param.padEnd(10)} UAVs: ${Object.keys(uavData).length}`);
+      Object.entries(uavData).forEach(([uav, entries]) => {
+        console.log(`  UAV ${uav.padEnd(5)} Entries: ${entries.length} ` + 
+          `First: ${entries[0]?.dateTime.toISOString()} | ${entries[0]?.value}`);
+      });
     });
+  
+    // 8. Convert to legacy format if needed
+    const legacyMap = new Map<string, any>();
+    Object.entries(paramTables).forEach(([param, uavData]) => {
+      const converted = Object.entries(uavData).map(([uav, data]) => ({
+        uavName: uav,
+        communication: comm,
+        parameterName: param,
+        dataArchive: data
+      }));
+      
+      legacyMap.set(`${comm}-${param}`, converted);
+      console.log(`[Legacy] Converted ${param} to ${converted.length} UAV entries`);
+    });
+  
+    // 9. Update class properties
+    this.allArchivedParameters = legacyMap;
+    // this.dataEvent.next(paramTables); // Emit both formats if needed
+  
+    // 10. Final verification log
+    console.log('[Processing] Completed with:',
+      `Parameters: ${Object.keys(paramTables).length}`,
+      `UAVs: ${new Set(response.map((u: any) => u.uavNumber)).size}`
+    );
+    this.processedData = paramTables;
+
   }
   
   

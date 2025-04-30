@@ -6,9 +6,8 @@
   border-left: 3px solid #4a435c;
   border-right: 3px solid #4a435c;
   border-bottom: 3px solid #4a435c;
-
 }
-.parameter-name{
+.parameter-name {
   color: white;
   font-weight: bold;
   font-size: 16px;
@@ -19,10 +18,10 @@
   width: 100%;
 }
 ::ng-deep .mat-mdc-cell {
-  border-bottom-color:white !important;
+  border-bottom-color: white !important;
 }
 ::ng-deep .mat-mdc-header-cell {
-  border-bottom-color: white !important; 
+  border-bottom-color: white !important;
   border-bottom-width: 2px !important;
 }
 .mat-header-cell {
@@ -36,7 +35,7 @@
   padding: 8px;
   text-align: center;
 }
-::ng-deep .mat-mdc-table{
+::ng-deep .mat-mdc-table {
   background: #261e35 !important;
 }
 .up-value {
@@ -48,15 +47,91 @@
   color: red;
   font-weight: bold;
 }
-
+scroll-color {
+  scrollbar-width: thin;
+  scrollbar-color: #4a435c #f5f5f5;
+}
 h2 {
   margin: 15px;
   font-weight: 500;
 }
-::ng-deep .mat-mdc-cell{
-  color : white
+::ng-deep .mat-mdc-cell {
+  color: white;
 }
-::ng-deep .mat-mdc-header-cell{
-  color : white
+::ng-deep .mat-mdc-header-cell {
+  color: white;
 }
 
+.tables-container {
+  display: block;
+  width: 100%;
+}
+
+.parameter-container {
+  flex: 1 1 100%;
+  max-width: 100%;
+  margin: 1rem 0;
+  padding: 1rem;
+  box-sizing: border-box;
+}
+
+.table-container {
+  margin: 0;
+  overflow-x: auto;
+}
+
+.parameter-header {
+  color: #95feff;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid #939595;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.parameter-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+}
+
+.uav-header {
+  background-color: #cd8bff;
+  color: white;
+  padding: 12px;
+  text-align: center;
+  min-width: 200px;
+}
+
+.data-cell {
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.timestamp {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  margin-bottom: 4px;
+}
+
+.value {
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.missing-data {
+  color: #95a5a6;
+  font-style: italic;
+}
+
+.tables-container {
+  display: flex;
+  gap: 1rem;
+  overflow-y: auto;
+  max-height: 90vh;
+  padding: 1rem;
+}

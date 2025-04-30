@@ -160,14 +160,16 @@
   margin: 0.5rem 0rem 0rem 0.5rem;
   margin-left: 4rem;
 }
-.tables-container{
-  flex-wrap: wrap;
+.tables-container {
   display: flex;
-  flex: 1;
+  flex-wrap: wrap;
+  gap: 1rem;
   overflow-y: auto;
-  overflow-x: hidden;
-  max-height: 100%;
+  max-height: 90vh;
+  padding: 1rem;
 }
+
+
 .tables{
   display: flex;
   flex-direction: column
