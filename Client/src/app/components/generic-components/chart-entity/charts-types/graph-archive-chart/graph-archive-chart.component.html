@@ -1,0 +1,19 @@
+<div class="chart-container">
+  <div class="uav-name-container">
+    <span class="uav-name">{{ title }}</span>
+  </div>
+  <ngx-charts-line-chart
+    #graph
+    [results]="graphValues"
+    [scheme]="graphConfig().colorScheme"
+    [gradient]="graphConfig().gradient"
+    [xAxis]="graphConfig().showXAxis"
+    [yAxis]="graphConfig().showYAxis"
+    [legend]="graphConfig().showLegend"
+    [showXAxisLabel]="graphConfig().showXAxisLabel"
+    [showYAxisLabel]="graphConfig().showYAxisLabel"
+    [autoScale]="false"
+    [animations]="true"
+    [view]="view"
+  ></ngx-charts-line-chart>
+</div>

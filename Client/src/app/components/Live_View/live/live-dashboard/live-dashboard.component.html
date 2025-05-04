@@ -30,10 +30,12 @@
 
         <div class="gridster-item-header">
           <span class="paramter-name">{{item.parameterName}}</span>
+          <button class="merge-split-buttton" (click)="archiveGraphs(item)">{{item.isArchive ? 'Live' : 'Archive'}}</button>
           <button class="merge-split-buttton" (click)="concatGraphs(item)" *ngIf="item.chartEntitys[0].parameter.units!=='Value'" >{{item.isConcatenated ? 'Split' : 'Merge'}}</button>
         </div>
+
         <div class="chart-container">
-          <div *ngIf="!item.isConcatenated" class="single-charts">
+          <div *ngIf="!item.isConcatenated && !item.isArchive" class="single-charts">
             <div class="widget-content" *ngFor="let chartEntity of item.chartEntitys">
               <app-gridster-block 
                 (chartDataUpdated)="onChangeChart($event)" 
@@ -45,6 +47,21 @@
           <div *ngIf="item.isConcatenated" class="concat-chart">
             <app-concat-graph [chartEntities]="item.chartEntitys"></app-concat-graph>
           </div>
+
+          <div *ngIf="item.isArchive && item.isConcatenated" class="archive-chart">
+            <app-graph-archive
+              [chartEntities]="item.chartEntitys"
+            ></app-graph-archive>
+          </div>
+
+          <div *ngIf="item.isArchive && !item.isConcatenated" class="archive-chart">
+            <div class="widget-content" *ngFor="let chartEntity of item.chartEntitys">
+              <app-graph-archive
+                [chartEntity]="chartEntity"
+              ></app-graph-archive>
+            </div>
+          </div>
+
         </div>
       </gridster-item>
     </gridster>

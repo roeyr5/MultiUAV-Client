@@ -29,6 +29,7 @@ import { EventEmitter } from "@angular/core";
 
 export interface TelemetryGridsterItem extends GridsterItem, IGridsterParameter{
   // chartEntitys: IChartEntity[];
+  isArchive: boolean;
   isConcatenated: boolean;
 }
 

@@ -341,6 +341,7 @@ export class LiveDashboardComponent implements AfterViewChecked {
         parameterName: parameter.parameterName,
         chartEntitys: [itemToAdd],
         isConcatenated:false,
+        isArchive: false,
       });
     }
 
@@ -483,6 +484,10 @@ export class LiveDashboardComponent implements AfterViewChecked {
 
   public concatGraphs(item: TelemetryGridsterItem): void {
     item.isConcatenated = !item.isConcatenated;
+  }
+
+  public archiveGraphs(item: TelemetryGridsterItem): void {
+    item.isArchive = !item.isArchive;
   }
   
   // public changeChartType(item: ChartGridsterItem, newType: ChartType): void {

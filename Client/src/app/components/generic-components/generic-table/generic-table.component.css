@@ -1,12 +1,9 @@
 /* uav-table.component.css */
 .table-container {
-  margin: 0rem 1rem 1rem 1rem;
-  overflow: auto;
-  max-height: 600px;
-  border-left: 3px solid #4a435c;
-  border-right: 3px solid #4a435c;
-  border-bottom: 3px solid #4a435c;
+  width: 100%;
+  overflow-x: auto;
 }
+
 .parameter-name {
   color: white;
   font-weight: bold;
@@ -62,44 +59,45 @@ h2 {
   color: white;
 }
 
-.tables-container {
-  display: block;
-  width: 100%;
-}
 
-.parameter-container {
+/* .parameter-container {
   flex: 1 1 100%;
   max-width: 100%;
   margin: 1rem 0;
   padding: 1rem;
   box-sizing: border-box;
+} */
+
+.parameter-container {
+  flex: 1 1 300px; /* Grow and shrink with 300px minimum */
+  min-width: 100%;
+  max-width: calc(33% - 1rem); /* 3 columns with gap */
+  box-sizing: border-box;
+  border: 1px solid #aaa;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background-color: #291b43;
+  margin: 0.5rem;
 }
 
-.table-container {
-  margin: 0;
-  overflow-x: auto;
-}
+
 
 .parameter-header {
   color: #95feff;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
   border-bottom: 2px solid #939595;
 }
 
-.table-container {
-  overflow-x: auto;
-}
 
 .parameter-table {
   width: 100%;
   border-collapse: collapse;
-  margin: 1rem 0;
 }
 
 .uav-header {
-  background-color: #cd8bff;
+  background-color: #291b43;
   color: white;
+  top: 0;
+  position: sticky;
   padding: 12px;
   text-align: center;
   min-width: 200px;
@@ -130,8 +128,11 @@ h2 {
 
 .tables-container {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
   overflow-y: auto;
+  overflow-x: hidden;
   max-height: 90vh;
-  padding: 1rem;
+
 }
+

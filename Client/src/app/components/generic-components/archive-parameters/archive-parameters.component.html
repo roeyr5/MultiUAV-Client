@@ -1,52 +1,61 @@
 <button mat-icon-button (click)="sidenav.toggle()" class="sidebar-toggle-btn">
   ☰
 </button>
-<mat-paginator
-[length]="10000"
-[pageSize]="pageSize"
-[pageIndex]="pageNumber-1"
-[pageSizeOptions]="[5, 10, 25, 100]"
-(page)="onPageChange($event)">
+<mat-paginator 
+  #paginator
+  [length]="10000"
+  [pageSize]="pageSize"
+  [pageIndex]="pageNumber - 1"
+  [pageSizeOptions]="[5, 10, 25, 100]"
+  (page)="onPageChange($event)"
+>
 </mat-paginator>
 
-  <mat-sidenav-container class="example-container">
-    <mat-sidenav #sidenav mode="side" opened class="sidebar-content">
-  
-      <div class="parameters-selection-container">
-        <mat-form-field class="mat-form-class">
-          <mat-label>Select UAVs</mat-label>
-          <mat-select multiple (selectionChange)="onSelectUAV($event)">
-            <mat-option *ngFor="let uav of uavsNumbers" [value]="uav">
-              {{ uav }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-    
-        <mat-form-field >
-          <mat-label>Select Comn</mat-label>
-          <mat-select (selectionChange)="onSelectCommunication($event)">
-            <mat-option value="FiberBoxDown">FBXDown</mat-option>
-            <mat-option value="FiberBoxUp">FBUp</mat-option>
-            <mat-option value="MissionDown">MissionDown</mat-option>
-            <mat-option value="MissionUp">MissionUp</mat-option>
-          </mat-select>
-        </mat-form-field>
-    
-        <mat-form-field  class="example-form-field">
-          <mat-label>Choose Archive Data</mat-label>
-          <mat-date-range-input
-            [formGroup]="archiveDates"
-            [rangePicker]="campaignOnePicker"
-            [comparisonStart]="archiveDates.value.start"
-            [comparisonEnd]="archiveDates.value.end">
-            <input matStartDate placeholder="Start date" formControlName="start">
-            <input matEndDate placeholder="End date" formControlName="end">
-          </mat-date-range-input>
-          <mat-datepicker-toggle matIconSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
-          <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
-        </mat-form-field>
-    
-        <input
+<mat-sidenav-container class="example-container">
+  <mat-sidenav #sidenav mode="side" opened class="sidebar-content">
+    <div class="parameters-selection-container">
+      <mat-form-field class="mat-form-class">
+        <mat-label>Select UAVs</mat-label>
+        <mat-select multiple (selectionChange)="onSelectUAV($event)">
+          <mat-option *ngFor="let uav of uavsNumbers" [value]="uav">
+            {{ uav }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field>
+        <mat-label>Select Comn</mat-label>
+        <mat-select (selectionChange)="onSelectCommunication($event)">
+          <mat-option value="FiberBoxDown">FBXDown</mat-option>
+          <mat-option value="FiberBoxUp">FBUp</mat-option>
+          <mat-option value="MissionDown">MissionDown</mat-option>
+          <mat-option value="MissionUp">MissionUp</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="example-form-field">
+        <mat-label>Choose Archive Data</mat-label>
+        <mat-date-range-input
+          [formGroup]="archiveDates"
+          [rangePicker]="campaignOnePicker"
+          [comparisonStart]="archiveDates.value.start"
+          [comparisonEnd]="archiveDates.value.end"
+        >
+          <input
+            matStartDate
+            placeholder="Start date"
+            formControlName="start"
+          />
+          <input matEndDate placeholder="End date" formControlName="end" />
+        </mat-date-range-input>
+        <mat-datepicker-toggle
+          matIconSuffix
+          [for]="campaignOnePicker"
+        ></mat-datepicker-toggle>
+        <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+      </mat-form-field>
+
+      <input
         matInput
         [(ngModel)]="selectedTime"
         [ngxTimepicker]="picker"
@@ -54,22 +63,34 @@
         class="time-input"
       />
       <ngx-material-timepicker #picker></ngx-material-timepicker>
+    </div>
+    <div>
+      <button (click)="submitButton()">submit</button>
+    </div>
+    <div class="parameters-selection">
+      <div
+        class="parameters-class"
+        *ngFor="let parameter of filteredParameters"
+        class="parameter-item"
+        (click)="onChooseParameter(parameter)"
+      >
+        <span
+          [ngClass]="
+            isParameterSelected(parameter)
+              ? 'parameter-selected'
+              : 'parameter-unSelected'
+          "
+        >
+          {{ parameter }}
+        </span>
       </div>
-      
-        <div class="parameters-selection">
-          <div class="parameters-class" *ngFor="let parameter of filteredParameters" class="parameter-item" (click)="onChooseParameter(parameter)">
-            <span [ngClass]="isParameterSelected(parameter)? 'parameter-selected' : 'parameter-unSelected'"> {{ parameter}} </span>
-          </div>
-      </div>
-      
-    </mat-sidenav>
+    </div>
+  </mat-sidenav>
   <mat-sidenav-content>
     <div class="tables-container">
-          <app-generic-table 
-          [paramTables]="processedData">
-        </app-generic-table>        
-     </div>
-    
+      <div class="inside-tables-container">
+        <app-generic-table [paramTables]="processedData"> </app-generic-table>
+      </div>
+    </div>
   </mat-sidenav-content>
-    
-  </mat-sidenav-container>
+</mat-sidenav-container>

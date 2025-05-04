@@ -15,7 +15,6 @@ import { LiveComponent } from './components/Live_View/live/live.component';
 import { MonitorComponent } from './components/Live_View/monitor/monitor.component';
 import { SignupComponent } from './components/Login_Register/signup/signup.component';
 import { ConfigComponent } from './components/Live_View/config/config.component';
-import { TestComponent } from './components/test/test.component';
 import { AddNewDialogComponent } from './components/Other_Logic/dialogs/add-new-dialog.component';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { MatIconModule } from '@angular/material/icon';
@@ -54,12 +53,16 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import { ArchiveDataComponent } from './components/Other_Logic/archive-data/archive-data.component';
 import { GenericTableComponent } from './components/generic-components/generic-table/generic-table.component';
 import { MatSortModule } from '@angular/material/sort';
-import { ArchiveParametersComponent } from './components/generic-components/archive-parameters/archive-parameters.component';  // For sorting (if you need sorting functionality)
-
+import { ArchiveParametersComponent } from './components/generic-components/archive-parameters/archive-parameters.component';
+import { GraphArchiveComponent } from './components/generic-components/chart-entity/charts-types/graph-archive-chart/graph-archive-chart.component';
+import { TestComponent } from './components/test/test.component';
+import { OrchestratorComponent } from './components/Live_View/orchestrator/orchestrator.component';
 
 @NgModule({
   declarations: [
     AppComponent,
+    TestComponent,
+    GraphArchiveComponent,
     SigninComponent,
     LiveComponent,
     MonitorComponent,
@@ -77,6 +80,7 @@ import { ArchiveParametersComponent } from './components/generic-components/arch
     LiveLabelComponent,
     ConcatGraphComponent,
     PresetParametersComponent,
+    OrchestratorComponent,
   ],
   imports: [
     MatSortModule,

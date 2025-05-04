@@ -10,17 +10,35 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatIconModule } from '@angular/material/icon'
+import { GraphRecordsList, GraphValue } from 'src/app/entities/live-charts/graph.conf';
 
 
 @Component({
   selector: 'app-test-page',
-  standalone: true,
-  imports: [CommonModule, MatFormFieldModule, MatDatepickerModule, FormsModule, ReactiveFormsModule, MatNativeDateModule, MatPaginatorModule, MatSelectModule, MatSidenavModule, MatExpansionModule, MatCheckboxModule, MatIconModule],
   templateUrl: './test.component.html',
   styleUrls: ['./test.component.css'],
   
 })
 export class TestComponent {
+
+  mockData: GraphRecordsList[] = [];
+
+  constructor() {
+    this.mockData = this.generateMockGraph('Temperature Sensor');
+  }
+
+  generateMockGraph(name: string): GraphRecordsList[] {
+    const start = new Date('2025-04-01T00:00:00');
+    const series: GraphValue[] = [];
+
+    for (let i = 0; i < 500; i++) {
+      const time = new Date(start.getTime() + i * 60000); // every 1 minute
+      const value = (20 + Math.sin(i / 50) * 5 + Math.random()).toFixed(1); // smooth + noise
+      series.push({ name: time, value });
+    }
+
+    return [{ name, series }];
+  }
   
   packetTypes = [
     { value: 0, label: 'Type 0' },

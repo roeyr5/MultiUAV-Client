@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -9,7 +9,7 @@ import {
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDrawer, MatSidenavModule } from '@angular/material/sidenav';
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
@@ -57,6 +57,8 @@ import { Subject } from 'rxjs';
 })
 export class ArchiveParametersComponent implements OnInit {
   constructor(private archiveService: ArchiveService) {}
+  @ViewChild('paginator', { static: true }) paginator!: MatPaginator;
+
 
   public allArchivedParameters: Map<string, ArchiveParameter[]> = new Map<
     string,
@@ -160,7 +162,6 @@ export class ArchiveParametersComponent implements OnInit {
     const israelEndDate = new Date(
       this.archiveDates.value.end.getTime() + israelTimeOffset * 60 * 60 * 1000
     );
-    // Create the archive request
     const archiveRequest: ArchiveSingleRequestDto = {
       StartDate: israelStartDate,
       EndDate: israelEndDate,
@@ -232,15 +233,47 @@ export class ArchiveParametersComponent implements OnInit {
 
     uavMap.set(this.selectedCOMM, selectedParams);
     this.selectedParametersMap.set(this.selectedUAVs[0], uavMap);
+
   }
 
   public onPageChange(event: any): void {
+    console.log(event);
+    
     this.pageNumber = Math.max(event.pageIndex + 1, 1);
     this.pageSize = event.pageSize;
     // this.reloadDataForAllParameters();
     this.groupDataForBackend();
   }
 
+  public submitButton(): void {
+    // grab the current state
+    const prev = this.paginator.pageIndex;
+    const size = this.paginator.pageSize;
+    const total = this.paginator.length;
+
+    // decide what new pageIndex you want—for example, go to page 2 (index 1)
+    const newIndex = 0;
+
+    // build the full PageEvent
+    const fakeEvent: PageEvent = {
+      previousPageIndex: prev,
+      pageIndex: newIndex,
+      pageSize: size,
+      length: total
+    };
+
+    // update the paginator’s internal state so the UI reflects it
+    this.paginator.pageIndex = newIndex;
+    this.paginator.pageIndex = newIndex-1;
+    this.paginator.pageSize = size;
+
+    // emit exactly as if the user clicked
+    this.paginator.page.emit(fakeEvent);
+
+    // now your onPageChange() will receive:
+    // { previousPageIndex: 0, pageIndex: 1, pageSize: 10, length: 10000 }
+  }
+  
   private groupDataForBackend(): void {
     const uavs: string[] = [];
     const parameters: string[] = [];
@@ -295,7 +328,12 @@ export class ArchiveParametersComponent implements OnInit {
           console.log('Received response for', comm); // Add this
           this.processMultiArchiveResponse(response, comm);
         },
-        error: (err) => console.error('Error loading data:', err),
+        error: (err) => Swal.fire({
+          icon: 'error',
+          title: 'Error',
+          text: 'Failed to fetch data. Please try again later.',
+          footer: 'Error details: ' + err.message,
+        }),
       });
     });
   }

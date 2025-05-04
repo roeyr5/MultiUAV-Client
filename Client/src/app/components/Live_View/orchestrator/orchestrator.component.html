@@ -1,0 +1,43 @@
+<div class="orchestrator-container">
+  <div>
+    <h1 class="title">Orchestrator Overview</h1>
+    <span class="devices-info">Total Devices: {{ totalDevices }}</span>
+    <span class="devices-info">Active UAVs: {{ activeUAVs }}</span>
+  </div>
+ 
+  <ng-container  *ngIf="orchestratorData && objectKeys(orchestratorData).length > 0; else noData">
+    <div class="devices-container">
+      <div *ngFor="let deviceId of objectKeys(orchestratorData)" class="device-block">
+        <h2>Telemetry Device ID 📡: {{ deviceId }}</h2>
+  
+        <div class="ports">
+          <span class="device-port">
+            Device Port 🔌: {{ orchestratorData[+deviceId].device.devicePort }}
+          </span>
+          <span class="listener-port">
+            Listener Port 📥: {{ orchestratorData[+deviceId].device.listenerPort }}
+          </span>
+        </div>
+  
+        <ng-container *ngIf="orchestratorData[+deviceId].simulators.length > 0; else noSim">
+          <h4>Assigned Simulators 🛰️:</h4>
+          <div class="simulators-list">
+            <div
+              *ngFor="let simulator of orchestratorData[+deviceId].simulators" class="simulator-item">
+                <span class="uav-number">UAV #{{ simulator.uavNumber }} </span>
+            </div>
+          </div>
+        </ng-container>
+  
+        <ng-template #noSim>
+          <p>No simulators assigned.</p>
+        </ng-template>
+      </div>
+    </div>
+   
+  </ng-container>
+
+  <ng-template #noData>
+    <p>Waiting for orchestrator data...</p>
+  </ng-template>
+</div>

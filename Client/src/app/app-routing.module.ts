@@ -8,6 +8,7 @@ import { SignupComponent } from './components/Login_Register/signup/signup.compo
 import { PageNotFoundComponent } from './components/Other_Logic/page-not-found/page-not-found.component';
 import { MonitorComponent } from './components/Live_View/monitor/monitor.component';
 import { ArchiveDataComponent } from './components/Other_Logic/archive-data/archive-data.component';
+import { OrchestratorComponent } from './components/Live_View/orchestrator/orchestrator.component';
 
 const routes: Routes = [
   { path: 'signin', component: SigninComponent },
@@ -16,6 +17,7 @@ const routes: Routes = [
   {path : 'error' , component : PageNotFoundComponent},
   {path : 'monitor', component :MonitorComponent},
   {path : 'archive', component :ArchiveDataComponent},
+  {path : 'orchestrator', component :OrchestratorComponent},
   {path : 'test', component :TestComponent},
   { path: 'config', component: ConfigComponent },
   {path: '**',component:PageNotFoundComponent},
