@@ -1,32 +1,41 @@
 import { IcdParameter } from "./IcdParameter";
 
-export interface ArchiveRequestDto {
+export interface ArchiveManyRequestDto { //many Paramters
   StartDate: Date;
   EndDate: Date;
   UavNumbers: number[];
   Communication: string;
   PageNumber: number;
   PageSize: number;
+  ParameterNames:string[];
 }
 
-export interface ArchiveData{
-  uavData: { [key: string]: string };
+export interface ArchiveSingleRequestDto { // single Parameter
+  StartDate: Date;
+  EndDate: Date;
+  UavNumbers: number[];
+  Communication: string;
+  PageNumber: number;
+  PageSize: number;
+  ParameterName:string;
+}
+
+export interface ArchiveParameterData{
+  uavNumber:string;
+  value: string;
   dateTime: Date;
 }
 
 export interface ArchiveDataDto{
-  archiveDataPackets:ArchiveData[];
+  archiveDataPackets:ArchiveParameterData[];
   uavNumber:string;
   communication:string;
+  parameterName:string;
 }
 
 export interface ArchiveParameter {
   uavName:string;
-  paramaeterName:string;
-  dataArchive:ParamaterData[];
-}
-
-export interface ParamaterData{
-  dateTime :Date;
-  parameterValue :string; 
+  parameterName:string;
+  communication:string;
+  dataArchive:ArchiveParameterData[];
 }

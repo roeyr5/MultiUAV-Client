@@ -1,16 +1,21 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { ArchiveData, ArchiveParameter } from 'src/app/entities/models/archiveDto'; 
+import { ArchiveParameterData, ArchiveParameter } from 'src/app/entities/models/archiveDto'; 
 import { MatTableModule } from '@angular/material/table'; 
+import { Observable, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 interface FormattedRow {
   dateTime: string;
   [key: string]: string;
 }
-
+interface DataEntry {
+  dateTime: Date;
+  value: string;
+}
 @Component({
   selector: 'app-generic-table',
   standalone: true,
@@ -23,54 +28,76 @@ interface FormattedRow {
   templateUrl: './generic-table.component.html',
   styleUrls: ['./generic-table.component.css']
 })
-export class GenericTableComponent implements OnInit {
+export class GenericTableComponent implements OnChanges  {
 
-  @Input() public parameterName: string = '';
-  @Input() public data: ArchiveParameter[] = [];
-  columns: string[] = ['uavName', 'datetime', 'value'];
-  dataSource: MatTableDataSource<any> = new MatTableDataSource<any>([]);
+  @Input() paramTables: { [param: string]: { [uav: string]: DataEntry[] } } = {};
 
-  uavNames: string[] = [];
-  displayedColumns: string[] = ['dateTime'];
+  // Helper functions for template
+  get parameters(): string[] {
+    return Object.keys(this.paramTables);
+  }
 
+  getUAVs(param: string): string[] {
+    return Object.keys(this.paramTables[param] || {});
+  }
 
-  ngOnInit() {
-    console.log(this.data.length);
-    
-    if (this.data.length > 0) {
-      this.columns = Object.keys(this.data[0]);
-      this.dataSource = new MatTableDataSource(this.data);
+  getMaxEntries(param: string): number {
+    const entries = Object.values(this.paramTables[param] || {});
+    return entries.length ? Math.max(...entries.map(e => e.length)) : 0;
+  }
+
+  getIndexArray(length: number): number[] {
+    return Array.from({length}, (_, i) => i);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['paramTables']) {
+      console.log('Child received new data:', this.paramTables);
+      this.logDataStructure();
     }
-    this.formatTableData();
-
   }
-  formatTableData() {
-    this.uavNames = this.data.map(dataa => dataa.uavName);
-    this.displayedColumns = ['dateTime', ...this.uavNames];
 
-    const allDates = new Set<string>();
-    this.data.forEach(uav => {
-      uav.dataArchive.forEach(entry => {
-        allDates.add(entry.dateTime.toString());
+  private logDataStructure() {
+    console.log('=== Child Component Data Analysis ===');
+    this.parameters.forEach(param => {
+      const uavs = this.getUAVs(param);
+      console.log(
+        `Parameter: ${param.padEnd(10)} UAVs: ${uavs.length}`,
+        `Entries: ${this.getMaxEntries(param)}`
+      );
+      
+      uavs.forEach(uav => {
+        console.log(`  UAV ${uav}:`, 
+          `First entry: ${this.paramTables[param][uav][0]?.dateTime.toISOString()}`,
+          `Last entry: ${this.paramTables[param][uav].slice(-1)[0]?.dateTime.toISOString()}`
+        );
       });
     });
-
-    const sortedDates = Array.from(allDates).sort();
-
-    const rows: FormattedRow[] = sortedDates.map(date => {
-      const row: FormattedRow = { dateTime: this.formatDate(date) };
-      
-      this.uavNames.forEach(uavName => {
-        const uavData = this.data.find(dataa => dataa.uavName === uavName);
-        const entry = uavData?.dataArchive.find(entry => entry.dateTime.toString() === date);
-        row[uavName] = entry ? entry.parameterValue : ''; 
-      });
-      
-      return row;
-    });
-
-    this.dataSource.data = rows;
   }
+
+
+  // private formatTableData(data: ArchiveParameter[]): void {
+  //   const allDates = new Set<string>();
+  //   data.forEach(uav => {
+  //     uav.dataArchive.forEach(entry => {
+  //       allDates.add(entry.dateTime.toString());
+  //     });
+  //   });
+
+  //   const sortedDates = Array.from(allDates).sort();
+  //   const rows: FormattedRow[] = sortedDates.map(date => {
+  //     const row: FormattedRow = { dateTime: this.formatDate(date) };
+      
+  //     data.forEach(uav => {
+  //       const entry = uav.dataArchive.find(e => e.dateTime.toString() === date);
+  //       row[uav.uavName] = entry ? entry.value : '';
+  //     });
+      
+  //     return row;
+  //   });
+
+  //   this.dataSource.data = rows;
+  // }
 
   formatDate(dateString: string): string {
     const date = new Date(dateString);

@@ -1,25 +1,4 @@
-<link
-  href="https://fonts.googleapis.com/icon?family=Material+Icons"
-  rel="stylesheet"
-/>
-<div id="main-container">
-  <mat-drawer-container class="sidenav-selector-container" autosize>
-    <mat-drawer
-      #drawer
-      class="sidenav-selector-drawer"
-      mode="side"
-      opened="true"
-      (opened)="onSidenavToggle()"
-      (closed)="onSidenavToggle()"
-    >
-      <div>
-        
-      </div>
-      <div>
-        
-      </div>
-    </mat-drawer>
-  </mat-drawer-container>
-  <div class="graphs-space">
-  </div>
-</div>
+<app-graph-archive
+  [archiveData]="mockData"
+  title="Archived Temperature Data"
+></app-graph-archive>

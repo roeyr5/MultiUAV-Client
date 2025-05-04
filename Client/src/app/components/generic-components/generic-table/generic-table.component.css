@@ -1,14 +1,26 @@
 /* uav-table.component.css */
 .table-container {
-  margin: 20px;
-  overflow: auto;
-  max-height: 600px;
+  width: 100%;
+  overflow-x: auto;
 }
 
+.parameter-name {
+  color: white;
+  font-weight: bold;
+  font-size: 16px;
+  margin-left: 10px;
+  margin-top: 10px;
+}
 .uav-table {
   width: 100%;
 }
-
+::ng-deep .mat-mdc-cell {
+  border-bottom-color: white !important;
+}
+::ng-deep .mat-mdc-header-cell {
+  border-bottom-color: white !important;
+  border-bottom-width: 2px !important;
+}
 .mat-header-cell {
   font-weight: bold;
   font-size: 14px;
@@ -20,7 +32,9 @@
   padding: 8px;
   text-align: center;
 }
-
+::ng-deep .mat-mdc-table {
+  background: #261e35 !important;
+}
 .up-value {
   color: green;
   font-weight: bold;
@@ -30,8 +44,95 @@
   color: red;
   font-weight: bold;
 }
-
+scroll-color {
+  scrollbar-width: thin;
+  scrollbar-color: #4a435c #f5f5f5;
+}
 h2 {
   margin: 15px;
   font-weight: 500;
 }
+::ng-deep .mat-mdc-cell {
+  color: white;
+}
+::ng-deep .mat-mdc-header-cell {
+  color: white;
+}
+
+
+/* .parameter-container {
+  flex: 1 1 100%;
+  max-width: 100%;
+  margin: 1rem 0;
+  padding: 1rem;
+  box-sizing: border-box;
+} */
+
+.parameter-container {
+  flex: 1 1 300px; /* Grow and shrink with 300px minimum */
+  min-width: 100%;
+  max-width: calc(33% - 1rem); /* 3 columns with gap */
+  box-sizing: border-box;
+  border: 1px solid #aaa;
+  padding: 0.5rem;
+  border-radius: 8px;
+  background-color: #291b43;
+  margin: 0.5rem;
+}
+
+
+
+.parameter-header {
+  color: #95feff;
+  border-bottom: 2px solid #939595;
+}
+
+
+.parameter-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.uav-header {
+  background-color: #291b43;
+  color: white;
+  top: 0;
+  position: sticky;
+  padding: 12px;
+  text-align: center;
+  min-width: 200px;
+}
+
+.data-cell {
+  padding: 10px;
+  border: 1px solid #dee2e6;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.timestamp {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+  margin-bottom: 4px;
+}
+
+.value {
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.missing-data {
+  color: #95a5a6;
+  font-style: italic;
+}
+
+.tables-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: 90vh;
+
+}
+

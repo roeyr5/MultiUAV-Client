@@ -58,7 +58,7 @@ export class LiveDashboardComponent implements AfterViewChecked {
   @Input() public presetDashboard : PresetItem[] = [];
   @Input() public presetName:string = '';
 
-  protected uavsList: number[] = [];
+  protected uavsList: number[] = [6];
   protected parametersMap: Map<string, ParameterDataDto[]> = new Map<string,ParameterDataDto[]>();
   protected selectedParametersMap: Map<number,Map<string, ParameterDataDto[]>> = new Map<number, Map<string, ParameterDataDto[]>>();
 
@@ -341,6 +341,7 @@ export class LiveDashboardComponent implements AfterViewChecked {
         parameterName: parameter.parameterName,
         chartEntitys: [itemToAdd],
         isConcatenated:false,
+        isArchive: false,
       });
     }
 
@@ -425,16 +426,18 @@ export class LiveDashboardComponent implements AfterViewChecked {
   }
 
   public getUavs(): void {
-    this.simulatorservice.telemetryUavs().subscribe(
+    this.simulatorservice.getActiveUavs().subscribe(
       (res) => {
-        console.log('UAVs List:', res);
-        this.uavsList = Object.keys(res).map(Number);
+        console.log(res);
+        
+        this.uavsList = res; 
       },
       (err) => {
         console.error('Error fetching UAVs list:', err);
       }
     );
   }
+  
 
   protected getParameters(): void {
     this.userservice.getAllParameters().subscribe(
@@ -481,6 +484,10 @@ export class LiveDashboardComponent implements AfterViewChecked {
 
   public concatGraphs(item: TelemetryGridsterItem): void {
     item.isConcatenated = !item.isConcatenated;
+  }
+
+  public archiveGraphs(item: TelemetryGridsterItem): void {
+    item.isArchive = !item.isArchive;
   }
   
   // public changeChartType(item: ChartGridsterItem, newType: ChartType): void {

@@ -10,8 +10,7 @@ import { CommonModule } from '@angular/common';
 // Removed invalid MatTimepickerModule import
 import { NgxMatTimepickerModule } from 'ngx-mat-timepicker';
 import { MatSidenavModule } from '@angular/material/sidenav';
-import { ArchiveRequestDto } from 'src/app/entities/models/archiveDto';
-import{ArchiveData} from 'src/app/entities/models/archiveDto';
+import { ArchiveSingleRequestDto } from 'src/app/entities/models/archiveDto';
 import { GenericTableComponent } from '../../generic-components/generic-table/generic-table.component'; 
 import { IcdParameter } from 'src/app/entities/IcdParameter';
 import { ArchiveParameter } from 'src/app/entities/models/archiveDto';
