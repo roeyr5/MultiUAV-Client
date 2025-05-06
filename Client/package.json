@@ -10,7 +10,7 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^16.2.0",
+    "@angular/animations": "^16.2.12",
     "@angular/cdk": "^16.2.14",
     "@angular/common": "^16.2.0",
     "@angular/compiler": "^16.2.0",
@@ -36,6 +36,7 @@
     "ngx-gauge": "^8.0.0",
     "ngx-mat-timepicker": "^16.0.0",
     "ngx-material-timepicker": "^13.1.1",
+    "ngx-toastr": "^17.0.2",
     "primeng": "^16.9.1",
     "rxjs": "~7.8.0",
     "signalr": "^2.4.3",

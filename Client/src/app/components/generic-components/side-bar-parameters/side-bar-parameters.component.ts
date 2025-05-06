@@ -139,10 +139,10 @@ export class SideBarParametersComponent implements OnInit {
 
     uavMap.set(this.selectedCommunication, selectedParams);
     this.selectedParametersMap.set(this.selectedUAV, uavMap);
-    console.log(
-      `Selected Parameters for UAV: ${this.selectedUAV}, Communication: ${this.selectedCommunication}:`,
-      selectedParams
-    );
+    // console.log(
+    //   `Selected Parameters for UAV: ${this.selectedUAV}, Communication: ${this.selectedCommunication}:`,
+    //   selectedParams
+    // );
 
     // this.toggleUAVParameterSelection(this.selectedUAV, this.selectedCommunication, parameter);
   }

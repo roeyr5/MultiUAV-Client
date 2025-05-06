@@ -1,6 +1,7 @@
 <div class="container">
   <div class="top">
     <div class="top-buttons">
+      <button (click)="showSuccess()"></button>
       <button mat-button class="button" (click)="toggleSideBar()">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" width="25" height="25" viewBox="0 0 32 32" version="1.1">
     
@@ -38,7 +39,8 @@
           <div *ngIf="!item.isConcatenated && !item.isArchive" class="single-charts">
             <div class="widget-content" *ngFor="let chartEntity of item.chartEntitys">
               <app-gridster-block 
-                (chartDataUpdated)="onChangeChart($event)" 
+                (chartDataUpdated)="onChangeChart($event)"
+                (timeShiftUpdate)="onTimeShiftRequest($event)"
                 [chartEntity]="chartEntity">
               </app-gridster-block>
             </div>
@@ -48,19 +50,19 @@
             <app-concat-graph [chartEntities]="item.chartEntitys"></app-concat-graph>
           </div>
 
-          <div *ngIf="item.isArchive && item.isConcatenated" class="archive-chart">
+          <!-- <div *ngIf="item.isArchive" class="archive-chart">
             <app-graph-archive
               [chartEntities]="item.chartEntitys"
             ></app-graph-archive>
-          </div>
+          </div> -->
 
-          <div *ngIf="item.isArchive && !item.isConcatenated" class="archive-chart">
+          <!-- <div *ngIf="item.isArchive && !item.isConcatenated" class="archive-chart">
             <div class="widget-content" *ngFor="let chartEntity of item.chartEntitys">
               <app-graph-archive
-                [chartEntity]="chartEntity"
+                [chartEntities]="item.chartEntitys"
               ></app-graph-archive>
             </div>
-          </div>
+          </div> -->
 
         </div>
       </gridster-item>

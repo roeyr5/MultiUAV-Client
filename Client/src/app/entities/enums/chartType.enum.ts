@@ -1,4 +1,4 @@
-import { IChartEntity } from "../models/IChartEntity";
+import { IChartEntity } from '../models/IChartEntity';
 
 export enum ChartType {
   Gauge = 'solidgauge',
@@ -10,9 +10,16 @@ export enum SingleChart {
   GRAPH = 1,
   PIE = 2,
   LABEL = 3,
+  SHIFT = 4,
 }
-export interface ChangeChartType{
+export interface ChangeChartType {
   chartType: SingleChart;
+  chartEntity: IChartEntity;
+}
+export interface GetTimeShift {
+  minutesBack : number;
+  newChartType: SingleChart;
+  oldChartType: SingleChart;
   chartEntity: IChartEntity;
 }
 

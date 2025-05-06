@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { DisplayGrid, GridsterConfig, GridsterItem, GridType } from 'angular-gridster2';
 import { GridsterBlockComponent } from 'src/app/components/generic-components/chart-entity/charts-types/gridster-block/gridster-block.component';
-import { ChartType, SingleChart,ChangeChartType } from 'src/app/entities/enums/chartType.enum';
+import { ChartType, SingleChart,ChangeChartType, GetTimeShift } from 'src/app/entities/enums/chartType.enum';
 import { IcdParameter } from 'src/app/entities/IcdParameter';
 import {
   gaugeChartTypes,
@@ -33,6 +33,7 @@ import { createPresetDto, PresetItem } from 'src/app/entities/models/presetItem'
 import { stringify , parse } from 'flatted';
 import { GridsterItems } from 'src/app/entities/models/presetItem';
 import { InsideParameterDTO } from 'src/app/entities/models/addParameter';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-live-dashboard',
@@ -45,7 +46,8 @@ export class LiveDashboardComponent implements AfterViewChecked {
     private userservice: UserService,
     private liveTelemetryData: SignalRService,
     private cdRef: ChangeDetectorRef,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private toastrService : ToastrService
   ) {}
 
   ngAfterViewChecked() {
@@ -136,7 +138,14 @@ export class LiveDashboardComponent implements AfterViewChecked {
   }
   public onChangeChart(chartChanges : ChangeChartType):void{
     chartChanges.chartEntity.chartType = chartChanges.chartType;
-
+  }
+  public onTimeShiftRequest(timeShiftChanges : GetTimeShift ):void{
+    
+    timeShiftChanges.chartEntity.chartType = timeShiftChanges.newChartType;
+    timeShiftChanges.chartEntity.oldChartType = timeShiftChanges.oldChartType;
+    timeShiftChanges.chartEntity.minutesBack = timeShiftChanges.minutesBack;
+    console.log(timeShiftChanges);
+    
   }
 
   public async savePreset() : Promise<void> {
@@ -417,7 +426,7 @@ export class LiveDashboardComponent implements AfterViewChecked {
     if (this.groupsJoined.includes(groupName)) return;
 
     this.liveTelemetryData.joinGroup(groupName).subscribe({
-      next: () => console.log(`Joined group: ${groupName}`),
+      next: () => {},
       error: (err) => console.error('Error joining group', err),
     });
   }
@@ -490,6 +499,9 @@ export class LiveDashboardComponent implements AfterViewChecked {
     item.isArchive = !item.isArchive;
   }
   
+  showSuccess() {
+    this.toastrService.success('Hello world!', 'Toastr fun!');
+  }
   // public changeChartType(item: ChartGridsterItem, newType: ChartType): void {
   //   // item.chartType = newType;
   //   const blockComponent = this.gridsterBlocks.find(

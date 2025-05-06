@@ -39,3 +39,57 @@ ngx-charts-line-chart {
 .uav-name{
   color: white;
 }
+.archive-button{
+  color: white;
+  position: absolute;
+  right: 30;
+  top: 0;
+}
+
+#mainMenuButton {
+z-index: 10;
+position: absolute;
+top: 0;
+right: 1rem;
+}
+
+.menu-icon {
+  height: 19px;
+  width: 19px;
+  margin: 0px 2px;
+
+  :hover {
+    cursor: pointer;
+  }
+}
+
+.menu-item {
+  display: flex;
+  height: 100%;
+  color: white !important;
+}
+
+.icon-button {
+  color: white !important;
+}
+
+#menu-icon-button {
+  top: 5px;
+  position: absolute;
+}
+
+::ng-deep .mat-mdc-menu-submenu-icon {
+  color: white !important;
+}
+
+::ng-deep .matMenuContent {
+  color: white !important;
+  background: rgb(47 41 62) !important;
+}
+
+.settings-container {
+  position: absolute;
+  top: 0;
+  right: 1rem;
+  color: white;
+}

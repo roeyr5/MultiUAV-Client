@@ -9,6 +9,13 @@
   background: #4a435c;
   border-bottom-left-radius: 10px;
   border-bottom-right-radius: 10px;
+
+  .uav-name-container {
+    position: absolute;
+    top: 0;
+    right: 1rem;
+    color: white;
+  }
   
   .gauge-size {
     background: #4a435c;
@@ -25,8 +32,48 @@
   right: 0;
   top: 0;
 }
+.archive-button{
+  color: white;
+  position: absolute;
+  right: 30;
+  top: 0;
+}
 .chart-icon {
   width: 20px;
   height: 20px;
   margin-right: 10px;
+}
+
+.menu-icon {
+  height: 19px;
+  width: 19px;
+  margin: 0px 2px;
+
+  :hover {
+    cursor: pointer;
+  }
+}
+
+.menu-item {
+  display: flex;
+  height: 100%;
+  color: white !important;
+}
+
+.icon-button {
+  color: white !important;
+}
+
+#menu-icon-button {
+  top: 5px;
+  position: absolute;
+}
+
+::ng-deep .mat-mdc-menu-submenu-icon {
+  color: white !important;
+}
+
+::ng-deep .matMenuContent {
+  color: white !important;
+  background: rgb(47 41 62) !important;
 }

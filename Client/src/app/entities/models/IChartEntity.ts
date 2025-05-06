@@ -13,6 +13,8 @@ export class IChartEntity {
   parameter: IcdParameter;
   chartType: SingleChart;
   dataEvent: EventEmitter<any>;
+  oldChartType?: SingleChart;
+  minutesBack?: number;
 
   constructor(
     id: string,

@@ -15,10 +15,12 @@ import {
   IChartEntity,
   IGridsterParameter,
 } from 'src/app/entities/models/IChartEntity';
-import { SingleChart } from 'src/app/entities/enums/chartType.enum';
+import { GetTimeShift, SingleChart } from 'src/app/entities/enums/chartType.enum';
 import { graphChartTypes } from 'src/app/entities/enums/chartType.enum';
 import { pieChartTypes } from 'src/app/entities/enums/chartType.enum';
 import { ChangeChartType } from 'src/app/entities/enums/chartType.enum';
+import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-gauge-chart',
@@ -50,12 +52,20 @@ export class GaugeChartComponent implements OnInit {
     ];
     
   @Output() newChartType = new EventEmitter<ChangeChartType>();
+  @Output() getTimeShift = new EventEmitter<GetTimeShift>();
+
   @Input() chartEntity!: IChartEntity;
   public gaugeConf: IGaugeConf = new IGaugeConf();
 
   public gaugeValue: number = 0;
   public size: number = 120;
-  changes!:ChangeChartType
+  public mode : string = 'live'
+
+  private dataSub?: Subscription;
+  
+
+  changes!:ChangeChartType;
+  timeShiftChange!:GetTimeShift;
 
   constructor(private cdr: ChangeDetectorRef, private ngZone: NgZone) {}
 
@@ -73,7 +83,7 @@ export class GaugeChartComponent implements OnInit {
       );
     }, 20);
 
-    this.chartEntity.dataEvent.subscribe((value) => {
+    this.dataSub = this.chartEntity.dataEvent.subscribe((value) => {
       this.gaugeValue = Number(value);
     });
   }
@@ -110,4 +120,58 @@ export class GaugeChartComponent implements OnInit {
     };
     this.newChartType.emit(this.changes);
   }
+
+  public backToLive():void{
+    this.dataSub?.unsubscribe();
+    this.gaugeValue = 0;
+    this.dataSub = this.chartEntity.dataEvent.subscribe((value) => {
+      this.gaugeValue = Number(value);
+    });
+    this.mode= "live";
+  }
+
+  public timeShiftMode():void{
+      Swal.fire({
+         title: 'Catch-up interval',
+         text: 'How many minutes back would you like to fetch?',
+         input: 'number',
+         inputLabel: 'Minutes',
+         inputPlaceholder: 'Enter number of minutes',
+         inputAttributes: {
+           min: '1',
+           step: '1'
+         },
+         showCancelButton: true,
+         confirmButtonText: 'Go',
+         cancelButtonText: 'Cancel',
+         inputValidator: (value) => {
+           if (!value) {
+             return 'You need to enter a number';
+           }
+           const n = Number(value);
+           if (isNaN(n) || n <= 0 || !Number.isInteger(n)) {
+             return 'Please enter a positive whole number';
+           }
+           return null; 
+         }
+       }).then((result) => {
+         if (result.isConfirmed) {
+           const minutesBack = parseInt(result.value, 10);
+           console.log('User wants to go back', minutesBack, 'minutes');
+           // this.chartEntity.dataEvent.unsubscribe();
+           this.dataSub?.unsubscribe();
+
+           this.timeShiftChange= {
+              minutesBack: minutesBack,
+              newChartType: SingleChart.GRAPH,
+              oldChartType: this.chartEntity.chartType,
+              chartEntity: this.chartEntity,
+           };
+
+           this.getTimeShift.emit(this.timeShiftChange);
+
+           this.mode = 'shift'
+         }
+       });
+  } 
 }

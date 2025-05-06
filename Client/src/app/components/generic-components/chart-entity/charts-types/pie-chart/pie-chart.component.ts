@@ -3,10 +3,12 @@ import { pie } from 'd3';
 import * as Highcharts from 'highcharts';
 import { IPieConf,PieRecord } from 'src/app/entities/live-charts/pie.conf';
 import { IChartEntity } from 'src/app/entities/models/IChartEntity';
-import { ChangeChartType } from 'src/app/entities/enums/chartType.enum';
+import { ChangeChartType, GetTimeShift } from 'src/app/entities/enums/chartType.enum';
 import { SingleChart } from 'src/app/entities/enums/chartType.enum';
 import { gaugeChartTypes } from 'src/app/entities/enums/chartType.enum';
 import { graphChartTypes } from 'src/app/entities/enums/chartType.enum';
+import Swal from 'sweetalert2';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-pie-chart',
@@ -14,6 +16,8 @@ import { graphChartTypes } from 'src/app/entities/enums/chartType.enum';
   styleUrls: ['./pie-chart.component.css']
 })
 export class PieChartComponent implements OnInit {
+
+  public mode : string = 'live'
 
    graphOptions = [
           {
@@ -44,18 +48,24 @@ export class PieChartComponent implements OnInit {
   
   changes!:ChangeChartType
   @Output() newChartType = new EventEmitter<ChangeChartType>();
+  @Output() getTimeShift = new EventEmitter<GetTimeShift>();
+
   @Input() chartEntity!: IChartEntity;
   public pieRecords: PieRecord[] = [];
   public isSliderCheck:boolean = false;
   public liveValue :string ='';
  
+  private dataSub?: Subscription;
+  
+  timeShiftChange!:GetTimeShift;
+
   public pieConf: IPieConf = new IPieConf();
   
   constructor(private cdr: ChangeDetectorRef, private ngZone: NgZone) {}
   
   ngOnInit(): void {
 
-    this.chartEntity.dataEvent.subscribe((data:string) => {
+    this.dataSub = this.chartEntity.dataEvent.subscribe((data:string) => {
       this.ngZone.run(() => {
         this.liveValue = data;
         this.addRecord(data);
@@ -109,4 +119,64 @@ export class PieChartComponent implements OnInit {
     };
     this.newChartType.emit(this.changes);
   }
+
+
+  public backToLive():void{
+    this.dataSub?.unsubscribe();
+
+    this.dataSub = this.chartEntity.dataEvent.subscribe((data:string) => {
+      this.ngZone.run(() => {
+        this.liveValue = data;
+        this.addRecord(data);
+        this.cdr.markForCheck();
+      });
+    });
+    this.mode= "live";
+  }
+
+
+   public timeShiftMode():void{
+        Swal.fire({
+           title: 'Catch-up interval',
+           text: 'How many minutes back would you like to fetch?',
+           input: 'number',
+           inputLabel: 'Minutes',
+           inputPlaceholder: 'Enter number of minutes',
+           inputAttributes: {
+             min: '1',
+             step: '1'
+           },
+           showCancelButton: true,
+           confirmButtonText: 'Go',
+           cancelButtonText: 'Cancel',
+           inputValidator: (value) => {
+             if (!value) {
+               return 'You need to enter a number';
+             }
+             const n = Number(value);
+             if (isNaN(n) || n <= 0 || !Number.isInteger(n)) {
+               return 'Please enter a positive whole number';
+             }
+             return null; 
+           }
+         }).then((result) => {
+           if (result.isConfirmed) {
+             const minutesBack = parseInt(result.value, 10);
+             console.log('User wants to go back', minutesBack, 'minutes');
+             // this.chartEntity.dataEvent.unsubscribe();
+             this.dataSub?.unsubscribe();
+  
+             this.timeShiftChange= {
+                minutesBack: minutesBack,
+                newChartType: SingleChart.GRAPH,
+                oldChartType: this.chartEntity.chartType,
+                chartEntity: this.chartEntity,
+             };
+  
+             this.getTimeShift.emit(this.timeShiftChange);
+  
+             this.mode = 'shift'
+           }
+         });
+    } 
 }

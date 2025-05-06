@@ -3,16 +3,57 @@
  <div class="gauge-container">
   <div class="uav-name-container">
     <div class="settings-container">
-      <button mat-icon-button [matMenuTriggerFor]="chartMenu" class="settings-button">
-        <mat-icon class="icon-button">bar_chart</mat-icon>
+
+      <button [matMenuTriggerFor]="mainMenu" mat-icon-button class="menu-icon">
+        <mat-icon class="icon-button-menu" id="menu-icon-button">menu</mat-icon>
       </button>
+
+      <mat-menu #mainMenu="matMenu" class="matMenuContent">
+        <button mat-menu-item [matMenuTriggerFor]="chartMenu" class="menu-item">
+            <mat-icon class="icon-button">bar_chart</mat-icon>
+            Change Chart
+        </button>
+
+        <button mat-menu-item *ngIf= "mode == 'live'" (click)="timeShiftMode()" class="menu-item">
+            <mat-icon class="icon-button">fast_rewind</mat-icon>
+            Enter Time Shift
+        </button>
+  
+        <button mat-menu-item *ngIf= "mode == 'shift'" (click)="backToLive()" class="menu-item">
+            <mat-icon class="icon-button">fast_forward</mat-icon>
+            Exit Time Shift
+        </button>
+        <mat-menu #chartMenu="matMenu" class="matMenuContent">
+          <button mat-menu-item *ngFor="let option of graphOptions" (click)="changeChartType(option.label)" class="menu-item">
+            <img [src]="option.image" class="chart-icon" alt="{{option.label}}">
+            <span>{{ option.label }}</span>
+          </button>
+        </mat-menu>
+      </mat-menu>
+
+
+      <!-- <button *ngIf= "mode == 'live'" (click)="timeShiftMode()" mat-icon-button class="archive-button">
+        <mat-icon class="icon-button">archive</mat-icon>
+      </button>
+
+      <button *ngIf= "mode == 'shift'" (click)="backToLive()" mat-icon-button class="archive-button">
+        <mat-icon class="icon-button">live_tv</mat-icon>
+      </button> -->
+
+
       
-      <mat-menu #chartMenu="matMenu">
+      <!-- <button  mat-icon-button [matMenuTriggerFor]="chartMenu" class="settings-button">
+        <mat-icon class="icon-button">bar_chart</mat-icon>
+      </button> -->
+
+      <!-- <mat-menu #chartMenu="matMenu">
         <button mat-menu-item *ngFor="let option of graphOptions" (click)="changeChartType(option.label)">
           <img [src]="option.image" class="chart-icon" alt="{{option.label}}">
           <span>{{ option.label }}</span>
         </button>
-      </mat-menu>
+      </mat-menu> -->
+
+      
     </div>
     <!-- <span class="uav-name">Uav Number {{chartEntity.parameter.uavNumber}}</span> -->
   </div>
@@ -30,6 +71,8 @@
   [size]="size"
   [ngClass]="getGaugeValueClass(gaugeValue)"
 ></ngx-gauge>
+
+
  </div>
 
 <!-- [cap]="gaugeConfig().cap" -->
