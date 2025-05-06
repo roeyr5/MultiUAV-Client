@@ -1,7 +1,42 @@
+<button [matMenuTriggerFor]="mainMenu" mat-icon-button class="menu-icon" id="mainMenuButton">
+  <mat-icon class="icon-button" id="menu-icon-button">menu</mat-icon>
+</button>
 <div class="chart-container">
-  <div class="uav-name-container">
     <div class="settings-container">
-      <button mat-icon-button [matMenuTriggerFor]="chartMenu" class="settings-button">
+
+      <mat-menu #mainMenu="matMenu" class="matMenuContent">
+        <button mat-menu-item [matMenuTriggerFor]="chartMenu" class="menu-item">
+            <mat-icon class="icon-button">bar_chart</mat-icon>
+            Change Chart
+        </button>
+
+        <button mat-menu-item *ngIf= "mode == 'live'" (click)="timeShiftMode()" class="menu-item">
+            <mat-icon class="icon-button">fast_rewind</mat-icon>
+            Enter Time Shift
+        </button>
+  
+        <button mat-menu-item *ngIf= "mode == 'shift'" (click)="backToLive()" class="menu-item">
+            <mat-icon class="icon-button">fast_forward</mat-icon>
+            Exit Time Shift
+        </button>
+        <mat-menu #chartMenu="matMenu" class="matMenuContent">
+          <button mat-menu-item *ngFor="let option of graphOptions" (click)="changeChartType(option.label)" class="menu-item">
+            <img [src]="option.image" class="chart-icon" alt="{{option.label}}">
+            <span>{{ option.label }}</span>
+          </button>
+        </mat-menu>
+      </mat-menu>
+      
+      <!-- <button *ngIf= "mode == 'live'" (click)="timeShiftMode()" mat-icon-button class="archive-button">
+        <mat-icon class="icon-button">archive</mat-icon>
+      </button>
+
+      <button *ngIf= "mode == 'shift'" (click)="backToLive()" mat-icon-button class="archive-button">
+        <mat-icon class="icon-button">live_tv</mat-icon>
+      </button>
+
+
+      <button  mat-icon-button [matMenuTriggerFor]="chartMenu" class="settings-button">
         <mat-icon class="icon-button">bar_chart</mat-icon>
       </button>
       
@@ -11,7 +46,7 @@
           <span>{{ option.label }}</span>
         </button>
       </mat-menu>
-    </div>
+    </div> -->
     <!-- <span class="uav-name">Uav Number {{chartEntity.parameter.uavNumber}}</span> -->
   </div>
     <ngx-charts-line-chart
@@ -32,8 +67,6 @@
       <ng-container *ngFor="let series of graphValues"></ng-container>
     </ngx-charts-line-chart>
 </div>
-
-
 
 
 <!-- <div class="chart-container">

@@ -23,13 +23,13 @@ import {
   graphChartTypes,
   pieChartTypes,
   SingleChart,
-  ChangeChartType
+  ChangeChartType,
+  GetTimeShift,
 } from 'src/app/entities/enums/chartType.enum';
 import {
   IChartEntity,
   IGridsterParameter,
 } from 'src/app/entities/models/IChartEntity';
-
 
 @Component({
   selector: 'app-gridster-block',
@@ -75,35 +75,48 @@ export class GridsterBlockComponent implements OnInit {
   ];
 
   public chartId: string = '';
-  public selectedChartType:any;
+  public selectedChartType: any;
   ngZone = inject(NgZone);
 
   @Input() chartEntity!: IChartEntity;
   @Output() updateChange = new EventEmitter<boolean>();
   @Output() chartDataUpdated = new EventEmitter<ChangeChartType>();
+  @Output() timeShiftUpdate = new EventEmitter<GetTimeShift>();
 
-  changes!:ChangeChartType
+  changes!: ChangeChartType;
+  getTimeShift!: GetTimeShift;
+
   chart: Highcharts.Chart | undefined;
   chartOptions: Highcharts.Options = {};
 
   constructor() {}
 
   ngOnInit(): void {
-    console.log('chartEntity', this.chartEntity);
-    
+    // console.log('chartEntity', this.chartEntity);
+
     this.chartId = `chart-container-${Math.random().toString(36).substr(2, 9)}`;
   }
   public getTypes() {
     return SingleChart;
   }
 
-  public onChangeChart(newChartType:ChangeChartType):void{
-
+  public onChangeChart(newChartType: ChangeChartType): void {
     this.changes = {
       chartType: newChartType.chartType,
       chartEntity: this.chartEntity,
     };
     this.chartDataUpdated.emit(this.changes);
+  }
+
+  public onTimeShiftRequest(timeShiftMode: GetTimeShift): void {
+    
+    this.getTimeShift = {
+      minutesBack: timeShiftMode.minutesBack,
+      newChartType: timeShiftMode.newChartType,
+      oldChartType: timeShiftMode.oldChartType,
+      chartEntity: timeShiftMode.chartEntity,
+    };
+    this.timeShiftUpdate.emit(this.getTimeShift);
   }
 
   // public changeChartType(newChartType: SingleChart): void {
@@ -123,8 +136,6 @@ export class GridsterBlockComponent implements OnInit {
 
   //   this.chartDataUpdated.emit(this.changes)
   // }
-
-  
 
   //   createChart() {
   //     this.chartOptions = {

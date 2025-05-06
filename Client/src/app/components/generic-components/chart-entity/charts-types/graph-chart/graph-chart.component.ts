@@ -21,10 +21,15 @@ import {
   IGridsterParameter,
 } from 'src/app/entities/models/IChartEntity';
 ('');
-import { ChangeChartType } from 'src/app/entities/enums/chartType.enum';
+import { ChangeChartType, GetTimeShift } from 'src/app/entities/enums/chartType.enum';
 import { SingleChart } from 'src/app/entities/enums/chartType.enum';
 import { gaugeChartTypes } from 'src/app/entities/enums/chartType.enum';
 import { pieChartTypes } from 'src/app/entities/enums/chartType.enum';
+import { min, Subscription } from 'rxjs';
+import { ArchiveManyRequestDto } from 'src/app/entities/models/archiveDto';
+import { ArchiveService } from 'src/app/services/archive.service';
+import Swal from 'sweetalert2';
+
 
 @Component({
   selector: 'app-graph-chart',
@@ -59,16 +64,22 @@ export class GraphChartComponent implements OnInit, AfterViewInit {
         },
       ];
 
-  changes!:ChangeChartType
+  changes!:ChangeChartType;
+  // timeShiftChange!:GetTimeShift;
+
   @Output() newChartType = new EventEmitter<ChangeChartType>();
+  @Output() getTimeShift = new EventEmitter<GetTimeShift>();
   @Input() chartEntity!: IChartEntity;
+
+  public mode : string = 'live'
   public view: [number, number] = [0, 0];
-  public graphValues: GraphRecordsList[] = [];
+  public  graphValues: GraphRecordsList[] = [];
   public isGraphCleared: boolean = false;
   // public readonly MAX_MS_WITHOUT_UPDATE = 5000;
   private lastRecord: Number = 0;
+  private dataSub?: Subscription;
 
-  constructor(private cdr: ChangeDetectorRef, private ngZone: NgZone) {}
+  constructor(private cdr: ChangeDetectorRef, private ngZone: NgZone,private _archiveService: ArchiveService) {}
 
   ngAfterViewInit(): void {
     this.updateGraphSize();
@@ -81,6 +92,9 @@ export class GraphChartComponent implements OnInit, AfterViewInit {
   @ViewChild('graph', { static: false }) graph!: ElementRef;
 
   ngOnInit(): void {
+    console.log(1);
+    console.log(this.chartEntity);
+    
     this.graphValues = [
       {
         name: this.chartEntity.parameter.parameterName,
@@ -103,16 +117,22 @@ export class GraphChartComponent implements OnInit, AfterViewInit {
       );
     }, 20);
 
-    this.chartEntity.dataEvent.subscribe((data: any) => {
-      this.ngZone.run(() => {
-        if (!this.isGraphCleared) {
-          this.clearGraph();
-          this.isGraphCleared = true;
-        }
-        this.addData(data);
-        this.cdr.markForCheck();
+    if(this.chartEntity.minutesBack){
+      this.loadLastMinuteData(this.chartEntity.minutesBack);
+    }
+    else{
+      this.dataSub = this.chartEntity.dataEvent.subscribe((data: any) => {
+        this.ngZone.run(() => {
+          if (!this.isGraphCleared) {
+            this.clearGraph();
+            this.isGraphCleared = true;
+          }
+          this.addData(data);
+          this.cdr.markForCheck();
+        });
       });
-    });
+    }
+    
   }
 
   updateGraphSize() {
@@ -198,6 +218,70 @@ export class GraphChartComponent implements OnInit, AfterViewInit {
     this.newChartType.emit(this.changes);
   }
 
+  public backToLive():void{
+    console.log(1);
+    console.log(this.chartEntity);
+    
+    if(this.chartEntity.oldChartType!=null){
+      this.changeChartType(this.chartEntity.oldChartType);
+    }
+    else{
+      this.dataSub?.unsubscribe();
+      this.isGraphCleared = false;
+  
+       this.dataSub = this.chartEntity.dataEvent.subscribe((data: any) => {
+        
+        this.ngZone.run(() => {
+          
+          if (!this.isGraphCleared) {
+            
+            this.clearGraph();
+            this.isGraphCleared = true;
+          }
+          this.addData(data);
+          this.cdr.markForCheck();
+        });
+      });
+      this.mode= "live";
+    }
+   
+  }
+
+  public timeShiftMode():void{
+    Swal.fire({
+      title: 'Catch-up interval',
+      text: 'How many minutes back would you like to fetch?',
+      input: 'number',
+      inputLabel: 'Minutes',
+      inputPlaceholder: 'Enter number of minutes',
+      inputAttributes: {
+        min: '1',
+        step: '1'
+      },
+      showCancelButton: true,
+      confirmButtonText: 'Go',
+      cancelButtonText: 'Cancel',
+      inputValidator: (value) => {
+        if (!value) {
+          return 'You need to enter a number';
+        }
+        const n = Number(value);
+        if (isNaN(n) || n <= 0 || !Number.isInteger(n)) {
+          return 'Please enter a positive whole number';
+        }
+        return null; 
+      }
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const minutesBack = parseInt(result.value, 10);
+        console.log('User wants to go back', minutesBack, 'minutes');
+        // this.chartEntity.dataEvent.unsubscribe();
+        this.dataSub?.unsubscribe();
+        this.loadLastMinuteData(minutesBack);
+      }
+    });
+   
+  } 
   // initialize() {
   //   this.chart = Highcharts.chart(this.chartContainer.nativeElement, {
   //     chart: { type: 'line' },
@@ -230,4 +314,140 @@ export class GraphChartComponent implements OnInit, AfterViewInit {
   //   this.chart.destroy();
   //   this.initialize();
   // }
+
+  public loadLastMinuteData(minutes:number): void {
+    // console.log(
+    //   '[1] Load triggered, chartEntities:',
+    //   this.chartEntities,
+    //   'chartEntity:',
+    //   this.chartEntity
+    // );
+    this.mode = 'shift'
+
+    console.log(minutes);
+    
+    const pageNumber = 1;
+
+    const now = new Date();
+    const past = new Date(now.getTime() - minutes * 60 * 1000);
+
+    // if (this.chartEntities && this.chartEntities.length > 0) {
+    //   console.log('[3] Handling multiple entities case');
+      
+    //   const req: ArchiveManyRequestDto = {
+    //     StartDate: oneMinuteAgo,
+    //     EndDate: now,
+    //     UavNumbers: this.chartEntities.map((e) => e.parameter.uavNumber),
+    //     Communication: this.chartEntities[0].parameter.communication,
+    //     PageNumber: pageNumber,
+    //     PageSize: pageSize,
+    //     ParameterNames: [this.chartEntities[0].parameter.parameterName],
+    //   };
+
+    //   console.log('[4] Sending multi-entity request:', req);
+
+    //   this._archiveService.getMultiArchiveData(req).subscribe({
+    //     next: (result) => {
+    //       console.log('[5] Multi-entity response:', result);
+    //       console.log('[6] Raw packets:', result.archiveDataPackets);
+
+    //       this.graphValues = this.chartEntities!.map((entity) => {
+    //         const converted = this.convertApiPacketsToArchiveData(
+    //           result.archiveDataPackets,
+    //           entity.parameter.parameterName
+    //         );
+    //         console.log(
+    //           `[7] Processed data for ${entity.parameter.parameterName}:`,
+    //           converted
+    //         );
+    //         return {
+    //           name: entity.parameter.parameterName,
+    //           series: converted,
+    //         };
+    //       });
+
+    //       console.log('[8] Final graphValues:', this.graphValues);
+    //       this.cdr.markForCheck();
+    //     },
+    //     error: (err) => {
+    //       console.error('Request failed:', err);
+    //     },
+    //     complete: () => {
+    //       console.log('Request complete.');
+    //     },
+    //   });
+    // }
+     if (this.chartEntity) {
+      console.log('[10] Handling single entity case');
+
+
+      const req: ArchiveManyRequestDto = {
+        StartDate: past,
+        EndDate: now,
+        UavNumbers: [this.chartEntity.parameter.uavNumber],
+        Communication: this.chartEntity.parameter.communication,
+        PageNumber: pageNumber,
+        PageSize: 14*60*minutes,
+        ParameterNames: [this.chartEntity.parameter.parameterName],
+      };
+
+      console.log('[11] Sending single-entity request:', req);
+
+      this._archiveService.getMultiArchiveData(req).subscribe({
+        next: (result) => {
+        console.log('[12] Single-entity response:', result);
+
+        const responseData = Array.isArray(result) ? result[0] : result;
+        const rawPackets = responseData?.archiveDataPackets || [];  
+
+        const paramName = this.chartEntity!.parameter.parameterName;
+        const converted = this.convertApiPacketsToArchiveData(
+          rawPackets,
+          paramName
+        );
+        
+        console.log('[14] Processed data:', converted);
+        
+        this.graphValues = [{
+          name: paramName,
+          series: converted
+        }];
+        
+        console.log('[15] Final graphValues:', this.graphValues);
+        this.cdr.markForCheck();
+        this.mode=="shift";
+        console.log(this.mode);
+        
+        },
+        error: (err) => {
+          console.error('Request failed:', err);
+        },
+        complete: () => {
+          console.log('Request complete.');
+        },
+      });
+    }
+  }
+
+  private convertApiPacketsToArchiveData(
+    packets: any[],
+    parameterName: string
+  ): GraphValue[] {
+    const filtered = packets.filter(p => 
+      p.parameters && p.parameters[parameterName] !== undefined
+    );
+    
+    console.log(`[17] Filtered ${filtered.length}/${packets.length} packets for ${parameterName}`);
+    
+    return filtered.map((p) => {
+      const numericValue = +p.parameters[parameterName]; // Convert to number
+      if (isNaN(numericValue)) {
+        console.warn(`[18] Invalid number value for ${parameterName}:`, p.parameters[parameterName]);
+      }
+      return {
+        name: new Date(p.dateTime),
+        value: numericValue.toString()
+      };
+    });
+  }
 }

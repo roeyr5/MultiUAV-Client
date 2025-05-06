@@ -376,7 +376,7 @@ export class LiveComponent implements OnInit , AfterViewInit {
     const groupName = `${this.selectedUAV}${this.selectedCommunication}`;
 
     this.signalRService.joinGroup(groupName).subscribe({
-      next: () => console.log(`Joined group: ${groupName}`),
+      next: () => {},
       error: (err) => console.error('Error joining group', err),
     });
   }

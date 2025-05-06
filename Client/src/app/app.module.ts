@@ -57,6 +57,8 @@ import { ArchiveParametersComponent } from './components/generic-components/arch
 import { GraphArchiveComponent } from './components/generic-components/chart-entity/charts-types/graph-archive-chart/graph-archive-chart.component';
 import { TestComponent } from './components/test/test.component';
 import { OrchestratorComponent } from './components/Live_View/orchestrator/orchestrator.component';
+import { ToastrModule } from 'ngx-toastr';
+
 
 @NgModule({
   declarations: [
@@ -103,6 +105,11 @@ import { OrchestratorComponent } from './components/Live_View/orchestrator/orche
     FormsModule,
     HttpClientModule,
     BrowserAnimationsModule,
+    ToastrModule.forRoot({
+      positionClass: 'toast-top-right',
+      preventDuplicates: true,
+      timeOut: 3000,
+    }),
     NgxChartsModule,
     ImageModule,
     RippleModule,

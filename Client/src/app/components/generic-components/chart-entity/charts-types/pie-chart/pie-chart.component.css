@@ -13,3 +13,48 @@
 .uav-name{
   color: white;
 }
+
+
+.icon-button {
+  color: white !important;
+}
+
+#menu-icon-button {
+  top: 5px;
+  position: absolute;
+}
+
+::ng-deep .mat-mdc-menu-submenu-icon {
+  color: white !important;
+}
+
+::ng-deep .matMenuContent {
+  color: white !important;
+  background: rgb(47 41 62) !important;
+}
+
+.settings-container {
+  position: absolute;
+  top: 0;
+  right: 1rem;
+  color: white;
+}
+
+.uav-name, .settings-button{
+  color: white;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+.archive-button{
+  color: white;
+  position: absolute;
+  right: 30;
+  top: 0;
+}
+
+.menu-item {
+  display: flex;
+  height: 100%;
+  color: white !important;
+}

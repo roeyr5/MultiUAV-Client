@@ -69,9 +69,6 @@ h2 {
 } */
 
 .parameter-container {
-  flex: 1 1 300px; /* Grow and shrink with 300px minimum */
-  min-width: 100%;
-  max-width: calc(33% - 1rem); /* 3 columns with gap */
   box-sizing: border-box;
   border: 1px solid #aaa;
   padding: 0.5rem;

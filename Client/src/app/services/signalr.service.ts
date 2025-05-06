@@ -93,7 +93,7 @@ export class SignalRService {
   public addParameter(parameter:IcdParameter): void {
     this.hubConnection.invoke('AddParameter', parameter.uavNumber+parameter.communication, parameter.parameterName)
       .then(() => {
-        console.log(`Parameter added: ${parameter.parameterName} for UAV: ${parameter.uavNumber}`);
+        // console.log(`Parameter added: ${parameter.parameterName} for UAV: ${parameter.uavNumber}`);
       })
       .catch((error) => {
         console.error('Error adding parameter:', error);
