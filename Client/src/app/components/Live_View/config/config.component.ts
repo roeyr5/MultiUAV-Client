@@ -82,6 +82,8 @@ export class ConfigComponent implements OnInit, OnDestroy {
 
     this.simulatorservice.telemetryUavs().subscribe((response) => {
       this.uavsTelemetry = response;
+      console.log(response);
+      
     });
   }
 
@@ -284,8 +286,8 @@ export class ConfigComponent implements OnInit, OnDestroy {
   //     }
   // }
 
-  protected pauseTelemetry(uavValue: any, address: string, port: number) {
-    this.simulatorservice.pauseTelemetry(port, address).subscribe(
+  protected pauseTelemetry(channelDto: channeldto) {
+    this.simulatorservice.pauseTelemetry(channelDto.uavNumber, channelDto.channel).subscribe(
       (response) => {
         console.log('Paused listening', response);
         Swal.fire({
@@ -295,7 +297,7 @@ export class ConfigComponent implements OnInit, OnDestroy {
           showConfirmButton: true,
           timer: 2000,
         });
-        uavValue.status = uavValue.status == 'run' ? 'paused' : 'run';
+        channelDto.status = !channelDto.status;
       },
       (error) => {
         console.error('Error pausing UAV:', error);
@@ -308,8 +310,8 @@ export class ConfigComponent implements OnInit, OnDestroy {
     );
   }
 
-  protected continueTelemetry(uavValue: any, address: string, port: number) {
-    this.simulatorservice.continueListening(port, address).subscribe(
+  protected continueTelemetry(channelDto :channeldto) {
+    this.simulatorservice.continueListening(channelDto.uavNumber, channelDto.channel).subscribe(
       (response) => {
         console.log('Continue listening', response);
         Swal.fire({
@@ -319,7 +321,7 @@ export class ConfigComponent implements OnInit, OnDestroy {
           showConfirmButton: true,
           timer: 2000,
         });
-        uavValue.status = uavValue.status == 'paused' ? 'run' : 'paused';
+        channelDto.status = !channelDto.status;
       },
       (error) => {
         console.error('Error continue listening UAV:', error);

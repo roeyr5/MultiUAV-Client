@@ -2,6 +2,7 @@
 .table-container {
   width: 100%;
   overflow-x: auto;
+  height:32vh;
 }
 
 .parameter-name {
@@ -75,6 +76,7 @@ h2 {
   border-radius: 8px;
   background-color: #291b43;
   margin: 0.5rem;
+  height: 41vh;
 }
 
 

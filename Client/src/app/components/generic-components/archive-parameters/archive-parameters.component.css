@@ -1,7 +1,14 @@
 .example-container {
   height: 100%;
 }
+.parameters-container {
+  height: 50%;
+  overflow: auto;
+}
 
+.mat-paginator {
+  background: 40394e;
+}
 .sidebar-content {
   background-color: #40394e;
   color: white;
@@ -18,8 +25,6 @@
   color: white !important;
 }
 .sidebar-toggle-btn {
-  top: 10px;
-  left: 10px;
   background-color: #2f293e;
   background: #2f293e;
   color: white;
@@ -64,7 +69,11 @@
   background-color: #40394e !important;
   color: white !important;
 }
-
+.top-buttons {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+}
 ::ng-deep .mat-mdc-text-field-wrapper {
   background-color: transparent !important;
   border: none !important;
@@ -73,6 +82,9 @@
 
 ::ng-deep .mat-mdc-paginator-icon {
   fill: white !important;
+}
+::ng-deep .mat-mdc-paginator-container{
+  background: #2f293e !important;
 }
 
 ::ng-deep .mat-mdc-paginator-icon {
@@ -146,6 +158,7 @@
   align-items: center;
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
+  height: 23%;
 }
 
 .parameter-unSelected {
@@ -170,7 +183,7 @@
   justify-content: center;
 }
 .submit-button {
-  margin-top: 20px;
+  margin-top: 4rem;
   padding: 10px 15px;
   background-color: #b97cf3;
   color: white;
@@ -201,7 +214,7 @@ html {
 }
 
 .mat-mdc-paginator {
-  background-color: #7862b3 !important;
+  background-color: #40394e !important;
   margin-top: 0.4rem;
 }
 ::ng-deep .mat-mdc-paginator-range-label {
@@ -367,6 +380,7 @@ table.side-nav-row {
 ::ng-deep .mat-drawer-inner-container {
   overflow-y: hidden !important;
   overflow-x: hidden !important;
+  background: #2f293e !important;
 }
 .mat-drawer-container {
   overflow: visible;
