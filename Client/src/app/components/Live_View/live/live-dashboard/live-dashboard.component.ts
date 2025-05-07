@@ -102,6 +102,7 @@ export class LiveDashboardComponent implements AfterViewChecked {
       });
     })
     
+    
   }
 
   private updateChartData( parameters: { [key: string]: string }, incomingFullUavName: string ): void {

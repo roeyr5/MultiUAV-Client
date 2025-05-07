@@ -1,7 +1,6 @@
 <div class="container">
   <div class="top">
     <div class="top-buttons">
-      <button (click)="showSuccess()"></button>
       <button mat-button class="button" (click)="toggleSideBar()">
         <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" width="25" height="25" viewBox="0 0 32 32" version="1.1">
     
@@ -31,7 +30,6 @@
 
         <div class="gridster-item-header">
           <span class="paramter-name">{{item.parameterName}}</span>
-          <button class="merge-split-buttton" (click)="archiveGraphs(item)">{{item.isArchive ? 'Live' : 'Archive'}}</button>
           <button class="merge-split-buttton" (click)="concatGraphs(item)" *ngIf="item.chartEntitys[0].parameter.units!=='Value'" >{{item.isConcatenated ? 'Split' : 'Merge'}}</button>
         </div>
 

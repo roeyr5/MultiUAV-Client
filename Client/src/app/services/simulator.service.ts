@@ -4,6 +4,12 @@ import { Observable } from 'rxjs';
 import { channeldto } from '../entities/models/channeldto';
 import { path } from 'd3';
 
+export interface simulatorDto {
+  uavNumber: number;
+  channelType: string;
+}
+
+
 @Injectable({
   providedIn: 'root',
 })
@@ -42,18 +48,20 @@ export class SimulatorService {
       `${this.ROOT_URL}/simulator/GetChannels`
     );
   }
-  public pauseTelemetry(port: number, address: string): Observable<any> {
-    return this.http.post(`${this.ROOT_URL}/simulator/Pause`, {
-      port: port,
-      address: address,
+
+  public pauseTelemetry(uavNumber: number, channelType: string): Observable<any> {
+    return this.http.post(`${this.ROOT_URL}/simulator/Stop`, {
+      uavNumber: uavNumber,
+      channelType: channelType,
     });
   }
-  public continueListening(port: number, address: string): Observable<any> {
+  public continueListening(uavNumber: number, channelType: string): Observable<any> {
     return this.http.post(`${this.ROOT_URL}/simulator/Continue`, {
-      port: port,
-      address: address,
+      uavNumber: uavNumber,
+      channelType: channelType,
     });
   }
+
   public deleteChannel(
     port: number,
     address: string,

@@ -1,17 +1,22 @@
-<button mat-icon-button (click)="sidenav.toggle()" class="sidebar-toggle-btn">
-  ☰
-</button>
-<mat-paginator 
-  #paginator
-  [length]="10000"
-  [pageSize]="pageSize"
-  [pageIndex]="pageNumber - 1"
-  [pageSizeOptions]="[5, 10, 25, 100]"
-  (page)="onPageChange($event)"
->
-</mat-paginator>
+<div class="top-buttons">
 
+  <mat-paginator  class="mat-paginator"
+    #paginator
+    [length]="10000"
+    [pageSize]="pageSize"
+    [pageIndex]="pageNumber - 1"
+    [pageSizeOptions]="[5, 10, 25, 100]"
+    (page)="onPageChange($event)"
+    
+  >
+  
+  </mat-paginator>
+  <button mat-icon-button (click)="sidenav.toggle()" class="sidebar-toggle-btn">
+    ☰
+  </button>
+</div>
 <mat-sidenav-container class="example-container">
+  
   <mat-sidenav #sidenav mode="side" opened class="sidebar-content">
     <div class="parameters-selection-container">
       <mat-form-field class="mat-form-class">
@@ -69,24 +74,27 @@
         <button class="submit-button" (click)="submitButton()">submit</button>
       </div>
     </div>
-    <div class="parameters-selection">
-      <div
-        class="parameters-class"
-        *ngFor="let parameter of filteredParameters"
-        class="parameter-item"
-        (click)="onChooseParameter(parameter)"
-      >
-        <span
-          [ngClass]="
-            isParameterSelected(parameter)
-              ? 'parameter-selected'
-              : 'parameter-unSelected'
-          "
+    <div class="parameters-container">
+      <div class="parameters-selection">
+        <div
+          class="parameters-class"
+          *ngFor="let parameter of filteredParameters"
+          class="parameter-item"
+          (click)="onChooseParameter(parameter)"
         >
-          {{ parameter }}
-        </span>
+          <span
+            [ngClass]="
+              isParameterSelected(parameter)
+                ? 'parameter-selected'
+                : 'parameter-unSelected'
+            "
+          >
+            {{ parameter }}
+          </span>
+        </div>
       </div>
     </div>
+  
   </mat-sidenav>
   <mat-sidenav-content>
     <div class="tables-container">

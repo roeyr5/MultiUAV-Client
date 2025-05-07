@@ -1,13 +1,22 @@
 import { Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
 import { Observable, Subject } from 'rxjs';
-import { SimulatorInfo, TelemetryDeviceInfo } from '../entities/models/orchestratorEntity';
+import {
+  SimulatorInfo,
+  TelemetryDeviceInfo,
+} from '../entities/models/orchestratorEntity';
 
 export interface OrchestratorUpdatePayload {
   [telemetryDeviceId: number]: {
     device: TelemetryDeviceInfo;
     simulators: SimulatorInfo[];
   };
+}
+
+export interface SimulatorReassign {
+  uavNumber: number;
+  oldDeviceId: number;
+  newDeviceId: number;
 }
 
 @Injectable({
@@ -21,7 +30,6 @@ export class OrchestratorService {
 
   private connectionStatus = new Subject<boolean>();
   public connectionStatus$ = this.connectionStatus.asObservable();
-  
 
   private timeoutPromise = (ms: number) =>
     new Promise((_, reject) => setTimeout(() => reject('Timeout'), ms));
@@ -34,12 +42,15 @@ export class OrchestratorService {
     this.connection = new signalR.HubConnectionBuilder()
       .withUrl('http://localhost:5000/livehub', {
         transport: signalR.HttpTransportType.WebSockets, // Force WebSockets
-        skipNegotiation: true // Skip negotiation if using WebSockets exclusively
+        skipNegotiation: true, // Skip negotiation if using WebSockets exclusively
       })
       .withAutomaticReconnect({
         nextRetryDelayInMilliseconds: (retryContext) => {
-          return Math.min(retryContext.previousRetryCount * 2, this.maxRetryTimeout);
-        }
+          return Math.min(
+            retryContext.previousRetryCount * 2,
+            this.maxRetryTimeout
+          );
+        },
       })
       .configureLogging(signalR.LogLevel.Information)
       .build();
@@ -55,7 +66,8 @@ export class OrchestratorService {
 
   public startConnection(): Observable<void> {
     return new Observable((observer) => {
-      this.connection.start()
+      this.connection
+        .start()
         .then(() => {
           this.connectionStatus.next(true);
           observer.next();
@@ -73,24 +85,44 @@ export class OrchestratorService {
     setTimeout(() => {
       this.startConnection().subscribe({
         error: () => {
-          this.retryTimeout = Math.min(this.retryTimeout * 2, this.maxRetryTimeout);
+          this.retryTimeout = Math.min(
+            this.retryTimeout * 2,
+            this.maxRetryTimeout
+          );
           this.retryConnection();
-        }
+        },
       });
     }, this.retryTimeout);
   }
 
   public listenToOrchestratorEvents(): Observable<OrchestratorUpdatePayload> {
     return new Observable((observer) => {
-      this.connection.on('OrchestratorUpdate', (data: OrchestratorUpdatePayload) => {
+      this.connection.on(
+        'OrchestratorUpdate',
+        (data: OrchestratorUpdatePayload) => {
+          observer.next(data);
+        }
+      );
+    });
+  }
+
+  public newAssignmentEvent(): Observable<SimulatorReassign> {
+    return new Observable((observer) => {
+      this.connection.on('SimulatorAssignment', (data: SimulatorReassign) => {
         observer.next(data);
       });
     });
   }
 
+  public newDeviceEvent(): Observable<number> {
+    return new Observable((observer) => {
+      this.connection.on('DeviceCreated', (data: number) => {
+        observer.next(data);
+      });
+    });
+  }
   public stopConnection(): void {
     this.isManualDisconnect = true;
     this.connection.stop();
   }
 }
-
