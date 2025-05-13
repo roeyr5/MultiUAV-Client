@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
 
-  .devices-info{
+  .devices-info {
     border-radius: 2rem;
     padding: 0.5rem;
     margin-left: 2rem;
@@ -30,11 +30,15 @@
       .device-port {
         margin-right: 2rem;
       }
-      .simulators-list{
+      .simulators-list {
         display: flex;
       }
+      .system-resources-container{
+        display: flex;
+        flex-direction: column;
+      }
 
-      .uav-number{
+      .uav-number {
         border: 1px solid #ddd;
         border-radius: 0.5rem;
         padding: 1rem;
@@ -46,11 +50,10 @@
       }
     }
   }
-  .data-waiting{
+  .data-waiting {
     color: #87cdff;
     margin-top: 2rem;
   }
-  
 }
 .device-block h2 {
   color: #a49fe4;

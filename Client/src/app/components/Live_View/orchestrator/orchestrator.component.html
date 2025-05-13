@@ -4,37 +4,50 @@
     <span class="devices-info">Total Devices: {{ totalDevices }}</span>
     <span class="devices-info">Active UAVs: {{ activeUAVs }}</span>
   </div>
- 
-  <ng-container  *ngIf="orchestratorData && objectKeys(orchestratorData).length > 0; else noData">
+
+  <ng-container
+    *ngIf="
+      orchestratorData && objectKeys(orchestratorData).length > 0;
+      else noData
+    "
+  >
     <div class="devices-container">
-      <div *ngFor="let deviceId of objectKeys(orchestratorData)" class="device-block">
+      <div
+        *ngFor="let deviceId of objectKeys(orchestratorData)"
+        class="device-block"
+      >
         <h2>Telemetry Device ID 📡: {{ deviceId }}</h2>
-  
+
         <div class="ports">
           <span class="device-port">
             Device Port 🔌: {{ orchestratorData[+deviceId].device.devicePort }}
           </span>
           <span class="listener-port">
-            Listener Port 📥: {{ orchestratorData[+deviceId].device.listenerPort }}
+            Listener Port 📥:
+            {{ orchestratorData[+deviceId].device.listenerPort }}
           </span>
         </div>
-  
-        <ng-container *ngIf="orchestratorData[+deviceId].simulators.length > 0; else noSim">
+
+        <ng-container
+          *ngIf="orchestratorData[+deviceId].simulators.length > 0; else noSim"
+        >
           <h4>Assigned Simulators 🛰️:</h4>
           <div class="simulators-list">
             <div
-              *ngFor="let simulator of orchestratorData[+deviceId].simulators" class="simulator-item">
-                <span class="uav-number">UAV #{{ simulator.uavNumber }} </span>
+              *ngFor="let simulator of orchestratorData[+deviceId].simulators"
+              class="simulator-item"
+            >
+              <span class="uav-number">UAV #{{ simulator.uavNumber }} </span>
             </div>
           </div>
+
         </ng-container>
-  
+
         <ng-template #noSim>
           <span class="no-simulators">No simulators assigned.</span>
         </ng-template>
       </div>
     </div>
-   
   </ng-container>
 
   <ng-template #noData>

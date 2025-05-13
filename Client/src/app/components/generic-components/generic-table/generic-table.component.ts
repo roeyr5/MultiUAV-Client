@@ -51,29 +51,16 @@ export class GenericTableComponent implements OnChanges  {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (changes['paramTables']) {
-      console.log('Child received new data:', this.paramTables);
-      this.logDataStructure();
-    }
+    // if (changes['paramTables']) {
+    //   // console.log('Child received new data:', this.paramTables);
+    //   this.logDataStructure();
+    // }
   }
 
-  private logDataStructure() {
-    console.log('=== Child Component Data Analysis ===');
-    this.parameters.forEach(param => {
-      const uavs = this.getUAVs(param);
-      console.log(
-        `Parameter: ${param.padEnd(10)} UAVs: ${uavs.length}`,
-        `Entries: ${this.getMaxEntries(param)}`
-      );
-      
-      uavs.forEach(uav => {
-        console.log(`  UAV ${uav}:`, 
-          `First entry: ${this.paramTables[param][uav][0]?.dateTime.toISOString()}`,
-          `Last entry: ${this.paramTables[param][uav].slice(-1)[0]?.dateTime.toISOString()}`
-        );
-      });
-    });
-  }
+  // private logDataStructure() {
+  //   this.parameters.forEach(param => {
+  //   });
+  // }
 
 
   // private formatTableData(data: ArchiveParameter[]): void {

@@ -10,6 +10,8 @@ export interface OrchestratorUpdatePayload {
   [telemetryDeviceId: number]: {
     device: TelemetryDeviceInfo;
     simulators: SimulatorInfo[];
+    cpuUsage: number;
+    ramUsage: number;
   };
 }
 
