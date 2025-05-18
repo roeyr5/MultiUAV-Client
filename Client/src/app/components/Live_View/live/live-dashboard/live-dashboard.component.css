@@ -79,14 +79,6 @@
     }
   }
 }
-app-concat-graph{
-  text-align: center;
-  width: 100%;
-  flex: 1 1 auto;
-  display: flex;
-  height: 100% !important;
-  background-color: #40394e;
-}
 
 app-side-bar-parameters {
   background-color: #40394e;

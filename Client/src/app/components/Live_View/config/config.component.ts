@@ -446,8 +446,6 @@ export class ConfigComponent implements OnInit, OnDestroy {
           />
         </div>
         
-        <button id="random-button" class="swal2-confirm swal2-styled">Generate Random Values</button>
-
         <div id="pcapInputs" style="display:none;">
           <input
             id="uav-number"

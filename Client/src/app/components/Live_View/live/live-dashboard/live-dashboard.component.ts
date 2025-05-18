@@ -10,18 +10,26 @@ import {
   ViewChild,
   ViewChildren,
 } from '@angular/core';
-import { DisplayGrid, GridsterConfig, GridsterItem, GridType } from 'angular-gridster2';
+import {
+  DisplayGrid,
+  GridsterConfig,
+  GridsterItem,
+  GridType,
+} from 'angular-gridster2';
 import { GridsterBlockComponent } from 'src/app/components/generic-components/chart-entity/charts-types/gridster-block/gridster-block.component';
-import { ChartType, SingleChart,ChangeChartType, GetTimeShift } from 'src/app/entities/enums/chartType.enum';
+import {
+  ChartType,
+  SingleChart,
+  ChangeChartType,
+  GetTimeShift,
+} from 'src/app/entities/enums/chartType.enum';
 import { IcdParameter } from 'src/app/entities/IcdParameter';
 import {
   gaugeChartTypes,
   graphChartTypes,
   pieChartTypes,
 } from 'src/app/entities/enums/chartType.enum';
-import {
-  TelemetryGridsterItem,
-} from 'src/app/entities/models/chartitem';
+import { TelemetryGridsterItem } from 'src/app/entities/models/chartitem';
 import { IChartEntity } from 'src/app/entities/models/IChartEntity';
 import { SignalRService } from 'src/app/services/signalr.service';
 import { SimulatorService } from 'src/app/services/simulator.service';
@@ -29,8 +37,11 @@ import { UserService } from 'src/app/services/user.service';
 import { ParameterDataDto } from 'src/app/entities/models/parameterDataDto';
 import { v4 as uuidv4 } from 'uuid';
 import Swal from 'sweetalert2';
-import { createPresetDto, PresetItem } from 'src/app/entities/models/presetItem';
-import { stringify , parse } from 'flatted';
+import {
+  createPresetDto,
+  PresetItem,
+} from 'src/app/entities/models/presetItem';
+import { stringify, parse } from 'flatted';
 import { GridsterItems } from 'src/app/entities/models/presetItem';
 import { InsideParameterDTO } from 'src/app/entities/models/addParameter';
 import { ToastrService } from 'ngx-toastr';
@@ -47,7 +58,7 @@ export class LiveDashboardComponent implements AfterViewChecked {
     private liveTelemetryData: SignalRService,
     private cdRef: ChangeDetectorRef,
     private ngZone: NgZone,
-    private toastrService : ToastrService
+    private toastrService: ToastrService
   ) {}
 
   ngAfterViewChecked() {
@@ -55,16 +66,25 @@ export class LiveDashboardComponent implements AfterViewChecked {
   }
 
   // @ViewChildren(ChartComponent) charts!: QueryList<ChartComponent>;
-  public presetParameters:InsideParameterDTO[] = [];
+  public presetParameters: InsideParameterDTO[] = [];
 
-  @Input() public presetDashboard : PresetItem[] = [];
-  @Input() public presetName:string = '';
+  @Input() public presetDashboard: PresetItem[] = [];
+  @Input() public presetName: string = '';
 
   protected uavsList: number[] = [6];
-  protected parametersMap: Map<string, ParameterDataDto[]> = new Map<string,ParameterDataDto[]>();
-  protected selectedParametersMap: Map<number,Map<string, ParameterDataDto[]>> = new Map<number, Map<string, ParameterDataDto[]>>();
+  protected parametersMap: Map<string, ParameterDataDto[]> = new Map<
+    string,
+    ParameterDataDto[]
+  >();
+  protected selectedParametersMap: Map<
+    number,
+    Map<string, ParameterDataDto[]>
+  > = new Map<number, Map<string, ParameterDataDto[]>>();
 
-  @Input() public parametersChartEntityMap: Map<string, IChartEntity> = new Map<string,IChartEntity>();
+  @Input() public parametersChartEntityMap: Map<string, IChartEntity> = new Map<
+    string,
+    IChartEntity
+  >();
 
   public groupsJoined: string[] = [];
 
@@ -84,14 +104,14 @@ export class LiveDashboardComponent implements AfterViewChecked {
     this.presetBuild();
   }
 
-  private presetBuild():void{
-    console.log("presetName" , this.presetName);
-    
+  private presetBuild(): void {
+    console.log('presetName', this.presetName);
+
     this.buildPresetDahboard(this.presetDashboard);
   }
 
   private startConnection(): Promise<void> {
-    return new Promise((resolve)=>{
+    return new Promise((resolve) => {
       this.liveTelemetryData.startConnection().subscribe(() => {
         this.liveTelemetryData.receiveMessage().subscribe((message) => {
           const parameterMap = message.message;
@@ -100,12 +120,13 @@ export class LiveDashboardComponent implements AfterViewChecked {
         });
         resolve();
       });
-    })
-    
-    
+    });
   }
 
-  private updateChartData( parameters: { [key: string]: string }, incomingFullUavName: string ): void {
+  private updateChartData(
+    parameters: { [key: string]: string },
+    incomingFullUavName: string
+  ): void {
     Object.entries(parameters).forEach(([parameterName, parameterValue]) => {
       let parameterKey = `${parameterName}_${incomingFullUavName}`;
       const chartEntity = this.parametersChartEntityMap.get(parameterKey);
@@ -137,155 +158,143 @@ export class LiveDashboardComponent implements AfterViewChecked {
   public onCloseSideBar(): void {
     this.isSideBarOpen = false;
   }
-  public onChangeChart(chartChanges : ChangeChartType):void{
+  public onChangeChart(chartChanges: ChangeChartType): void {
     chartChanges.chartEntity.chartType = chartChanges.chartType;
   }
-  public onTimeShiftRequest(timeShiftChanges : GetTimeShift ):void{
-    
+  public onTimeShiftRequest(timeShiftChanges: GetTimeShift): void {
     timeShiftChanges.chartEntity.chartType = timeShiftChanges.newChartType;
     timeShiftChanges.chartEntity.oldChartType = timeShiftChanges.oldChartType;
     timeShiftChanges.chartEntity.minutesBack = timeShiftChanges.minutesBack;
     console.log(timeShiftChanges);
-    
   }
 
-  public async savePreset() : Promise<void> {
-         
+  public async savePreset(): Promise<void> {
     const email = localStorage.getItem('email');
     if (email !== null) {
-
-
-      if(this.presetName != 'null'){
-
+      if (this.presetName != 'null') {
         const presetUpdate: createPresetDto = {
           email: email,
-          presetName:this.presetName,
-          presetItem: this.buildDashboardItemsDto()
+          presetName: this.presetName,
+          presetItem: this.buildDashboardItemsDto(),
         };
 
         const { value: saveOption } = await Swal.fire({
-          icon: "question",
+          icon: 'question',
           title: `Do you want to save it as "${this.presetName}" or save it as a new one?`,
           showDenyButton: true,
           showCancelButton: true,
           confirmButtonText: `Save as ${this.presetName}`,
-          denyButtonText: "Save as new",
-          cancelButtonText: "Cancel"
+          denyButtonText: 'Save as new',
+          cancelButtonText: 'Cancel',
         });
-        
+
         if (saveOption === true) {
           this.userservice.updatePreset(presetUpdate).subscribe((res) => {
-            console.log("Preset updated successfully", res);
+            console.log('Preset updated successfully', res);
 
             Swal.fire({
-              icon: "success",
+              icon: 'success',
               title: res.message,
               text: res.message,
             });
           });
-        } 
-        else if (saveOption === false) {
-
+        } else if (saveOption === false) {
           const { value: presetName } = await Swal.fire({
-            title: "Input preset name",
-            input: "text",
-            inputLabel: "Your preset name for this mission",
-            inputPlaceholder: "Enter your preset name "
-          }); 
-    
+            title: 'Input preset name',
+            input: 'text',
+            inputLabel: 'Your preset name for this mission',
+            inputPlaceholder: 'Enter your preset name ',
+          });
+
           const presetCreate: createPresetDto = {
             email: email,
-            presetName:presetName,
-            presetItem: this.buildDashboardItemsDto()
+            presetName: presetName,
+            presetItem: this.buildDashboardItemsDto(),
           };
 
-          this.userservice.createPreset(presetCreate).subscribe((res) => {
-            // console.log("Preset created successfully", res);
-            console.log(res);
-            
-            if(res.statusCode == 200){
-              Swal.fire({
-                icon: "success",
-                title: res.message,
-                text: res.message,
-              });
+          this.userservice.createPreset(presetCreate).subscribe(
+            (res) => {
+              // console.log("Preset created successfully", res);
+              console.log(res);
+
+              if (res.statusCode == 200) {
+                Swal.fire({
+                  icon: 'success',
+                  title: res.message,
+                  text: res.message,
+                });
+              }
+            },
+            (error) => {
+              if (error.status == 300) {
+                Swal.fire({
+                  icon: 'info',
+                  title: error.error.message,
+                  text: error.error.message,
+                });
+              } else {
+                Swal.fire({
+                  icon: 'error',
+                  title: 'An error occurred',
+                  text: error.message,
+                });
+              }
             }
-           
-          },(error) =>{
-            if (error.status == 300) {
-              Swal.fire({
-                icon: "info",
-                title: error.error.message,
-                text: error.error.message,
-              });
-            } 
-            else {
-              Swal.fire({
-                icon: "error",
-                title: "An error occurred",
-                text: error.message ,
-              });
-            }
-          }
-        );
+          );
         } else {
-          console.log("User cancelled the action.");
+          console.log('User cancelled the action.');
         }
-        
-       
-      }
-      else{
+      } else {
         const { value: presetName } = await Swal.fire({
-          title: "Input preset name",
-          input: "text",
-          inputLabel: "Your preset name for this mission",
-          inputPlaceholder: "Enter your preset name "
-        }); 
-  
+          title: 'Input preset name',
+          input: 'text',
+          inputLabel: 'Your preset name for this mission',
+          inputPlaceholder: 'Enter your preset name ',
+        });
+
         if (!presetName) {
-          console.log("User cancelled or entered no name.");
+          console.log('User cancelled or entered no name.');
           return;
         }
 
         const presetCreate: createPresetDto = {
           email: email,
-          presetName:presetName,
-          presetItem: this.buildDashboardItemsDto()
+          presetName: presetName,
+          presetItem: this.buildDashboardItemsDto(),
         };
-        
-        this.userservice.createPreset(presetCreate).subscribe((res)=>{
-          if(res.statusCode == 200){
-            Swal.fire({
-              icon: "success",
-              title: res.message,
-              text: res.message,
-            });
+
+        this.userservice.createPreset(presetCreate).subscribe(
+          (res) => {
+            if (res.statusCode == 200) {
+              Swal.fire({
+                icon: 'success',
+                title: res.message,
+                text: res.message,
+              });
+            }
+          },
+          (error) => {
+            if (error.status == 300) {
+              console.log(error);
+              Swal.fire({
+                icon: 'info',
+                title: error.error.message,
+                text: error.error.message,
+              });
+            } else {
+              Swal.fire({
+                icon: 'error',
+                title: 'An error occurred',
+                text: error.message,
+              });
+            }
           }
-         
-        },
-        (error) =>{
-          if (error.status == 300) {
-            console.log(error)
-            Swal.fire({
-              icon: "info",
-              title: error.error.message,
-              text: error.error.message,
-            });
-          } 
-          else {
-            Swal.fire({
-              icon: "error",
-              title: "An error occurred",
-              text: error.message ,
-            });
-          }
-        })
+        );
       }
-      
     }
   }
 
-  public buildDashboardItemsDto():  PresetItem[] {
+  public buildDashboardItemsDto(): PresetItem[] {
     let dashboardItemsDto: PresetItem[] = [];
     for (const item of this.telemetryGridsterDashboard) {
       let dashboardItem: PresetItem = {
@@ -296,34 +305,40 @@ export class LiveDashboardComponent implements AfterViewChecked {
         communication: item.parameterComm,
         isConcat: item.isConcatenated,
         parameterName: item.parameterName,
-        telemetryItems: this.buildDashboardItemsChart(item.chartEntitys)
-      }
-      dashboardItemsDto.push(dashboardItem)
+        telemetryItems: this.buildDashboardItemsChart(item.chartEntitys),
+      };
+      dashboardItemsDto.push(dashboardItem);
     }
     return dashboardItemsDto;
   }
 
-  public buildDashboardItemsChart(chartEntitys: IChartEntity[]): GridsterItems[] {
+  public buildDashboardItemsChart(
+    chartEntitys: IChartEntity[]
+  ): GridsterItems[] {
     let gridsterChartItems: GridsterItems[] = [];
     for (const chartEntity of chartEntitys) {
       let girdsterChartItem: GridsterItems = {
         chartType: chartEntity.chartType,
-        parameter: chartEntity.parameter
-      }
+        parameter: chartEntity.parameter,
+      };
       gridsterChartItems.push(girdsterChartItem);
     }
     return gridsterChartItems;
   }
-  
+
   public toggleSideBar(): void {
     this.isSideBarOpen = !this.isSideBarOpen;
   }
 
   public onAddParameter(parameter: InsideParameterDTO): void {
-    
     const id = uuidv4();
 
-    let itemToAdd: IChartEntity = new IChartEntity(id,parameter.parameter,parameter.chartType,new EventEmitter<any>());
+    let itemToAdd: IChartEntity = new IChartEntity(
+      id,
+      parameter.parameter,
+      parameter.chartType,
+      new EventEmitter<any>()
+    );
 
     const existingItem = this.telemetryGridsterDashboard.find(
       (item) =>
@@ -332,16 +347,23 @@ export class LiveDashboardComponent implements AfterViewChecked {
     );
 
     if (existingItem) {
+      if (this.telemetryGridsterDashboard.length >= 16) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Limit Reached',
+          text: 'You can add a maximum of 16 parameters.',
+        });
+        return;
+      }
       const uavExists = existingItem.chartEntitys.some(
-        (chartEntity) => chartEntity.parameter.uavNumber === parameter.parameter.uavNumber
+        (chartEntity) =>
+          chartEntity.parameter.uavNumber === parameter.parameter.uavNumber
       );
 
       if (!uavExists) {
         existingItem.chartEntitys.push(itemToAdd);
       }
-
-    }
-    else {
+    } else {
       this.telemetryGridsterDashboard.push({
         cols: parameter.cols,
         rows: parameter.rows,
@@ -350,13 +372,15 @@ export class LiveDashboardComponent implements AfterViewChecked {
         parameterComm: parameter.parameterComm,
         parameterName: parameter.parameterName,
         chartEntitys: [itemToAdd],
-        isConcatenated:false,
+        isConcatenated: false,
         isArchive: false,
       });
     }
 
-
-    this.parametersChartEntityMap.set(`${parameter.parameterName}_${parameter.parameter.uavNumber}${parameter.parameter.communication}`,itemToAdd);
+    this.parametersChartEntityMap.set(
+      `${parameter.parameterName}_${parameter.parameter.uavNumber}${parameter.parameter.communication}`,
+      itemToAdd
+    );
     this.liveTelemetryData.addParameter(parameter.parameter);
     this.joinGroup(parameter.parameter);
   }
@@ -391,28 +415,26 @@ export class LiveDashboardComponent implements AfterViewChecked {
     this.liveTelemetryData.removeParameter(parameter);
   }
 
-  private buildPresetDahboard(presetItems :PresetItem[]){
-
-    const arr:InsideParameterDTO[] = [];
-    presetItems.forEach((item)=>{
-      item.telemetryItems.forEach((element)=>{
-        let InsideParameter : InsideParameterDTO = {
+  private buildPresetDahboard(presetItems: PresetItem[]) {
+    const arr: InsideParameterDTO[] = [];
+    presetItems.forEach((item) => {
+      item.telemetryItems.forEach((element) => {
+        let InsideParameter: InsideParameterDTO = {
           parameter: element.parameter,
           chartType: element.chartType,
           parameterName: item.parameterName,
           parameterComm: item.communication,
           isConcat: item.isConcat,
-          rows:item.rows,
-          cols:item.cols,
-          x:item.x,
-          y:item.y
-        }
+          rows: item.rows,
+          cols: item.cols,
+          x: item.x,
+          y: item.y,
+        };
 
-      this.onAddParameter(InsideParameter);
-      arr.push(InsideParameter);
-
-      })
-    })
+        this.onAddParameter(InsideParameter);
+        arr.push(InsideParameter);
+      });
+    });
 
     console.log(this.parametersChartEntityMap);
     this.presetParameters = arr;
@@ -439,15 +461,13 @@ export class LiveDashboardComponent implements AfterViewChecked {
     this.simulatorservice.getActiveUavs().subscribe(
       (res) => {
         console.log(res);
-        
-        this.uavsList = res; 
+        this.uavsList = res;
       },
       (err) => {
         console.error('Error fetching UAVs list:', err);
       }
     );
   }
-  
 
   protected getParameters(): void {
     this.userservice.getAllParameters().subscribe(
@@ -499,7 +519,7 @@ export class LiveDashboardComponent implements AfterViewChecked {
   public archiveGraphs(item: TelemetryGridsterItem): void {
     item.isArchive = !item.isArchive;
   }
-  
+
   showSuccess() {
     this.toastrService.success('Hello world!', 'Toastr fun!');
   }

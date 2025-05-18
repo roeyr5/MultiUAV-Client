@@ -1,4 +1,30 @@
 .chart-container {
+  background: #4a435c;
+  text-align: center;
   width: 100%;
   height: 100%;
+  flex: 1 1 auto;
+  display: flex;
+  position: relative;
+  flex-wrap: wrap;
+}
+/* put in styles.scss or use ::ng-deep in your component */
+ngx-charts-line-chart {
+  width: 100%;
+  height: 100%;
+}
+
+.ng-tns-c2610905874-195 {
+  background: #4a435c;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  flex: 1 1 auto;
+  display: flex;
+  position: relative;
+  flex-wrap: wrap;
+}
+
+::ng-deep .legend-title-text{
+  display: none !important;
 }

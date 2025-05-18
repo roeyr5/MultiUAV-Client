@@ -192,22 +192,45 @@ span{
 
 
 .open-table-container {
-  display: block; /* Ensures the table is block-level and retains structure */
   width: 100%;
+  overflow-x: auto;
+}
+:host ::ng-deep .mat-expansion-panel {
+  /* let the panel itself be full-width of its parent */
+  width: 100% !important;
 }
 
-.open-table-container thead, .open-table-container tbody {
-  display: block;
+:host ::ng-deep .mat-expansion-panel-body {
+  /* remove the left/right padding so your 100% truly touches the edges */
+  padding: 0 0 !important;
 }
 
-.open-table-container th, .open-table-container td {
-  display: inline-flex;  /* Treats each column as a flex item */
-  justify-content: space-between;  /* Space between content */
-  text-align: left; /* Optional, aligns text to the left */
+.open-table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
 }
+
+
+.open-table-container {
+  overflow-x: auto;    /* if you still need scrolling when it’s too wide */
+}
+
+.open-table-container table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed; /* make all rows/columns share the same “grid” */
+}
+
+.open-table-container th,
+.open-table-container td {
+  padding: 8px;
+  text-align: center;
+  white-space: nowrap; /* prevents your “MissionDown” or “FiberBoxUp” from wrapping */
+}
+
 
 .open-table-container tr {
-  display: flex;
   justify-content: space-between;  /* Spreads columns evenly */
 }
 
