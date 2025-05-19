@@ -131,6 +131,7 @@ h2 {
   gap: 1rem;
   overflow-y: auto;
   overflow-x: hidden;
+  justify-content: space-evenly;
   max-height: 90vh;
 
 }

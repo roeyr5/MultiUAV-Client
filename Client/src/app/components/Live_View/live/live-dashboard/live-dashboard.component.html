@@ -43,10 +43,13 @@
               </app-gridster-block>
             </div>
           </div>
-          
-          <div *ngIf="item.isConcatenated" class="concat-chart">
-            <app-concat-graph [chartEntities]="item.chartEntitys"></app-concat-graph>
+
+          <div class="single-charts" *ngIf="item.isConcatenated">
+            <div class="widget-content">
+              <app-concat-graph [chartEntities]="item.chartEntitys"></app-concat-graph>
+            </div>
           </div>
+         
 
           <!-- <div *ngIf="item.isArchive" class="archive-chart">
             <app-graph-archive

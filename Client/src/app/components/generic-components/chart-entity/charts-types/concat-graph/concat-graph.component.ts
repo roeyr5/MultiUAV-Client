@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { IChartEntity } from 'src/app/entities/models/IChartEntity';
 import { GraphRecordsList, GraphValue } from 'src/app/entities/live-charts/graph.conf';
 import { Subscription } from 'rxjs';
@@ -11,7 +11,7 @@ import { ChangeDetectorRef } from '@angular/core';
   styleUrls: ['./concat-graph.component.css']
 })
 
-export class ConcatGraphComponent implements OnInit, OnDestroy {
+export class ConcatGraphComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() chartEntities: IChartEntity[] = [];
   public graphValues: GraphRecordsList[] = [];
   public view: [number, number] = [0, 0];
@@ -55,16 +55,33 @@ export class ConcatGraphComponent implements OnInit, OnDestroy {
       this.subscriptions.push(subscription);
     });
 
+    // setTimeout(() => {
+    //   const resizeObserver = new ResizeObserver(() => {
+    //     this.ngZone.run(() => {
+    //       // this.resizeGraph();
+    //       this.cdr.markForCheck();
+    //     });
+    //   });
+    //   const parent = document.querySelector('.widget-content');
+    //   if (parent) resizeObserver.observe(parent);
+    // }, 20);
+
     setTimeout(() => {
-      const resizeObserver = new ResizeObserver(() => {
+      // @ts-ignore Cannot find name 'ResizeObserver'
+      const resizeObserver = new ResizeObserver((entries) => {
         this.ngZone.run(() => {
-          // this.resizeGraph();
+          this.updateGraphSize();
           this.cdr.markForCheck();
         });
       });
-      const parent = document.querySelector('.widget-content');
-      if (parent) resizeObserver.observe(parent);
+      resizeObserver.observe(
+        document.getElementById("id")!
+      );
     }, 20);
+  }
+
+  ngAfterViewInit(): void {
+    this.updateGraphSize();
   }
 
   public ngOnDestroy(): void {
@@ -101,4 +118,20 @@ export class ConcatGraphComponent implements OnInit, OnDestroy {
   //     this.view = [parent.offsetWidth, parent.offsetHeight];
   //   }
   // }
+
+  updateGraphSize() {
+    const element = document.getElementById("id");
+    if (element) {
+      const width = element.offsetWidth;
+      const height = element.offsetHeight;
+
+      // Only update the view size if it's changed
+      if (this.view[0] !== width || this.view[1] !== height) {
+        this.view = [width, height];
+        this.cdr.detectChanges(); // Manually trigger change detection
+      }
+    } else {
+      console.log('Element not found');
+    }
+  }
 }

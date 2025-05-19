@@ -34,6 +34,8 @@ export class SimulatorService {
     );
   }
   public startSimulate(dto: channeldto): Observable<any> {
+    console.log(dto);
+    
     return this.http.post(`${this.ROOT_URL}/simulator/StartIcd`, dto);
   }
   public updateSimulating(uavNumber: number, time: number): Observable<any> {
@@ -82,6 +84,6 @@ export class SimulatorService {
   }
   
   public getActiveUavs(): Observable<number[]> {
-    return this.http.get<number[]>(`${this.ROOT_URL}/simulator/activeUavs`);
+    return this.http.get<number[]>(`http://localhost:7000/Simulator/GetAllTailNumbers`);
   }
 }

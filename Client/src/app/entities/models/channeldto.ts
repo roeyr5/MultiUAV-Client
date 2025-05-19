@@ -7,4 +7,6 @@ export interface channeldto {
   type?: string;
   status?:boolean;
   pcap?:boolean;
+  fileName?:string;
+
 }

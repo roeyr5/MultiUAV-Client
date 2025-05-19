@@ -55,8 +55,8 @@ export class PresetParametersComponent implements OnInit {
         hashSet.add(item.parameter.uavNumber);
       })
     }
-    this.uavsNumbersPerPreset.set(preset.presetName, Array.from(hashSet));
-    console.log(hashSet);
+    const sortedUavNumbers = Array.from(hashSet).sort((a, b) => a - b);
+    this.uavsNumbersPerPreset.set(preset.presetName, sortedUavNumbers);
     
   }
 

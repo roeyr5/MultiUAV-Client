@@ -83,7 +83,6 @@ export class ConfigComponent implements OnInit, OnDestroy {
     this.simulatorservice.telemetryUavs().subscribe((response) => {
       this.uavsTelemetry = response;
       console.log(response);
-      
     });
   }
 
@@ -287,51 +286,55 @@ export class ConfigComponent implements OnInit, OnDestroy {
   // }
 
   protected pauseTelemetry(channelDto: channeldto) {
-    this.simulatorservice.pauseTelemetry(channelDto.uavNumber, channelDto.channel).subscribe(
-      (response) => {
-        console.log('Paused listening', response);
-        Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: 'Channel has been paused.',
-          showConfirmButton: true,
-          timer: 2000,
-        });
-        channelDto.status = !channelDto.status;
-      },
-      (error) => {
-        console.error('Error pausing UAV:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to Pause UAV.',
-        });
-      }
-    );
+    this.simulatorservice
+      .pauseTelemetry(channelDto.uavNumber, channelDto.channel)
+      .subscribe(
+        (response) => {
+          console.log('Paused listening', response);
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Channel has been paused.',
+            showConfirmButton: true,
+            timer: 2000,
+          });
+          channelDto.status = !channelDto.status;
+        },
+        (error) => {
+          console.error('Error pausing UAV:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to Pause UAV.',
+          });
+        }
+      );
   }
 
-  protected continueTelemetry(channelDto :channeldto) {
-    this.simulatorservice.continueListening(channelDto.uavNumber, channelDto.channel).subscribe(
-      (response) => {
-        console.log('Continue listening', response);
-        Swal.fire({
-          icon: 'success',
-          title: 'Success!',
-          text: 'Channel now listening.',
-          showConfirmButton: true,
-          timer: 2000,
-        });
-        channelDto.status = !channelDto.status;
-      },
-      (error) => {
-        console.error('Error continue listening UAV:', error);
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: 'Failed to continue listening .',
-        });
-      }
-    );
+  protected continueTelemetry(channelDto: channeldto) {
+    this.simulatorservice
+      .continueListening(channelDto.uavNumber, channelDto.channel)
+      .subscribe(
+        (response) => {
+          console.log('Continue listening', response);
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Channel now listening.',
+            showConfirmButton: true,
+            timer: 2000,
+          });
+          channelDto.status = !channelDto.status;
+        },
+        (error) => {
+          console.error('Error continue listening UAV:', error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Failed to continue listening .',
+          });
+        }
+      );
   }
 
   protected deleteTelemetry(address: string, port: number, pcap?: boolean) {
@@ -446,8 +449,6 @@ export class ConfigComponent implements OnInit, OnDestroy {
           />
         </div>
         
-        <button id="random-button" class="swal2-confirm swal2-styled">Generate Random Values</button>
-
         <div id="pcapInputs" style="display:none;">
           <input
             id="uav-number"
@@ -515,8 +516,14 @@ export class ConfigComponent implements OnInit, OnDestroy {
           // const portInput = (document.getElementById('swal-port') as HTMLInputElement).value.trim();
           // const port = Number(portInput);
 
-          if (!uavNumber) {
-            Swal.showValidationMessage('Please enter Tail Number.');
+          // if (!uavNumber) {
+          //   Swal.showValidationMessage('Please enter Tail Number.');
+          //   return;
+          // }
+          if (uavNumber < 1 || uavNumber > 255) {
+            Swal.showValidationMessage(
+              'UAV Number must be between 1 and 255.'
+            );
             return;
           }
           // if (!address) {
@@ -554,42 +561,40 @@ export class ConfigComponent implements OnInit, OnDestroy {
     }).then((result) => {
       if (result.isConfirmed && result.value) {
         const data = result.value;
-        if (data.deviceType === 'regular') {
-          this.simulatorservice.startSimulate(data).subscribe(
-            (response) => {
-              this.initData();
+        console.log(data);
+
+        this.simulatorservice.startSimulate(data).subscribe(
+          (response) => {
+            this.initData();
+            Swal.fire({
+              icon: 'success',
+              title: 'Opened Channel',
+              text: 'Simulator and Telemetry starting!',
+            });
+          },
+          (error) => {
+            console.error(error);
+            if (error.status === 500) {
               Swal.fire({
-                icon: 'success',
-                title: 'Opened Channel',
-                text: 'Simulator and Telemetry starting!',
+                icon: 'error',
+                title: 'Error opening simulator',
+                text: 'Failed to start Simulate.',
               });
-            },
-            (error) => {
-              console.error(error);
-              if (error.status === 500) {
-                Swal.fire({
-                  icon: 'error',
-                  title: 'Error opening simulator',
-                  text: 'Failed to start Simulate.',
-                });
-              } else if (error.status === 409) {
-                Swal.fire({
-                  icon: 'info',
-                  title: 'Error opening simulator',
-                  text: error.error.message,
-                });
-              } else if (error) {
-                Swal.fire({
-                  icon: 'info',
-                  title: 'Server down',
-                });
-              }
+            } else if (error.status === 409) {
+              Swal.fire({
+                icon: 'info',
+                title: 'Error opening simulator',
+                text: error.error.message,
+              });
+            } else if (error) {
+              Swal.fire({
+                icon: 'info',
+                title: 'Server down',
+              });
             }
-          );
-        } else {
-          // Handle PCAP Device logic
-          this.startPcap(data.fileName, data.uavNumber);
-        }
+          }
+        );
+        // Handle PCAP Device logic
       }
     });
   }
