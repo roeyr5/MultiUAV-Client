@@ -143,9 +143,9 @@ export class LiveDashboardComponent implements AfterViewChecked {
       outerMargin: false,
       mobileBreakpoint: 640,
       minCols: 1,
-      maxCols: 6,
+      maxCols: 4,
       minRows: 1,
-      maxRows: 6,
+      maxRows: 4,
       draggable: { enabled: true },
       resizable: { enabled: true },
       displayGrid: DisplayGrid.OnDragAndResize,
@@ -189,6 +189,14 @@ export class LiveDashboardComponent implements AfterViewChecked {
         });
 
         if (saveOption === true) {
+          if (this.presetName == null || this.presetName == '') {
+            Swal.fire({
+              icon: 'error',
+              title: 'Empty Preset Name',
+              text: 'Please enter a valid name for the preset. It cannot be empty',
+            });
+            return;
+          }
           this.userservice.updatePreset(presetUpdate).subscribe((res) => {
             console.log('Preset updated successfully', res);
 
@@ -211,6 +219,15 @@ export class LiveDashboardComponent implements AfterViewChecked {
             presetName: presetName,
             presetItem: this.buildDashboardItemsDto(),
           };
+
+          if (presetName == null || presetName == '') {
+            Swal.fire({
+              icon: 'error',
+              title: 'Empty Preset Name',
+              text: 'Please enter a valid name for the preset. It cannot be empty',
+            });
+            return;
+          }
 
           this.userservice.createPreset(presetCreate).subscribe(
             (res) => {
@@ -253,7 +270,19 @@ export class LiveDashboardComponent implements AfterViewChecked {
         });
 
         if (!presetName) {
-          console.log('User cancelled or entered no name.');
+          Swal.fire({
+            icon: 'error',
+            title: 'Empty Preset Name',
+            text: 'Please enter a valid name for the preset. It cannot be empty',
+          });
+          return;
+        }
+        if (presetName == null || presetName == '') {
+          Swal.fire({
+            icon: 'error',
+            title: 'Empty Preset Name',
+            text: 'Please enter a valid name for the preset. It cannot be empty',
+          });
           return;
         }
 
@@ -262,6 +291,15 @@ export class LiveDashboardComponent implements AfterViewChecked {
           presetName: presetName,
           presetItem: this.buildDashboardItemsDto(),
         };
+
+        if (presetName == null || presetName == '') {
+          Swal.fire({
+            icon: 'error',
+            title: 'Empty Preset Name',
+            text: 'Please enter a valid name for the preset. It cannot be empty',
+          });
+          return;
+        }
 
         this.userservice.createPreset(presetCreate).subscribe(
           (res) => {
@@ -331,6 +369,26 @@ export class LiveDashboardComponent implements AfterViewChecked {
   }
 
   public onAddParameter(parameter: InsideParameterDTO): void {
+    const currentMaxCol = Math.max(
+      ...this.telemetryGridsterDashboard.map((item) => item.x + item.cols)
+    );
+
+    const currentMaxRow = Math.max(
+      ...this.telemetryGridsterDashboard.map((item) => item.y + item.rows)
+    );
+
+    console.log(currentMaxCol);
+    console.log(currentMaxRow);
+    
+    if (this.telemetryGridsterDashboard.length >= 16) {
+      Swal.fire({
+        icon: 'error',
+        title: 'Limit Reached',
+        text: 'You can add a maximum of 16 parameters.',
+      });
+      return;
+    }
+
     const id = uuidv4();
 
     let itemToAdd: IChartEntity = new IChartEntity(
@@ -347,14 +405,6 @@ export class LiveDashboardComponent implements AfterViewChecked {
     );
 
     if (existingItem) {
-      if (this.telemetryGridsterDashboard.length >= 16) {
-        Swal.fire({
-          icon: 'error',
-          title: 'Limit Reached',
-          text: 'You can add a maximum of 16 parameters.',
-        });
-        return;
-      }
       const uavExists = existingItem.chartEntitys.some(
         (chartEntity) =>
           chartEntity.parameter.uavNumber === parameter.parameter.uavNumber

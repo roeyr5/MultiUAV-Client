@@ -1,6 +1,6 @@
 <div class="orchestrator-container">
   <div>
-    <h1 class="title">Orchestrator Overview</h1>
+    <h1 class="title">Auto Scaler Overview</h1>
     <span class="devices-info">Total Devices: {{ totalDevices }}</span>
     <span class="devices-info">Active UAVs: {{ activeUAVs }}</span>
   </div>
@@ -16,14 +16,14 @@
         *ngFor="let deviceId of objectKeys(orchestratorData)"
         class="device-block"
       >
-        <h2>Telemetry Device ID 📡: {{ deviceId }}</h2>
+        <h2>Telemetry Device ID : {{ deviceId }}</h2>
 
         <div class="ports">
           <span class="device-port">
-            Device Port 🔌: {{ orchestratorData[+deviceId].device.devicePort }}
+            Device Port : {{ orchestratorData[+deviceId].device.devicePort }}
           </span>
           <span class="listener-port">
-            Listener Port 📥:
+            Listener Port :
             {{ orchestratorData[+deviceId].device.listenerPort }}
           </span>
         </div>
@@ -31,7 +31,7 @@
         <ng-container
           *ngIf="orchestratorData[+deviceId].simulators.length > 0; else noSim"
         >
-          <h4>Assigned Simulators 🛰️:</h4>
+          <h4>Assigned Simulators :</h4>
           <div class="simulators-list">
             <div
               *ngFor="let simulator of orchestratorData[+deviceId].simulators"

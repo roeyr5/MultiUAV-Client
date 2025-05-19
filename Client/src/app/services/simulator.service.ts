@@ -34,6 +34,8 @@ export class SimulatorService {
     );
   }
   public startSimulate(dto: channeldto): Observable<any> {
+    console.log(dto);
+    
     return this.http.post(`${this.ROOT_URL}/simulator/StartIcd`, dto);
   }
   public updateSimulating(uavNumber: number, time: number): Observable<any> {
